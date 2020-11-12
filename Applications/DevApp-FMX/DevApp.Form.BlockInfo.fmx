@@ -1,0 +1,196 @@
+inherited BlockInfoForm: TBlockInfoForm
+  Caption = 'DevBaseForm1'
+  ClientHeight = 511
+  ClientWidth = 667
+  DesignerMasterStyle = 0
+  inherited HeaderLayout: TLayout
+    Size.Width = 661.000000000000000000
+    inherited FormCaption: TLabel
+      AutoSize = True
+      Size.Width = 577.000000000000000000
+      Text = 'Block Stuff'
+    end
+  end
+  inherited FooterLayout: TLayout
+    Position.Y = 458.000000000000000000
+    Size.Width = 661.000000000000000000
+  end
+  inherited ContentLayout: TLayout
+    Size.Width = 661.000000000000000000
+    Size.Height = 399.000000000000000000
+    object Layout1: TLayout
+      Align = Top
+      Padding.Top = 3.000000000000000000
+      Padding.Bottom = 3.000000000000000000
+      Size.Width = 661.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Label1: TLabel
+        Align = Left
+        Position.Y = 3.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'From Block Number'
+        TabOrder = 2
+      end
+      object Block1: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 3
+        Position.X = 120.000000000000000000
+        Position.Y = 3.000000000000000000
+        Hint = 'use arrow keys to move between blocks'
+        Padding.Left = 3.000000000000000000
+        Margins.Right = 3.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        ParentShowHint = False
+        ShowHint = True
+        OnKeyDown = Block1KeyDown
+      end
+      object Label2: TLabel
+        Align = Left
+        Position.X = 223.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 98.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'To Block Number'
+        TabOrder = 0
+      end
+      object Block2: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 1
+        Position.X = 321.000000000000000000
+        Position.Y = 3.000000000000000000
+        Padding.Left = 3.000000000000000000
+        Margins.Right = 3.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Button1: TButton
+        Align = Left
+        Margins.Right = 3.000000000000000000
+        Position.X = 424.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 33.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Go'
+        OnClick = Button1Click
+      end
+      object ClearButton: TButton
+        Align = Left
+        Position.X = 460.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 59.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Clear'
+        OnClick = ClearButtonClick
+      end
+    end
+    object Layout2: TLayout
+      Align = Top
+      Padding.Top = 3.000000000000000000
+      Padding.Bottom = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Position.Y = 33.000000000000000000
+      Size.Width = 661.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Label3: TLabel
+        Align = Left
+        Position.Y = 3.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Last N Blocks'
+        TabOrder = 2
+      end
+      object Button2: TButton
+        Align = Left
+        Margins.Right = 3.000000000000000000
+        Position.X = 223.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 33.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Go'
+        OnClick = Button2Click
+      end
+      object LastNBlocks: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 4
+        Cursor = crIBeam
+        Max = 1000.000000000000000000
+        Value = 10.000000000000000000
+        Position.X = 120.000000000000000000
+        Position.Y = 3.000000000000000000
+        Margins.Right = 3.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object Layout3: TLayout
+      Align = Client
+      Size.Width = 385.000000000000000000
+      Size.Height = 331.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object Memo1: TMemo
+        Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+        DataDetectorTypes = []
+        StyledSettings = [Family, Style, FontColor]
+        TextSettings.Font.Size = 9.000000000000000000
+        Align = Top
+        Size.Width = 385.000000000000000000
+        Size.Height = 329.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Viewport.Width = 385.000000000000000000
+        Viewport.Height = 329.000000000000000000
+      end
+    end
+    object BlockList: TStringGrid
+      Align = Left
+      CanFocus = True
+      ClipChildren = True
+      Margins.Right = 3.000000000000000000
+      Position.Y = 68.000000000000000000
+      Size.Width = 273.000000000000000000
+      Size.Height = 331.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 9.000000000000000000
+      StyledSettings = [Family, Style, FontColor]
+      TabOrder = 3
+      Options = [Editing, ColumnResize, ColumnMove, ColLines, RowLines, RowSelect, Tabs, Header, HeaderClick, AutoDisplacement]
+      OnCellClick = BlockListCellClick
+      Viewport.Width = 273.000000000000000000
+      Viewport.Height = 331.000000000000000000
+      object StringColumn1: TStringColumn
+        Header = 'Block'
+        Size.Width = 65.000000000000000000
+      end
+      object StringColumn2: TStringColumn
+        Header = 'Date/Time'
+        Size.Width = 119.000000000000000000
+      end
+      object OpsCol: TStringColumn
+        Header = 'Ops'
+        Size.Width = 52.000000000000000000
+      end
+    end
+  end
+end

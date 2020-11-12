@@ -1,0 +1,83 @@
+inherited PendingInfo: TPendingInfo
+  Caption = 'Pending Ops'
+  DesignerMasterStyle = 0
+  inherited ContentLayout: TLayout
+    Size.Height = 340.000000000000000000
+    object Label1: TLabel
+      Align = Top
+      StyledSettings = [Family, FontColor]
+      Margins.Right = 3.000000000000000000
+      Size.Width = 631.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 18.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Label1'
+      TabOrder = 0
+      object Button1: TButton
+        Align = Right
+        Margins.Bottom = 3.000000000000000000
+        Position.X = 520.000000000000000000
+        Size.Width = 111.000000000000000000
+        Size.Height = 21.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Refresh Pending'
+        OnClick = Button1Click
+      end
+    end
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      StyledSettings = [Size, Style, FontColor]
+      TextSettings.Font.Family = 'Courier New'
+      Align = Client
+      Margins.Right = 3.000000000000000000
+      Size.Width = 631.000000000000000000
+      Size.Height = 316.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Viewport.Width = 627.000000000000000000
+      Viewport.Height = 312.000000000000000000
+    end
+  end
+  object Layout1: TLayout
+    Align = Top
+    Padding.Top = 3.000000000000000000
+    Padding.Bottom = 3.000000000000000000
+    Position.X = 3.000000000000000000
+    Position.Y = 53.000000000000000000
+    Size.Width = 634.000000000000000000
+    Size.Height = 28.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object Label2: TLabel
+      Align = Left
+      Position.Y = 3.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Find Op Hash'
+      TabOrder = 0
+    end
+    object OpHashList: TComboBox
+      Align = Client
+      Margins.Right = 3.000000000000000000
+      Size.Width = 500.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+    end
+    object Button2: TButton
+      Align = Right
+      Position.X = 584.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Find'
+      OnClick = Button2Click
+    end
+  end
+end
