@@ -28,7 +28,6 @@ The development has been done using FireMonkey (FMX) and I have included some FM
 The applications do use some third part libraries:
 
 FrameStand/FormStand: available via GetIt package manager or at https://github.com/andrea-magni/TFrameStand
-Spring4D: https://bitbucket.org/sglienke/spring4d     
 
 The DevApp-FMX is the application used to develop the framework, it's a bit rough and ready but shows the use of the library.
 

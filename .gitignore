@@ -67,3 +67,8 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+Applications/DevApp-FMX/DevApp.deployproj
+Applications/DevApp-FMX/Entitlement.TemplateOSX.xml
+Applications/DevApp-FMX/info.plist.TemplateOSX.xml
+Applications/DevApp-FMX/OSX64/
+Applications/DevApp-FMX/Win64/

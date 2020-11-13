@@ -1,11 +1,6 @@
 program DevApp;
 
 uses
-  madExcept,
-  madLinkDisAsm,
-  madListHardware,
-  madListProcesses,
-  madListModules,
   System.StartUpCopy,
   FMX.Forms,
   DevApp.Main in 'DevApp.Main.pas' {MainForm},

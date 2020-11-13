@@ -1,96 +1,122 @@
-unit DevApp.Config.Impl;
+Unit DevApp.Config.Impl;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
+// ************************************************************************//
+// copyright 2019-2020  Russell Weetch                     //
 // Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+// LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
+// //
+// PascalCoin website http://pascalcoin.org                 //
+// //
+// PascalCoin Delphi RPC Client Repository                //
+// https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
+// //
+// PASC Donations welcome: Account (PASA) 1922-23             //
+// //
+// THIS LICENSE HEADER MUST NOT BE REMOVED.                //
+// //
+// ************************************************************************//
 
-interface
+Interface
 
-Uses Spring.Container, System.JSON;
+Uses
+  System.JSON,
+  PascalCoin.RPC.Interfaces;
 
 Type
 
-TDevAppConfig = class
-private
-    FContainer: TContainer;
+  TDevAppConfig = Class
+  Private
     FConfigFile: String;
     FConfigData: TJSONObject;
-    function GetContainer: TContainer;
-    function GetServers: TJSONArray;
-    function GetConfigFolder: String;
-protected
-public
-  Constructor Create;
-  Destructor Destroy; override;
-  Procedure SaveConfig;
-  Procedure AddServer(const AURI: String);
-  Property Container: TContainer read GetContainer;
-  Property ConfigFolder: String read GetConfigFolder;
-  Property ConfigData: TJSONObject read FConfigData;
-  Property Servers: TJSONArray read GetServers;
-end;
+    Function GetServers: TJSONArray;
+    Function GetConfigFolder: String;
+    Function GetRPCClient: IPascalCoinRPCClient;
+    Function GetExplorerAPI: IPascalCoinExplorerAPI;
+    Function GetNodeAPI: IPascalCoinNodeAPI;
+    function GetWalletAPI: IPascalCoinWalletAPI;
+  Protected
+  Public
+    Constructor Create;
+    Destructor Destroy; Override;
+    Procedure SaveConfig;
+    Procedure AddServer(Const AURI: String);
+    Property ConfigFolder: String Read GetConfigFolder;
+    Property ConfigData: TJSONObject Read FConfigData;
+    Property Servers: TJSONArray Read GetServers;
+    Property ExplorerAPI: IPascalCoinExplorerAPI Read GetExplorerAPI;
+    Property NodeAPI: IPascalCoinNodeAPI Read GetNodeAPI;
+    Property WalletAPI: IPascalCoinWalletAPI read GetWalletAPI;
+  End;
 
-implementation
+Implementation
 
-uses System.IOUtils, System.SysUtils;
+Uses
+  System.IOUtils,
+  System.SysUtils,
+  UC.Net.Interfaces,
+  UC.HTTPClient.Delphi,
+  PascalCoin.RPC.Client,
+  PascalCoin.RPC.API.Node,
+  PascalCoin.RPC.API.Explorer,
+  PascalCoin.RPC.API.Wallet;
 
 { TDevAppConfig }
 
-procedure TDevAppConfig.AddServer(const AURI: String);
-begin
+Procedure TDevAppConfig.AddServer(Const AURI: String);
+Begin
   GetServers.Add(AURI);
   SaveConfig;
-end;
+End;
 
-constructor TDevAppConfig.Create;
-begin
-  inherited Create;
+Constructor TDevAppConfig.Create;
+Begin
+  Inherited Create;
   FConfigFile := TPath.Combine(TPath.Combine(TPath.GetHomePath, 'PascalCoin_UrbanCohort'), 'DevApp') + 'Config.json';
-  FContainer := TContainer.Create;
-  if TFile.Exists(FConfigFile) then
-     FConfigData := TJSONObject.ParseJSONValue(TFile.ReadAllText(FConfigFile)) as TJSONObject
-  else
-    FConfigData := TJSONObject.ParseJSONValue('{"app":"DevApp", "Servers":[]}') as TJSONObject;
-end;
+  If TFile.Exists(FConfigFile) Then
+    FConfigData := TJSONObject.ParseJSONValue(TFile.ReadAllText(FConfigFile)) As TJSONObject
+  Else
+    FConfigData := TJSONObject.ParseJSONValue('{"app":"DevApp", "Servers":[]}') As TJSONObject;
+End;
 
+Destructor TDevAppConfig.Destroy;
+Begin
+  Inherited;
+End;
 
-destructor TDevAppConfig.Destroy;
-begin
-  FContainer.Free;
-  inherited;
-end;
-
-function TDevAppConfig.GetConfigFolder: String;
-begin
+Function TDevAppConfig.GetConfigFolder: String;
+Begin
   Result := TPath.GetDirectoryName(FConfigFile);
+End;
+
+Function TDevAppConfig.GetExplorerAPI: IPascalCoinExplorerAPI;
+Begin
+  Result := TPascalCoinExplorerAPI.Create(GetRPCClient);
+End;
+
+Function TDevAppConfig.GetNodeAPI: IPascalCoinNodeAPI;
+Begin
+  Result := TPascalCoinNodeAPI.Create(GetRPCClient);
+End;
+
+function TDevAppConfig.GetRPCClient: IPascalCoinRPCClient;
+begin
+  Result := TPascalCoinRPCClient.Create(TDelphiHTTP.Create);
 end;
 
-function TDevAppConfig.GetContainer: TContainer;
-begin
-  Result := FContainer;
-end;
-
-function TDevAppConfig.GetServers: TJSONArray;
-begin
+Function TDevAppConfig.GetServers: TJSONArray;
+Begin
   Result := FConfigData.GetValue<TJSONArray>('Servers');
+End;
+
+function TDevAppConfig.GetWalletAPI: IPascalCoinWalletAPI;
+begin
+  Result := TPascalCoinWalletAPI.Create(GetRPCClient);
 end;
 
-procedure TDevAppConfig.SaveConfig;
-begin
+Procedure TDevAppConfig.SaveConfig;
+Begin
   TDirectory.CreateDirectory(ConfigFolder);
   TFile.WriteAllText(FConfigFile, FConfigData.ToJSON);
-end;
+End;
 
-end.
+End.

@@ -66,13 +66,13 @@ end;
 
 function TDevBaseForm.ExplorerAPI: IPascalCoinExplorerAPI;
 begin
-  Result := Config.Container.Resolve<IPascalCoinExplorerAPI>;
+  Result := Config.ExplorerAPI;
   Result.NodeURI := UseURI;
 end;
 
 function TDevBaseForm.NodeAPI: IPascalCoinNodeAPI;
 begin
-  Result := Config.Container.Resolve<IPascalCoinNodeAPI>;
+  Result := Config.NodeAPI;
   Result.NodeURI := UseURI;
 end;
 
@@ -103,7 +103,7 @@ end;
 
 function TDevBaseForm.WalletExplorerAPI: IPascalCoinWalletAPI;
 begin
-  Result := Config.Container.Resolve<IPascalCoinWalletAPI>;
+  Result := Config.WalletAPI;
   Result.NodeURI := UseURI;
 end;
 

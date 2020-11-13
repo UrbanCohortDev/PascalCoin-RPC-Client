@@ -182,7 +182,7 @@ end;
 
 function TMainForm.GetNodeAPI: IPascalCoinNodeAPI;
 begin
-  Result := Config.Container.Resolve<IPascalCoinNodeAPI>;
+  Result := Config.NodeAPI;
   Result.NodeURI := NodeList.Items[NodeList.ItemIndex];
 end;
 
