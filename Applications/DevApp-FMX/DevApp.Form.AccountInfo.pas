@@ -1,20 +1,20 @@
 Unit DevApp.Form.AccountInfo;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -201,13 +201,14 @@ Begin
 End;
 
 Procedure TAccountInfoForm.OpsButtonClick(Sender: TObject);
-var lDepth: Integer;
+Var
+  lDepth: Integer;
 Begin
   Inherited;
-  if SameText(OpDepth.Text, 'deep') then
-     lDepth := DEEP_SEARCH
-  else
-     lDepth := StrToInt(OpDepth.Text.Trim);
+  If SameText(OpDepth.Text, 'deep') Then
+    lDepth := DEEP_SEARCH
+  Else
+    lDepth := StrToInt(OpDepth.Text.Trim);
   ExplorerAPI.getaccountoperations(TPascalCoinUtils.AccountNumber(Edit1.Text), lDepth);
 End;
 

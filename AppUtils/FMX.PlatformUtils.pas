@@ -1,20 +1,20 @@
 Unit FMX.PlatformUtils;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -25,39 +25,40 @@ Type
 
   TFMXUtils = Class
   Public
-    Class Function TryGetClipboardService(Out AClipboard: IFMXClipboardService): boolean; static;
-    Class Function CopyToClipboard(const Value: string): Boolean; static;
-    Class Function CopyFromClipboard(out Value: String): boolean; static;
+    Class Function TryGetClipboardService(Out AClipboard: IFMXClipboardService): boolean; Static;
+    Class Function CopyToClipboard(Const Value: String): boolean; Static;
+    Class Function CopyFromClipboard(Out Value: String): boolean; Static;
   End;
 
 Implementation
 
-uses System.Rtti;
+Uses
+  System.Rtti;
 
 { TFMXUtils }
 
-class function TFMXUtils.CopyFromClipboard(out Value: String): boolean;
-var
+Class Function TFMXUtils.CopyFromClipboard(Out Value: String): boolean;
+Var
   lClipboard: IFMXClipboardService;
   lValue: TValue;
-begin
+Begin
   Result := TryGetClipboardService(lClipboard);
-  if Result then
-  begin
+  If Result Then
+  Begin
     lValue := lClipboard.GetClipboard;
-    if not lValue.TryAsType(Value) then
+    If Not lValue.TryAsType(Value) Then
       Value := '';
-  end;
-end;
+  End;
+End;
 
-class function TFMXUtils.CopyToClipboard(const Value: string): Boolean;
-var
+Class Function TFMXUtils.CopyToClipboard(Const Value: String): boolean;
+Var
   lClipboard: IFMXClipboardService;
-begin
+Begin
   Result := TryGetClipboardService(lClipboard);
-  if Result then
+  If Result Then
     lClipboard.SetClipboard(Value);
-end;
+End;
 
 Class Function TFMXUtils.TryGetClipboardService(Out AClipboard: IFMXClipboardService): boolean;
 Begin

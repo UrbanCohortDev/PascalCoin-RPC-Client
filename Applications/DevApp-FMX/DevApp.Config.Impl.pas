@@ -1,20 +1,20 @@
 Unit DevApp.Config.Impl;
 
-// ************************************************************************//
-// copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-// LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-// //
-// PascalCoin website http://pascalcoin.org                 //
-// //
-// PascalCoin Delphi RPC Client Repository                //
-// https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-// //
-// PASC Donations welcome: Account (PASA) 1922-23             //
-// //
-// THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-// //
-// ************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -33,7 +33,7 @@ Type
     Function GetRPCClient: IPascalCoinRPCClient;
     Function GetExplorerAPI: IPascalCoinExplorerAPI;
     Function GetNodeAPI: IPascalCoinNodeAPI;
-    function GetWalletAPI: IPascalCoinWalletAPI;
+    Function GetWalletAPI: IPascalCoinWalletAPI;
   Protected
   Public
     Constructor Create;
@@ -45,7 +45,7 @@ Type
     Property Servers: TJSONArray Read GetServers;
     Property ExplorerAPI: IPascalCoinExplorerAPI Read GetExplorerAPI;
     Property NodeAPI: IPascalCoinNodeAPI Read GetNodeAPI;
-    Property WalletAPI: IPascalCoinWalletAPI read GetWalletAPI;
+    Property WalletAPI: IPascalCoinWalletAPI Read GetWalletAPI;
   End;
 
 Implementation
@@ -98,20 +98,20 @@ Begin
   Result := TPascalCoinNodeAPI.Create(GetRPCClient);
 End;
 
-function TDevAppConfig.GetRPCClient: IPascalCoinRPCClient;
-begin
+Function TDevAppConfig.GetRPCClient: IPascalCoinRPCClient;
+Begin
   Result := TPascalCoinRPCClient.Create(TDelphiHTTP.Create);
-end;
+End;
 
 Function TDevAppConfig.GetServers: TJSONArray;
 Begin
   Result := FConfigData.GetValue<TJSONArray>('Servers');
 End;
 
-function TDevAppConfig.GetWalletAPI: IPascalCoinWalletAPI;
-begin
+Function TDevAppConfig.GetWalletAPI: IPascalCoinWalletAPI;
+Begin
   Result := TPascalCoinWalletAPI.Create(GetRPCClient);
-end;
+End;
 
 Procedure TDevAppConfig.SaveConfig;
 Begin

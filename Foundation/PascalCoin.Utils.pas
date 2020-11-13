@@ -1,24 +1,25 @@
 Unit PascalCoin.Utils;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
-uses PascalCoin.RPC.Interfaces;
+Uses
+  PascalCoin.RPC.Interfaces;
 
 Type
 
@@ -30,14 +31,13 @@ Type
     Class Function AccountNumberWithCheckSum(Const Value: Cardinal): String; Static;
     Class Function ValidAccountNumber(Const Value: String): Boolean; Static;
     Class Function AccountNumber(Const Value: String): Cardinal; Static;
-    class procedure SplitAccount(Const Value: String; Out AccountNumber: Cardinal;
-        Out CheckSum: Integer); static;
+    Class Procedure SplitAccount(Const Value: String; Out AccountNumber: Cardinal; Out CheckSum: Integer); Static;
     Class Function ValidateAccountName(Const Value: String): Boolean; Static;
 
-    Class Function BlocksToRecovery(Const LatestBlock, LastActiveBlock: Integer): Integer; static;
-    Class Function DaysToRecovery(Const LatestBlock, LastActiveBlock: Integer): Double; static;
+    Class Function BlocksToRecovery(Const LatestBlock, LastActiveBlock: Integer): Integer; Static;
+    Class Function DaysToRecovery(Const LatestBlock, LastActiveBlock: Integer): Double; Static;
 
-    Class Function KeyStyle(const AKey: String): TKeyStyle; static;
+    Class Function KeyStyle(Const AKey: String): TKeyStyle; Static;
 
     Class Function UnixToLocalDate(Const Value: Integer): TDateTime; Static;
     Class Function StrToHex(Const Value: String): String; Static;
@@ -54,62 +54,62 @@ Uses
 
 { TPascalCoinTools }
 
-class function TPascalCoinUtils.AccountNumber(const Value: String): Cardinal;
-var lCheckSum: Integer;
-begin
+Class Function TPascalCoinUtils.AccountNumber(Const Value: String): Cardinal;
+Var
+  lCheckSum: Integer;
+Begin
   SplitAccount(Value, Result, lCheckSum);
-end;
+End;
 
 Class Function TPascalCoinUtils.AccountNumberCheckSum(Const Value: Cardinal): Integer;
 Var
   lVal: Int64;
 Begin
   lVal := Value;
-  result := ((lVal * 101) MOD 89) + 10;
+  Result := ((lVal * 101) MOD 89) + 10;
 End;
 
-class function TPascalCoinUtils.AccountNumberWithCheckSum(const Value: Cardinal): String;
-begin
+Class Function TPascalCoinUtils.AccountNumberWithCheckSum(Const Value: Cardinal): String;
+Begin
   Result := Value.ToString + '-' + AccountNumberCheckSum(Value).ToString;
-end;
+End;
 
-class function TPascalCoinUtils.BlocksToRecovery(const LatestBlock, LastActiveBlock: Integer): Integer;
-begin
+Class Function TPascalCoinUtils.BlocksToRecovery(Const LatestBlock, LastActiveBlock: Integer): Integer;
+Begin
   Result := (LastActiveBlock + RECOVERY_WAIT_BLOCKS) - LatestBlock;
-end;
+End;
 
-class function TPascalCoinUtils.DaysToRecovery(const LatestBlock, LastActiveBlock: Integer): Double;
-begin
+Class Function TPascalCoinUtils.DaysToRecovery(Const LatestBlock, LastActiveBlock: Integer): Double;
+Begin
   Result := BlocksToRecovery(LatestBlock, LastActiveBlock) / BLOCKS_PER_DAY;
-end;
+End;
 
 Class Function TPascalCoinUtils.IsHexaString(Const Value: String): Boolean;
 Var
   i: Integer;
 Begin
-  if Value.Length mod 2 > 0 then
-     Exit(False);
+  If Value.Length Mod 2 > 0 Then
+    Exit(False);
 
-  result := true;
+  Result := true;
   For i := Low(Value) To High(Value) Do
-    If (NOT CharInSet(Value[i], PASCALCOIN_HEXA))Then
+    If (NOT CharInSet(Value[i], PASCALCOIN_HEXA)) Then
     Begin
-      Exit(false);
+      Exit(False);
     End;
 End;
 
-class function TPascalCoinUtils.KeyStyle(const AKey: String): TKeyStyle;
-begin
-  if IsHexaString(AKey) then
-     Result := TKeyStyle.ksEncKey
-  else //if B58Key(AKey)
-     Result := TKeyStyle.ksB58Key;
-//  else
-//     Result := TKeyStyle.ksUnkown
-end;
+Class Function TPascalCoinUtils.KeyStyle(Const AKey: String): TKeyStyle;
+Begin
+  If IsHexaString(AKey) Then
+    Result := TKeyStyle.ksEncKey
+  Else // if B58Key(AKey)
+    Result := TKeyStyle.ksB58Key;
+  // else
+  // Result := TKeyStyle.ksUnkown
+End;
 
-Class Procedure TPascalCoinUtils.SplitAccount(Const Value: String; Out AccountNumber: Cardinal;
-  Out CheckSum: Integer);
+Class Procedure TPascalCoinUtils.SplitAccount(Const Value: String; Out AccountNumber: Cardinal; Out CheckSum: Integer);
 Var
   lVal: TArray<String>;
 Begin
@@ -128,7 +128,7 @@ End;
 
 Class Function TPascalCoinUtils.StrToHex(Const Value: String): String;
 Begin
-  result := THex.Encode(TConverters.ConvertStringToBytes(Value, TEncoding.ANSI));
+  Result := THex.Encode(TConverters.ConvertStringToBytes(Value, TEncoding.ANSI));
 End;
 
 Class Function TPascalCoinUtils.UnixToLocalDate(Const Value: Integer): TDateTime;
@@ -142,19 +142,19 @@ Var
   lChk: Integer;
   lAcct: Int64;
 Begin
-  result := false;
+  Result := False;
   lVal := Value.Trim.Split(['-']);
-  If length(lVal) = 1 Then
+  If Length(lVal) = 1 Then
   Begin
     If TryStrToInt64(lVal[0], lAcct) Then
-      result := true;
+      Result := true;
   End
   Else
   Begin
     If TryStrToInt64(lVal[0], lAcct) Then
     Begin
       lChk := AccountNumberCheckSum(lVal[0].Trim.ToInt64);
-      result := lChk = lVal[1].Trim.ToInteger;
+      Result := lChk = lVal[1].Trim.ToInteger;
     End;
   End;
 End;
@@ -163,19 +163,19 @@ Class Function TPascalCoinUtils.ValidateAccountName(Const Value: String): Boolea
 Var
   i: Integer;
 Begin
-  result := true;
+  Result := true;
   If Value = '' Then
-    exit;
+    Exit;
   If Not CharInSet(Value.Chars[0], PASCALCOIN_ENCODING_START) Then
-    exit(false);
-  If Value.length < 3 Then
-    exit(false);
-  If Value.length > 64 Then
-    exit(false);
-  For i := 0 To Value.length - 1 Do
+    Exit(False);
+  If Value.Length < 3 Then
+    Exit(False);
+  If Value.Length > 64 Then
+    Exit(False);
+  For i := 0 To Value.Length - 1 Do
   Begin
     If Not CharInSet(Value.Chars[i], PASCALCOIN_ENCODING) Then
-      exit(false);
+      Exit(False);
   End;
 End;
 

@@ -1,22 +1,22 @@
-unit PascalCoin.RPC.API.Operations;
+Unit PascalCoin.RPC.API.Operations;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
 
 Uses
   System.JSON,
@@ -29,40 +29,41 @@ Type
   TPascalCoinOperationsAPI = Class(TPascalCoinAPIBase, IPascalCoinOperationsAPI)
   Private
   Protected
-       Function payloadEncryptWithPublicKey(Const APayload: String; Const AKey: String;
+    Function payloadEncryptWithPublicKey(Const APayload: String; Const AKey: String;
       Const AKeyStyle: TKeyStyle): String;
 
     Function executeoperation(Const RawOperation: String): IPascalCoinOperation;
   Public
-  Constructor Create(AClient: IPascalCoinRPCClient);
+    Constructor Create(AClient: IPascalCoinRPCClient);
   End;
 
-implementation
+Implementation
 
-uses Rest.JSON, PascalCoin.RPC.Operation;
+Uses
+  Rest.JSON,
+  PascalCoin.RPC.Operation;
 
 { TPascalCoinOperationsAPI }
 
-constructor TPascalCoinOperationsAPI.Create(AClient: IPascalCoinRPCClient);
-begin
-  inherited Create(AClient);
-end;
+Constructor TPascalCoinOperationsAPI.Create(AClient: IPascalCoinRPCClient);
+Begin
+  Inherited Create(AClient);
+End;
 
-function TPascalCoinOperationsAPI.executeoperation(const RawOperation: String): IPascalCoinOperation;
-begin
+Function TPascalCoinOperationsAPI.executeoperation(Const RawOperation: String): IPascalCoinOperation;
+Begin
   If FClient.RPCCall('executeoperations', [TParamPair.Create('rawoperations', RawOperation)]) Then
   Begin
     result := TJSON.JsonToObject<TPascalCoinOperation>((GetJSONResult As TJSONObject));
   End;
-end;
+End;
 
-function TPascalCoinOperationsAPI.payloadEncryptWithPublicKey(const APayload, AKey: String;
-  const AKeyStyle: TKeyStyle): String;
-begin
+Function TPascalCoinOperationsAPI.payloadEncryptWithPublicKey(Const APayload, AKey: String;
+  Const AKeyStyle: TKeyStyle): String;
+Begin
   If FClient.RPCCall('payloadencrypt', [TParamPair.Create('payload', APayload), TParamPair.Create('payload_method',
     'pubkey'), PublicKeyParam(AKey, AKeyStyle)]) Then
     result := GetJSONResult.AsType<String>;
 End;
 
-
-end.
+End.

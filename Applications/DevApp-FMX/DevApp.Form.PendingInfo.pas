@@ -1,31 +1,46 @@
-unit DevApp.Form.PendingInfo;
+Unit DevApp.Form.PendingInfo;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
-  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls, DevApp.Base.DetailForm,
-  FMX.Controls.Presentation, FMX.Layouts, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, PascalCoin.RPC.Interfaces,
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+  FMX.Types,
+  FMX.Graphics,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Dialogs,
+  FMX.StdCtrls,
+  DevApp.Base.DetailForm,
+  FMX.Controls.Presentation,
+  FMX.Layouts,
+  FMX.Memo.Types,
+  FMX.ScrollBox,
+  FMX.Memo,
+  PascalCoin.RPC.Interfaces,
   FMX.ListBox;
 
-type
-  TPendingInfo = class(TDevBaseForm)
+Type
+  TPendingInfo = Class(TDevBaseForm)
     Label1: TLabel;
     Button1: TButton;
     Memo1: TMemo;
@@ -33,60 +48,60 @@ type
     Label2: TLabel;
     OpHashList: TComboBox;
     Button2: TButton;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-  private
+    Procedure Button1Click(Sender: TObject);
+    Procedure Button2Click(Sender: TObject);
+  Private
     { Private declarations }
     Procedure UpdateCount;
     Procedure ListOps;
-  public
+  Public
     { Public declarations }
-    Procedure InitialiseThis; override;
-  end;
+    Procedure InitialiseThis; Override;
+  End;
 
-var
+Var
   PendingInfo: TPendingInfo;
 
-implementation
+Implementation
 
 {$R *.fmx}
 
-uses DevApp.Utils;
+Uses
+  DevApp.Utils;
 
-resourcestring
-//Same block 1 & 2
-live_1 = '984B0700A04A240001000000FCA1B7B71B603A4F017627078829FE3E59D86D44';
-live_2 = '984B0700C14C240001000000752CE98EAC32F74944150665866F8CDCAE7AC5FE';
+Resourcestring
+  // Same block 1 & 2
+  live_1 = '984B0700A04A240001000000FCA1B7B71B603A4F017627078829FE3E59D86D44';
+  live_2 = '984B0700C14C240001000000752CE98EAC32F74944150665866F8CDCAE7AC5FE';
 
+  // block 477618
+  live_3 = 'B2490700EEB8080091380000B1ACD816599C01E680151DA3FC346DBB6D286685';
 
-//block 477618
-live_3 = 'B2490700EEB8080091380000B1ACD816599C01E680151DA3FC346DBB6D286685';
-
-
-procedure TPendingInfo.Button1Click(Sender: TObject);
-begin
-  inherited;
+Procedure TPendingInfo.Button1Click(Sender: TObject);
+Begin
+  Inherited;
   UpdateCount;
-  end;
+End;
 
-procedure TPendingInfo.Button2Click(Sender: TObject);
-var lOp: IPascalCoinOperation;
-begin
-  inherited;
+Procedure TPendingInfo.Button2Click(Sender: TObject);
+Var
+  lOp: IPascalCoinOperation;
+Begin
+  Inherited;
   Memo1.Lines.Clear;
-  lOp := ExplorerAPI.findoperation(OpHashList.Items[OphashList.ItemIndex]);
-  if lOp <> nil then
+  lOp := ExplorerAPI.findoperation(OpHashList.Items[OpHashList.ItemIndex]);
+  If lOp <> Nil Then
     TDevAppUtils.OperationInfo(lOp, Memo1.Lines)
-  else
+  Else
     ShowMessage('where''s the op?');
 
-end;
+End;
 
 { TPendingInfo }
 
-procedure TPendingInfo.InitialiseThis;
-begin
-  inherited;
+Procedure TPendingInfo.InitialiseThis;
+Begin
+  Inherited;
 
   OpHashList.Items.Add(live_1);
   OpHashList.Items.Add(live_2);
@@ -94,32 +109,33 @@ begin
 
   UpdateCount;
 
+End;
 
-end;
-
-procedure TPendingInfo.ListOps;
-var lOps: IPascalCoinOperations;
+Procedure TPendingInfo.ListOps;
+Var
+  lOps: IPascalCoinOperations;
   I: Integer;
-begin
+Begin
   lOps := ExplorerAPI.getpendings(0, 0);
-  for I := 0 to lOps.Count - 1 do
-  begin
+  For I := 0 To lOps.Count - 1 Do
+  Begin
     Memo1.Lines.Add('Pending Op ' + I.ToString);
     Memo1.Lines.Add(StringOfChar('=', 15));
     TDevAppUtils.OperationInfo(lOps[I], Memo1.Lines);
     Memo1.Lines.Add('');
-  end;
-end;
+  End;
+End;
 
-procedure TPendingInfo.UpdateCount;
-var lCount: Integer;
-begin
+Procedure TPendingInfo.UpdateCount;
+Var
+  lCount: Integer;
+Begin
   Memo1.Lines.Clear;
   FormCaption.Text := 'Pending Ops; Last Block: ' + ExplorerAPI.GetBlockCount.ToString;
   lCount := ExplorerAPI.GetPendingsCount;
   Label1.Text := 'Pending Count: ' + lCount.ToString;
-  if lCount > 0 then
-     ListOps;
-end;
+  If lCount > 0 Then
+    ListOps;
+End;
 
-end.
+End.

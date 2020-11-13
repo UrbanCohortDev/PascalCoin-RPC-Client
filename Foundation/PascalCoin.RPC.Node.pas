@@ -1,41 +1,43 @@
-unit PascalCoin.RPC.Node;
+Unit PascalCoin.RPC.Node;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses System.Generics.Collections,
-  PascalCoin.RPC.Interfaces, System.JSON;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
-type
+  PASC Donations welcome: Account (PASA) 1922-23
 
-  TPascalCoinNetProtocol = class(TInterfacedObject, IPascalCoinNetProtocol)
-  private
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.Generics.Collections,
+  PascalCoin.RPC.Interfaces,
+  System.JSON;
+
+Type
+
+  TPascalCoinNetProtocol = Class(TInterfacedObject, IPascalCoinNetProtocol)
+  Private
     FVer: Integer;
     FVer_A: Integer;
-  protected
-    function GetVer: Integer;
-    function GetVer_A: Integer;
-  public
-   class function FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetProtocol;
-  end;
+  Protected
+    Function GetVer: Integer;
+    Function GetVer_A: Integer;
+  Public
+    Class Function FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetProtocol;
+  End;
 
-  TPascalCoinNetStats = class(TInterfacedObject, IPascalNetStats)
-  private
+  TPascalCoinNetStats = Class(TInterfacedObject, IPascalNetStats)
+  Private
     FActive: Integer;
     FClients: Integer;
     FServers: Integer;
@@ -45,44 +47,43 @@ type
     FTServers: Integer;
     FBReceived: Integer;
     FBSend: Integer;
-  protected
-    function GetActive: Integer;
-    function GetClients: Integer;
-    function GetServers: Integer;
-    function GetServers_t: Integer;
-    function GetTotal: Integer;
-    function GetTClients: Integer;
-    function GetTServers: Integer;
-    function GetBReceived: Integer;
-    function GetBSend: Integer;
-  public
-    class function FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetStats;
-  end;
+  Protected
+    Function GetActive: Integer;
+    Function GetClients: Integer;
+    Function GetServers: Integer;
+    Function GetServers_t: Integer;
+    Function GetTotal: Integer;
+    Function GetTClients: Integer;
+    Function GetTServers: Integer;
+    Function GetBReceived: Integer;
+    Function GetBSend: Integer;
+  Public
+    Class Function FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetStats;
+  End;
 
-  TPascalCoinServer = class(TInterfacedObject, IPascalCoinServer)
-  private
+  TPascalCoinServer = Class(TInterfacedObject, IPascalCoinServer)
+  Private
     FIP: String;
     FPort: Integer;
     FLastCon: Integer;
     FAttempts: Integer;
-  protected
-    function GetIP: String;
-    procedure SetIP(const Value: String);
-    function GetPort: Integer;
-    procedure SetPort(const Value: Integer);
-    function GetLastCon: Integer;
-    procedure SetLastCon(const Value: Integer);
-    function GetAttempts: Integer;
-    procedure SetAttempts(const Value: Integer);
-    function GetLastConAsDateTime: TDateTime;
-    procedure SetLastConAsDateTime(const Value: TDateTime);
-  public
-  class function FromJsonObject(AJsonObject: TJSONObject): TPascalCoinServer;
-  end;
+  Protected
+    Function GetIP: String;
+    Procedure SetIP(Const Value: String);
+    Function GetPort: Integer;
+    Procedure SetPort(Const Value: Integer);
+    Function GetLastCon: Integer;
+    Procedure SetLastCon(Const Value: Integer);
+    Function GetAttempts: Integer;
+    Procedure SetAttempts(Const Value: Integer);
+    Function GetLastConAsDateTime: TDateTime;
+    Procedure SetLastConAsDateTime(Const Value: TDateTime);
+  Public
+    Class Function FromJsonObject(AJsonObject: TJSONObject): TPascalCoinServer;
+  End;
 
-
-  TPascalCoinNodeStatus = class(TInterfacedObject, IPascalCoinNodeStatus)
-  private
+  TPascalCoinNodeStatus = Class(TInterfacedObject, IPascalCoinNodeStatus)
+  Private
     FReady: Boolean;
     FReady_S: String;
     FStatus_S: String;
@@ -97,255 +98,256 @@ type
     FSBH: String;
     FPOW: String;
     FOpenSSL: String;
-  protected
-    function GetReady: Boolean;
-    function GetReady_S: String;
-    function GetStatus_S: String;
-    function GetPort: Integer;
-    function GetLocked: Boolean;
-    function GetTimeStamp: Integer;
-    function GetVersion: String;
-    function GetNetProtocol: IPascalCoinNetProtocol;
-    function GetBlocks: Integer;
-    function GetNetStats: IPascalNetStats;
-    Function GetnodeServer(const Index: Integer): IPascalCoinServer;
+  Protected
+    Function GetReady: Boolean;
+    Function GetReady_S: String;
+    Function GetStatus_S: String;
+    Function GetPort: Integer;
+    Function GetLocked: Boolean;
+    Function GetTimeStamp: Integer;
+    Function GetVersion: String;
+    Function GetNetProtocol: IPascalCoinNetProtocol;
+    Function GetBlocks: Integer;
+    Function GetNetStats: IPascalNetStats;
+    Function GetnodeServer(Const Index: Integer): IPascalCoinServer;
     Function NodeServerCount: Integer;
 
-    function GetSBH: String;
-    function GetPOW: String;
-    function GetOpenSSL: String;
+    Function GetSBH: String;
+    Function GetPOW: String;
+    Function GetOpenSSL: String;
 
-    function GetTimeStampAsDateTime: TDateTime;
-    function GetIsTestNet: Boolean;
+    Function GetTimeStampAsDateTime: TDateTime;
+    Function GetIsTestNet: Boolean;
 
-  public
-    class function FromJsonValue(AJSONValue: TJSONValue): TPascalCoinNodeStatus;
-  end;
+  Public
+    Class Function FromJsonValue(AJSONValue: TJSONValue): TPascalCoinNodeStatus;
+  End;
 
+Implementation
 
-implementation
-
-uses System.DateUtils, System.SysUtils, Rest.JSON;
+Uses
+  System.DateUtils,
+  System.SysUtils,
+  Rest.JSON;
 
 { TPascalCoinNodeStatus }
 
-class function TPascalCoinNodeStatus.FromJsonValue(AJSONValue: TJSONValue): TPascalCoinNodeStatus;
-begin
-  Result := TJSON.JsonToObject<TPascalCoinNodeStatus>(AJSONValue as TJSONObject);
-end;
+Class Function TPascalCoinNodeStatus.FromJsonValue(AJSONValue: TJSONValue): TPascalCoinNodeStatus;
+Begin
+  Result := TJSON.JsonToObject<TPascalCoinNodeStatus>(AJSONValue As TJSONObject);
+End;
 
-function TPascalCoinNodeStatus.GetBlocks: Integer;
-begin
-  result := FBlocks;
-end;
+Function TPascalCoinNodeStatus.GetBlocks: Integer;
+Begin
+  Result := FBlocks;
+End;
 
-function TPascalCoinNodeStatus.GetIsTestNet: Boolean;
-begin
-  Result := Fversion.Contains('TESTNET');
-end;
+Function TPascalCoinNodeStatus.GetIsTestNet: Boolean;
+Begin
+  Result := FVersion.Contains('TESTNET');
+End;
 
-function TPascalCoinNodeStatus.GetLocked: Boolean;
-begin
-  result := FLocked;
-end;
+Function TPascalCoinNodeStatus.GetLocked: Boolean;
+Begin
+  Result := FLocked;
+End;
 
-function TPascalCoinNodeStatus.GetNetProtocol: IPascalCoinNetProtocol;
-begin
-  if FNetProtocol = nil then
+Function TPascalCoinNodeStatus.GetNetProtocol: IPascalCoinNetProtocol;
+Begin
+  If FNetProtocol = Nil Then
     FNetProtocol := TPascalCoinNetProtocol.Create;
-  result := FNetProtocol;
-end;
+  Result := FNetProtocol;
+End;
 
-function TPascalCoinNodeStatus.GetNetStats: IPascalNetStats;
-begin
-  result := FNetStats;
-end;
+Function TPascalCoinNodeStatus.GetNetStats: IPascalNetStats;
+Begin
+  Result := FNetStats;
+End;
 
-function TPascalCoinNodeStatus.GetnodeServer(const Index: Integer): IPascalCoinServer;
-begin
-  Result := FNodeServers[Index] as IPascalCoinServer;
-end;
+Function TPascalCoinNodeStatus.GetnodeServer(Const Index: Integer): IPascalCoinServer;
+Begin
+  Result := FNodeServers[Index] As IPascalCoinServer;
+End;
 
-function TPascalCoinNodeStatus.GetOpenSSL: String;
-begin
-  result := FOpenSSL;
-end;
+Function TPascalCoinNodeStatus.GetOpenSSL: String;
+Begin
+  Result := FOpenSSL;
+End;
 
-function TPascalCoinNodeStatus.GetPort: Integer;
-begin
-  result := FPort;
-end;
+Function TPascalCoinNodeStatus.GetPort: Integer;
+Begin
+  Result := FPort;
+End;
 
-function TPascalCoinNodeStatus.GetPOW: String;
-begin
-  result := FPOW;
-end;
+Function TPascalCoinNodeStatus.GetPOW: String;
+Begin
+  Result := FPOW;
+End;
 
-function TPascalCoinNodeStatus.GetReady: Boolean;
-begin
-  result := FReady;
-end;
+Function TPascalCoinNodeStatus.GetReady: Boolean;
+Begin
+  Result := FReady;
+End;
 
-function TPascalCoinNodeStatus.GetReady_S: String;
-begin
-  result := FReady_S;
-end;
+Function TPascalCoinNodeStatus.GetReady_S: String;
+Begin
+  Result := FReady_S;
+End;
 
-function TPascalCoinNodeStatus.GetSBH: String;
-begin
-  result := FSBH;
-end;
+Function TPascalCoinNodeStatus.GetSBH: String;
+Begin
+  Result := FSBH;
+End;
 
-function TPascalCoinNodeStatus.GetStatus_S: String;
-begin
-  result := FStatus_S;
-end;
+Function TPascalCoinNodeStatus.GetStatus_S: String;
+Begin
+  Result := FStatus_S;
+End;
 
-function TPascalCoinNodeStatus.GetTimeStamp: Integer;
-begin
-  result := FTimeStamp;
-end;
+Function TPascalCoinNodeStatus.GetTimeStamp: Integer;
+Begin
+  Result := FTimeStamp;
+End;
 
-function TPascalCoinNodeStatus.GetTimeStampAsDateTime: TDateTime;
-begin
-  result := UnixToDateTime(FTimeStamp);
-end;
+Function TPascalCoinNodeStatus.GetTimeStampAsDateTime: TDateTime;
+Begin
+  Result := UnixToDateTime(FTimeStamp);
+End;
 
-function TPascalCoinNodeStatus.GetVersion: String;
-begin
-  result := FVersion;
-end;
+Function TPascalCoinNodeStatus.GetVersion: String;
+Begin
+  Result := FVersion;
+End;
 
-function TPascalCoinNodeStatus.NodeServerCount: Integer;
-begin
+Function TPascalCoinNodeStatus.NodeServerCount: Integer;
+Begin
   Result := Length(FNodeServers);
-end;
+End;
 
 { TNetProtocol }
 
-class function TPascalCoinNetProtocol.FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetProtocol;
-begin
+Class Function TPascalCoinNetProtocol.FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetProtocol;
+Begin
   Result := TJSON.JsonToObject<TPascalCoinNetProtocol>(AJsonObject);
-end;
+End;
 
-function TPascalCoinNetProtocol.GetVer: Integer;
-begin
-  result := FVer;
-end;
+Function TPascalCoinNetProtocol.GetVer: Integer;
+Begin
+  Result := FVer;
+End;
 
-function TPascalCoinNetProtocol.GetVer_A: Integer;
-begin
-  result := FVer_A;
-end;
+Function TPascalCoinNetProtocol.GetVer_A: Integer;
+Begin
+  Result := FVer_A;
+End;
 
 { TPascalCoinServer }
 
-class function TPascalCoinServer.FromJsonObject(AJsonObject: TJSONObject): TPascalCoinServer;
-begin
-  result := TJson.JsonToObject<TPascalCoinServer>(AJsonObject)
-end;
+Class Function TPascalCoinServer.FromJsonObject(AJsonObject: TJSONObject): TPascalCoinServer;
+Begin
+  Result := TJSON.JsonToObject<TPascalCoinServer>(AJsonObject)
+End;
 
-function TPascalCoinServer.GetAttempts: Integer;
-begin
-  result := FAttempts;
-end;
+Function TPascalCoinServer.GetAttempts: Integer;
+Begin
+  Result := FAttempts;
+End;
 
-function TPascalCoinServer.GetIP: String;
-begin
-  result := FIP;
-end;
+Function TPascalCoinServer.GetIP: String;
+Begin
+  Result := FIP;
+End;
 
-function TPascalCoinServer.GetLastCon: Integer;
-begin
-  result := FLastCon;
-end;
+Function TPascalCoinServer.GetLastCon: Integer;
+Begin
+  Result := FLastCon;
+End;
 
-function TPascalCoinServer.GetLastConAsDateTime: TDateTime;
-begin
-  result := UnixToDateTime(FLastCon);
-end;
+Function TPascalCoinServer.GetLastConAsDateTime: TDateTime;
+Begin
+  Result := UnixToDateTime(FLastCon);
+End;
 
-function TPascalCoinServer.GetPort: Integer;
-begin
-  result := FPort;
-end;
+Function TPascalCoinServer.GetPort: Integer;
+Begin
+  Result := FPort;
+End;
 
-procedure TPascalCoinServer.SetAttempts(const Value: Integer);
-begin
+Procedure TPascalCoinServer.SetAttempts(Const Value: Integer);
+Begin
   FAttempts := Value;
-end;
+End;
 
-procedure TPascalCoinServer.SetIP(const Value: String);
-begin
+Procedure TPascalCoinServer.SetIP(Const Value: String);
+Begin
   FIP := Value;
-end;
+End;
 
-procedure TPascalCoinServer.SetLastCon(const Value: Integer);
-begin
+Procedure TPascalCoinServer.SetLastCon(Const Value: Integer);
+Begin
   FLastCon := Value;
-end;
+End;
 
-procedure TPascalCoinServer.SetLastConAsDateTime(const Value: TDateTime);
-begin
+Procedure TPascalCoinServer.SetLastConAsDateTime(Const Value: TDateTime);
+Begin
   FLastCon := DateTimeToUnix(Value);
-end;
+End;
 
-procedure TPascalCoinServer.SetPort(const Value: Integer);
-begin
+Procedure TPascalCoinServer.SetPort(Const Value: Integer);
+Begin
   FPort := Value;
-end;
+End;
 
 { TPascalCoinNetStats }
 
-class function TPascalCoinNetStats.FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetStats;
-begin
- result := TJson.JsonToObject<TPascalCoinNetStats>(AJsonObject);
-end;
+Class Function TPascalCoinNetStats.FromJsonObject(AJsonObject: TJSONObject): TPascalCoinNetStats;
+Begin
+  Result := TJSON.JsonToObject<TPascalCoinNetStats>(AJsonObject);
+End;
 
-function TPascalCoinNetStats.GetActive: Integer;
-begin
-  result := FActive;
-end;
+Function TPascalCoinNetStats.GetActive: Integer;
+Begin
+  Result := FActive;
+End;
 
-function TPascalCoinNetStats.GetBReceived: Integer;
-begin
-  result := FBReceived;
-end;
+Function TPascalCoinNetStats.GetBReceived: Integer;
+Begin
+  Result := FBReceived;
+End;
 
-function TPascalCoinNetStats.GetBSend: Integer;
-begin
-  result := FBSend;
-end;
+Function TPascalCoinNetStats.GetBSend: Integer;
+Begin
+  Result := FBSend;
+End;
 
-function TPascalCoinNetStats.GetClients: Integer;
-begin
-  result := FClients;
-end;
+Function TPascalCoinNetStats.GetClients: Integer;
+Begin
+  Result := FClients;
+End;
 
-function TPascalCoinNetStats.GetServers: Integer;
-begin
-  result := FServers;
-end;
+Function TPascalCoinNetStats.GetServers: Integer;
+Begin
+  Result := FServers;
+End;
 
-function TPascalCoinNetStats.GetServers_t: Integer;
-begin
-  result := FServers_t;
-end;
+Function TPascalCoinNetStats.GetServers_t: Integer;
+Begin
+  Result := FServers_t;
+End;
 
-function TPascalCoinNetStats.GetTClients: Integer;
-begin
-  result := FTClients;
-end;
+Function TPascalCoinNetStats.GetTClients: Integer;
+Begin
+  Result := FTClients;
+End;
 
-function TPascalCoinNetStats.GetTotal: Integer;
-begin
-  result := FTotal;
-end;
+Function TPascalCoinNetStats.GetTotal: Integer;
+Begin
+  Result := FTotal;
+End;
 
-function TPascalCoinNetStats.GetTServers: Integer;
-begin
-  result := FTServers;
-end;
+Function TPascalCoinNetStats.GetTServers: Integer;
+Begin
+  Result := FTServers;
+End;
 
-
-end.
+End.

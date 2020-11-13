@@ -1,22 +1,22 @@
-unit PascalCoin.RPC.API.Wallet;
+Unit PascalCoin.RPC.API.Wallet;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
 
 Uses
   System.JSON,
@@ -24,33 +24,34 @@ Uses
   PascalCoin.RPC.Interfaces,
   PascalCoin.RPC.API.Base,
   PascalCoin.RPC.API.Explorer,
-  pascalCoin.RPC.Account;
+  PascalCoin.RPC.Account;
 
 Type
 
   TPascalCoinWalletAPI = Class(TPascalCoinExplorerAPI, IPascalCoinWalletAPI)
-  private
-  protected
+  Private
+  Protected
     Function getwalletaccounts(Const APublicKey: String; Const AKeyStyle: TKeyStyle; Const AStartIndex: Integer = 0;
       Const AMaxCount: Integer = 100): IPascalCoinAccounts;
-
 
     Function getwalletaccountscount(Const APublicKey: String; Const AKeyStyle: TKeyStyle): Integer;
 
     Procedure AddWalletAccounts(Const APublicKey: String; Const AKeyStyle: TKeyStyle; AAccountList: IPascalCoinAccounts;
-      Const AStartIndex: integer; Const AMaxCount: integer = 100);
+      Const AStartIndex: Integer; Const AMaxCount: Integer = 100);
 
   Public
-  Constructor Create(AClient: IPascalCoinRPCClient);
+    Constructor Create(AClient: IPascalCoinRPCClient);
   End;
-implementation
 
-uses Rest.JSON;
+Implementation
+
+Uses
+  Rest.JSON;
 
 { TPascalCoinExplorerAPI }
 
-procedure TPascalCoinWalletAPI.AddWalletAccounts(const APublicKey: String; const AKeyStyle: TKeyStyle;
-  AAccountList: IPascalCoinAccounts; const AStartIndex, AMaxCount: integer);
+Procedure TPascalCoinWalletAPI.AddWalletAccounts(Const APublicKey: String; Const AKeyStyle: TKeyStyle;
+  AAccountList: IPascalCoinAccounts; Const AStartIndex, AMaxCount: Integer);
 Var
   lAccounts: TJSONArray;
   lAccount: TJSONValue;
@@ -62,15 +63,15 @@ Begin
     For lAccount In lAccounts Do
       AAccountList.AddAccount(TJSON.JsonToObject<TPascalCoinAccount>((lAccount As TJSONObject)));
   End;
-end;
+End;
 
-constructor TPascalCoinWalletAPI.Create(AClient: IPascalCoinRPCClient);
-begin
-  inherited Create(AClient);
-end;
+Constructor TPascalCoinWalletAPI.Create(AClient: IPascalCoinRPCClient);
+Begin
+  Inherited Create(AClient);
+End;
 
-function TPascalCoinWalletAPI.getwalletaccounts(const APublicKey: String; const AKeyStyle: TKeyStyle;
-  const AStartIndex, AMaxCount: Integer): IPascalCoinAccounts;
+Function TPascalCoinWalletAPI.getwalletaccounts(Const APublicKey: String; Const AKeyStyle: TKeyStyle;
+  Const AStartIndex, AMaxCount: Integer): IPascalCoinAccounts;
 Var
   lAccounts: TJSONArray;
   lAccount: TJSONValue;
@@ -83,13 +84,13 @@ Begin
     For lAccount In lAccounts Do
       result.AddAccount(TJSON.JsonToObject<TPascalCoinAccount>((lAccount As TJSONObject)));
   End;
-end;
+End;
 
-function TPascalCoinWalletAPI.getwalletaccountscount(const APublicKey: String; const AKeyStyle: TKeyStyle): Integer;
-begin
-  Result := -1;
+Function TPascalCoinWalletAPI.getwalletaccountscount(Const APublicKey: String; Const AKeyStyle: TKeyStyle): Integer;
+Begin
+  result := -1;
   If FClient.RPCCall('getwalletaccountscount', PublicKeyParam(APublicKey, AKeyStyle)) Then
     result := GetJSONResult.AsType<Integer>;
-end;
+End;
 
-end.
+End.

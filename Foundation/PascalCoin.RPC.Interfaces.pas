@@ -1,20 +1,20 @@
 Unit PascalCoin.RPC.Interfaces;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -57,7 +57,7 @@ Type
 
   TKeyStyle = (ksUnkown, ksEncKey, ksB58Key);
 
-  TAccountData = String; //Array [0 .. 31] Of Byte;
+  TAccountData = String; // Array [0 .. 31] Of Byte;
 
   IPascalCoinAccount = Interface
     ['{10B1816D-A796-46E6-94DA-A4C6C2125F82}']
@@ -553,12 +553,12 @@ Type
     /// apply when optype=1)
     /// </summary>
     Property amount: Currency Read GetAmount;
-    Property amount_s: String read GetAmount_s;
+    Property amount_s: String Read GetAmount_s;
     /// <summary>
     /// Fee of this operation
     /// </summary>
     Property fee: Currency Read GetFee;
-    Property fee_s: String read GetFee_s;
+    Property fee_s: String Read GetFee_s;
     /// <summary>
     /// Balance of account after this block is introduced in the Blockchain.
     /// Note: balance is a calculation based on current safebox account balance
@@ -638,6 +638,14 @@ Type
     Property Operation[Const Index: integer]: IPascalCoinOperation Read GetOperation; Default;
   End;
 
+  IPascalCoinConnection = Interface
+    ['{C925AB61-8000-4165-99E0-13E6BA74F9A7}']
+  End;
+
+  IPascalCoinConnections = Interface
+    ['{FFC86F9F-48C3-4A6E-9E8D-D20886D72F2A}']
+  End;
+
   IPascalCoinBaseAPI = Interface
     ['{2EB22047-B7CE-4B6E-8B78-EFB4E8F349F4}']
     Function GetNodeURI: String;
@@ -659,6 +667,16 @@ Type
     ['{C650A953-E3D7-4ED7-B942-7A6B0B6FC1ED}']
     Function NodeStatus: IPascalCoinNodeStatus;
 
+    /// <param name="nodes">
+    /// String containing 1 or multiple IP:port separated by ";" <br />
+    /// </param>
+    Function addnode(Const nodes: String): integer;
+    Function getconnections: IPascalCoinConnections;
+    Function stopnode: boolean;
+    Function startnode: boolean;
+    Function cleanblacklist: boolean;
+    Function node_ip_stats: IPascalNetStats;
+
   End;
 
   IPascalCoinExplorerAPI = Interface(IPascalCoinBaseAPI)
@@ -668,60 +686,61 @@ Type
     Function GetBlock(Const BlockNumber: integer): IPascalCoinBlock;
 
     /// <summary>
-    ///   Returns a JSON Array with blocks information from "start" to "end"
-    ///   (or "last" n blocks) Blocks are returned in DESCENDING order See
-    ///   getblock <br />Note: Must use param <b>last</b> alone, or <b>start</b>
-    ///    and end <br />
-    ///  Function GetBlocks(const Alast, Astart, Aend: Integer): IPascalCoinBlocks; <br />
-    ///  Simplifying Methods Implemented
+    /// Returns a JSON Array with blocks information from "start" to "end"
+    /// (or "last" n blocks) Blocks are returned in DESCENDING order See
+    /// getblock <br />Note: Must use param <b>last</b> alone, or <b>start</b>
+    /// and end <br />
+    /// Function GetBlocks(const Alast, Astart, Aend: Integer): IPascalCoinBlocks; <br />
+    /// Simplifying Methods Implemented
     /// </summary>
     /// <param name="Alast">
-    ///   Last n blocks inthe blockchain (n&gt;0 and n&lt;=1000) <br />
+    /// Last n blocks inthe blockchain (n&gt;0 and n&lt;=1000) <br />
     /// </param>
 
-    Function GetLastBlocks(const ACount: Integer): IPascalCoinBlocks;
-    Function GetBlockRange(const AStart, AEnd: Integer): IPascalCoinBlocks;
+    Function GetLastBlocks(Const ACount: integer): IPascalCoinBlocks;
+    Function GetBlockRange(Const AStart, AEnd: integer): IPascalCoinBlocks;
 
     /// <summary>
-    ///   Params <br />block : Integer - Block number <br />opblock : Integer -
-    ///   Operation <br />
+    /// Params <br />block : Integer - Block number <br />opblock : Integer -
+    /// Operation <br />
     /// </summary>
     /// <param name="block">
-    ///   Block Number
+    /// Block Number
     /// </param>
     /// <param name="opblock">
-    ///   Operation Index (0..operations-1) of this block
+    /// Operation Index (0..operations-1) of this block
     /// </param>
-    Function getblockoperation(const Ablock, Aopblock: Integer): IPascalCoinOperation;
+    Function getblockoperation(Const Ablock, Aopblock: integer): IPascalCoinOperation;
 
     /// <param name="ABlock">
-    ///   Block Number
+    /// Block Number
     /// </param>
     /// <param name="AStart">
-    ///   Start with operation index (default 0)
+    /// Start with operation index (default 0)
     /// </param>
     /// <param name="Amax">
-    ///   Maximum number of operations to retrieve
+    /// Maximum number of operations to retrieve
     /// </param>
-    Function getblockoperations(Const ABlock: Integer; const AStart: Integer = 0; const Amax: Integer = 100): IPascalCoinOperations;
+    Function getblockoperations(Const Ablock: integer; Const AStart: integer = 0; Const Amax: integer = 100)
+      : IPascalCoinOperations;
 
     /// <summary>
-    ///   Returns node pending buffer count ( New on Build 3.0 )
+    /// Returns node pending buffer count ( New on Build 3.0 )
     /// </summary>
-    Function getpendingscount: Integer;
+    Function getpendingscount: integer;
 
     /// <summary>
-    ///   Get pending operations to be included in the blockchain
+    /// Get pending operations to be included in the blockchain
     /// </summary>
     /// <param name="AStart">
-    ///   Start at index
+    /// Start at index
     /// </param>
     /// <param name="AMax">
-    ///   Number to return. Setting this as 0 returns all pending transactions
+    /// Number to return. Setting this as 0 returns all pending transactions
     /// </param>
-    Function getpendings(const AStart: Integer = 0; Const AMax: Integer = 100): IPascalCoinOperations;
+    Function getpendings(Const AStart: integer = 0; Const Amax: integer = 100): IPascalCoinOperations;
 
-    Function findoperation(const AOpHash: HexaStr): IPascalCoinOperation;
+    Function findoperation(Const AOpHash: HexaStr): IPascalCoinOperation;
 
     Function GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount;
 
@@ -745,15 +764,14 @@ Type
     /// provided, max=100 by default
     /// </param>
     Function getaccountoperations(Const AAccount: Cardinal; Const ADepth: integer = 100; Const AStart: integer = 0;
-      Const AMax: integer = 100): IPascalCoinOperations;
+      Const Amax: integer = 100): IPascalCoinOperations;
 
   End;
 
-
   /// <summary>
-  ///   This has been created as an extended explorer to contain explorer
-  ///   methods which require the node to have the AllowUsePrivateKeys set to
-  ///   true and access to the wallet
+  /// This has been created as an extended explorer to contain explorer
+  /// methods which require the node to have the AllowUsePrivateKeys set to
+  /// true and access to the wallet
   /// </summary>
   IPascalCoinWalletAPI = Interface(IPascalCoinExplorerAPI)
     ['{1FE4E934-1B75-4614-8EAA-5F71CA27C237}']
@@ -766,10 +784,27 @@ Type
     Function getwalletaccountscount(Const APublicKey: String; Const AKeyStyle: TKeyStyle): integer;
 
 
-    // function getwalletcoins(const APublicKey: String): Currency;
+    // Function getwalletcoins(const APublicKey: String): Currency;
+    // Function getwalletpubkeys - PK
+    // Function getwalletpubkey - PK
+    // Function importpubkey
+
+    // Function sendto - PK
+    // Function signsendto - PK
+    // Function changekey - PK
+    // Function changekeys - PK
+    // Function signchangekey - PK
+    // Function listaccountforsale - PK
+    // Function signlistaccountforsale - PK
+    // Function delistaccountforsale - PK
+    // Function signdelistaccountforsale - PK
+    // Function buyaccount - PK
+    // Function signbuyaccount - PK
+    // Function changeaccountinfo - PK
+    // Function signchangeaccountinfo - PK
+    // Function signmessage - PK
 
   End;
-
 
   IPascalCoinOperationsAPI = Interface(IPascalCoinBaseAPI)
     ['{111BF45E-B203-4E9E-A639-5D837EDFCC3F}']
@@ -793,6 +828,8 @@ Type
       Const AKeyStyle: TKeyStyle): String;
 
     Function executeoperation(Const RawOperation: String): IPascalCoinOperation;
+
+    // Function verifysign
 
   End;
 

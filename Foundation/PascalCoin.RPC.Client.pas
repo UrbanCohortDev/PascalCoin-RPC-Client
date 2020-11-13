@@ -1,20 +1,20 @@
 Unit PascalCoin.RPC.Client;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -51,7 +51,8 @@ Implementation
 Uses
   System.SysUtils,
   System.IOUtils,
-  PascalCoin.RPC.Exceptions, PascalCoin.RPC.Consts;
+  PascalCoin.RPC.Exceptions,
+  PascalCoin.RPC.Consts;
 
 { TPascalCoinRPCClient }
 
@@ -111,7 +112,7 @@ Begin
     Begin
       lObj.Free;
       If FHTTPClient.StatusText.Contains('not allowed') Then
-        Raise ENotAllowedException.Create(RPC_ERRNUM_NOTALLOWEDCALL, FHTTPClient.ResponseStr) //FHTTPClient.StatusText)
+        Raise ENotAllowedException.Create(RPC_ERRNUM_NOTALLOWEDCALL, FHTTPClient.ResponseStr) // FHTTPClient.StatusText)
       Else
         Raise EHTTPException.Create(FHTTPClient.StatusCode, FHTTPClient.StatusText);
     End

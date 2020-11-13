@@ -1,133 +1,137 @@
-unit UC.HTTPClient.Delphi;
+Unit UC.HTTPClient.Delphi;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses System.Classes, System.Net.HTTPClient, UC.Net.Interfaces;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
-type
+  PASC Donations welcome: Account (PASA) 1922-23
 
-  TDelphiHTTP = class(TInterfacedObject, IucHTTPRequest)
-  private
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.Classes,
+  System.Net.HTTPClient,
+  UC.Net.Interfaces;
+
+Type
+
+  TDelphiHTTP = Class(TInterfacedObject, IucHTTPRequest)
+  Private
     FHTTP: THTTPClient;
     FResponse: IHTTPResponse;
     FStatusCode: Integer;
-    FStatusText: string;
+    FStatusText: String;
     FStatusType: THTTPStatusType;
-  protected
-    function GetResponseStr: string;
-    function GetStatusCode: Integer;
-    function GetStatusText: string;
-    function GetStatusType: THTTPStatusType;
+  Protected
+    Function GetResponseStr: String;
+    Function GetStatusCode: Integer;
+    Function GetStatusText: String;
+    Function GetStatusType: THTTPStatusType;
 
-    procedure Clear;
-    function Post(AURL: string; AData: string): boolean;
-    function Get(AURL: String): String;
-  public
-    constructor Create;
-    destructor Destroy; override;
-  end;
+    Procedure Clear;
+    Function Post(AURL: String; AData: String): boolean;
+    Function Get(AURL: String): String;
+  Public
+    Constructor Create;
+    Destructor Destroy; Override;
+  End;
 
-implementation
+Implementation
 
-uses System.SysUtils;
+Uses
+  System.SysUtils;
 
 { TDelphiHTTP }
 
-procedure TDelphiHTTP.Clear;
-begin
-  FResponse := nil;
+Procedure TDelphiHTTP.Clear;
+Begin
+  FResponse := Nil;
   FStatusCode := -1;
   FStatusText := '';
-end;
+End;
 
-constructor TDelphiHTTP.Create;
-begin
-  inherited Create;
+Constructor TDelphiHTTP.Create;
+Begin
+  Inherited Create;
   FHTTP := THTTPClient.Create;
-end;
+End;
 
-destructor TDelphiHTTP.Destroy;
-begin
+Destructor TDelphiHTTP.Destroy;
+Begin
   FHTTP.Free;
-  inherited;
-end;
+  Inherited;
+End;
 
-function TDelphiHTTP.Get(AURL: String): String;
-begin
+Function TDelphiHTTP.Get(AURL: String): String;
+Begin
   FResponse := FHTTP.Get(AURL);
   result := FResponse.ContentAsString;
-end;
+End;
 
-function TDelphiHTTP.GetResponseStr: string;
-begin
+Function TDelphiHTTP.GetResponseStr: String;
+Begin
   result := FResponse.ContentAsString;
-end;
+End;
 
-function TDelphiHTTP.GetStatusCode: Integer;
-begin
+Function TDelphiHTTP.GetStatusCode: Integer;
+Begin
   result := FStatusCode;
-end;
+End;
 
-function TDelphiHTTP.GetStatusText: string;
-begin
+Function TDelphiHTTP.GetStatusText: String;
+Begin
   result := FStatusText;
-end;
+End;
 
-function TDelphiHTTP.GetStatusType: THTTPStatusType;
-begin
+Function TDelphiHTTP.GetStatusType: THTTPStatusType;
+Begin
   result := FStatusType;
-end;
+End;
 
-function TDelphiHTTP.Post(AURL, AData: string): boolean;
-var
+Function TDelphiHTTP.Post(AURL, AData: String): boolean;
+Var
   lStream: TStringStream;
-begin
+Begin
   FStatusText := '';
   lStream := TStringStream.Create(AData);
-  try
+  Try
     lStream.Position := 0;
-    try
+    Try
       FResponse := FHTTP.Post(AURL, lStream);
       FStatusCode := FResponse.StatusCode;
 
       result := (FResponse.StatusCode >= 200) AND (FResponse.StatusCode <= 299);
-      if result then
+      If result Then
         FStatusType := THTTPStatusType.OK
-      else
-      begin
+      Else
+      Begin
         FStatusType := THTTPStatusType.Fail;
-        try
+        Try
           FStatusText := FResponse.StatusText;
-        except
-        end;
-      end;
-    except
-      on E: Exception do
-      begin
+        Except
+        End;
+      End;
+    Except
+      On E: Exception Do
+      Begin
         FStatusType := THTTPStatusType.Exception;
         FStatusText := E.ClassName + ':' + E.Message;
         result := False;
-      end;
-    end;
-  finally
+      End;
+    End;
+  Finally
     lStream.Free;
-  end;
-end;
+  End;
+End;
 
-end.
+End.

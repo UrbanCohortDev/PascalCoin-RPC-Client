@@ -1,54 +1,58 @@
-unit DevApp.Utils;
+Unit DevApp.Utils;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses PascalCoin.RPC.Interfaces, System.Classes, System.SysUtils;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  PascalCoin.RPC.Interfaces,
+  System.Classes,
+  System.SysUtils;
 
 Type
 
-TDevAppUtils = Class
-public
-  class procedure AccountInfo(AAccount: IPascalCoinAccount; Strings: TStrings;
-      const ExcludePubKey: Boolean = True); static;
-  class procedure BlockInfo(ABlock: IPascalCoinBlock; Strings: TStrings); static;
-  class procedure OperationInfo(AOp: IPascalCoinOperation; Strings: TStrings);
-      static;
+  TDevAppUtils = Class
+  Public
+    Class Procedure AccountInfo(AAccount: IPascalCoinAccount; Strings: TStrings;
+      Const ExcludePubKey: Boolean = True); Static;
+    Class Procedure BlockInfo(ABlock: IPascalCoinBlock; Strings: TStrings); Static;
+    Class Procedure OperationInfo(AOp: IPascalCoinOperation; Strings: TStrings); Static;
 
+    Class Function FormatAsTimeToGo(Const ADate: TDateTime): String; Static;
+  End;
 
-  class function FormatAsTimeToGo(const ADate: TDateTime): string; static;
-End;
+Implementation
 
-implementation
+Uses
+  System.DateUtils,
+  System.Rtti;
 
-uses System.DateUtils, System.Rtti;
+Const
+  bool_array: Array [Boolean] Of String = ('False', 'True');
 
-const
-bool_array: Array[Boolean] of String = ('False', 'True');
+  { TDevAppUtils }
 
-{ TDevAppUtils }
-
-class procedure TDevAppUtils.AccountInfo(AAccount: IPascalCoinAccount; Strings: TStrings; const ExcludePubKey: Boolean = True);
-begin
+Class Procedure TDevAppUtils.AccountInfo(AAccount: IPascalCoinAccount; Strings: TStrings;
+  Const ExcludePubKey: Boolean = True);
+Begin
   Strings.Add('Account: ' + AAccount.account.ToString);
   Strings.Add('Name: ' + AAccount.Name);
-  if Not ExcludePubkey then
-     Strings.Add('enc_pubkey: ' + AAccount.enc_pubkey);
+  If Not ExcludePubKey Then
+    Strings.Add('enc_pubkey: ' + AAccount.enc_pubkey);
   Strings.Add('balance: ' + FormatFloat('#,000.0000', AAccount.balance));
   Strings.Add('balance_s: ' + AAccount.balance_s);
   Strings.Add('n_operation: ' + AAccount.n_operation.ToString);
@@ -63,11 +67,11 @@ begin
   Strings.Add('new_enc_pubkey: ' + AAccount.new_enc_pubkey);
   Strings.Add('account_type: ' + AAccount.account_type.ToString);
   Strings.Add('Seal: ' + AAccount.Seal);
-  Strings.Add('Data: ' + AAccount.Data); //TEncoding.Unicode.GetString(AAccount.Data));
-end;
+  Strings.Add('Data: ' + AAccount.Data); // TEncoding.Unicode.GetString(AAccount.Data));
+End;
 
-class procedure TDevAppUtils.BlockInfo(ABlock: IPascalCoinBlock; Strings: TStrings);
-begin
+Class Procedure TDevAppUtils.BlockInfo(ABlock: IPascalCoinBlock; Strings: TStrings);
+Begin
   Strings.AddPair('Block', ABlock.block.ToString);
   Strings.AddPair('enc_pubkey', ABlock.enc_pubkey);
   Strings.AddPair('reward', CurrToStr(ABlock.reward));
@@ -76,8 +80,8 @@ begin
   Strings.AddPair('fee_s', ABlock.fee_s);
   Strings.AddPair('ver', ABlock.ver.ToString);
   Strings.AddPair('ver_a', ABlock.ver_a.ToString);
-  Strings.AddPair('timestamp', ABlock.timestamp.ToString + ' (' +
-      FormatDateTime('dd/mm/yyyy hh:nn:ss:zz', ABlock.TimeStampAsDateTime) + ')');
+  Strings.AddPair('timestamp', ABlock.timestamp.ToString + ' (' + FormatDateTime('dd/mm/yyyy hh:nn:ss:zz',
+    ABlock.TimeStampAsDateTime) + ')');
   Strings.AddPair('target', ABlock.target.ToString);
   Strings.AddPair('nonce', ABlock.nonce.ToString);
   Strings.AddPair('payload', ABlock.payload);
@@ -87,142 +91,143 @@ begin
   Strings.AddPair('operations', ABlock.operations.ToString);
   Strings.AddPair('maturation', ABlock.maturation.ToString);
   Strings.AddPair('hashratekhs', ABlock.hashratekhs.ToString);
-end;
+End;
 
-class function TDevAppUtils.FormatAsTimeToGo(const ADate: TDateTime): string;
-var y,m,d,h,n,s,z: word;
-    r: string;
-begin
+Class Function TDevAppUtils.FormatAsTimeToGo(Const ADate: TDateTime): String;
+Var
+  y, m, d, h, n, s, z: word;
+  r: String;
+Begin
   r := '';
-    y := 0;
-    m := 0;
-    d := 0;
-    h := 0;
-    n := 0;
-    s := 0;
-    z := 0;
+  y := 0;
+  m := 0;
+  d := 0;
+  h := 0;
+  n := 0;
+  s := 0;
+  z := 0;
 
-    if ADate >= 1 then
-       DecodeDateTime(ADate + 1,y,m,d,h,n,s,z)
-    else
-       DecodeTime(ADate, h,n,s,z);
+  If ADate >= 1 Then
+    DecodeDateTime(ADate + 1, y, m, d, h, n, s, z)
+  Else
+    DecodeTime(ADate, h, n, s, z);
 
-       y := y - 1900;
-    if y > 0 then
-       r := y.ToString + ' years ';
+  y := y - 1900;
+  If y > 0 Then
+    r := y.ToString + ' years ';
 
-    if m > 0 then
-    begin
-       r := r + m.ToString + 'mths ';
-       if y > 0 then
-          Exit(r.Trim);
-    end;
+  If m > 0 Then
+  Begin
+    r := r + m.ToString + 'mths ';
+    If y > 0 Then
+      Exit(r.Trim);
+  End;
 
-    if d > 0 then
-    begin
-      r := r + d.ToString+ ' days ';
-      if m > 0 then
-         Exit(r.Trim);
-    end;
+  If d > 0 Then
+  Begin
+    r := r + d.ToString + ' days ';
+    If m > 0 Then
+      Exit(r.Trim);
+  End;
 
-    if h > 0 then
-    begin
-       r := r + h.ToString + ' hours ';
-       if d > 0 then
-          exit(r.Trim);
-    end;
+  If h > 0 Then
+  Begin
+    r := r + h.ToString + ' hours ';
+    If d > 0 Then
+      Exit(r.Trim);
+  End;
 
-    if n > 0 then
-    begin
-      r := r + n.ToString + ' mins ';
-      if h > 0 then
-         exit(r.Trim);
-    end;
+  If n > 0 Then
+  Begin
+    r := r + n.ToString + ' mins ';
+    If h > 0 Then
+      Exit(r.Trim);
+  End;
 
-    result := '!!!!!!!!';
+  result := '!!!!!!!!';
 
-end;
+End;
 
+Class Procedure TDevAppUtils.OperationInfo(AOp: IPascalCoinOperation; Strings: TStrings);
+Var
+  I: Integer;
+Begin
+  Strings.AddPair('valid', bool_array[AOp.Valid]);
+  Strings.AddPair('errors', AOp.Errors);
+  Strings.AddPair('block', AOp.block.ToString);
+  Strings.AddPair('time', AOp.Time.ToString);
+  Strings.AddPair('opblock', AOp.Opblock.ToString);
+  Strings.AddPair('maturation', AOp.maturation.ToString);
+  Strings.AddPair('optype', AOp.Optype.ToString);
+  Strings.AddPair('OperationType', TRttiEnumerationType.GetName<TOperationType>(AOp.OperationType));
+  Strings.AddPair('optxt', AOp.Optxt);
+  Strings.AddPair('account', AOp.account.ToString);
+  Strings.AddPair('amount', CurrToStr(AOp.Amount));
+  Strings.AddPair('fee', CurrToStr(AOp.fee));
+  Strings.AddPair('balance', CurrToStr(AOp.balance));
+  Strings.AddPair('sender_account', AOp.Sender_account.ToString);
+  Strings.AddPair('dest_account', AOp.Dest_account.ToString);
+  Strings.AddPair('enc_pubkey', AOp.enc_pubkey);
+  Strings.AddPair('ophash', AOp.Ophash);
+  Strings.AddPair('old_ophash', AOp.Old_ophash);
+  Strings.AddPair('subtype', AOp.Subtype);
+  Strings.AddPair('signer_account', AOp.Signer_account.ToString);
+  Strings.AddPair('n_operation', AOp.n_operation.ToString);
+  Strings.AddPair('payload', AOp.payload);
+  Strings.AddPair('enc_pubkey', AOp.enc_pubkey);
 
-class procedure TDevAppUtils.OperationInfo(AOp: IPascalCoinOperation; Strings: TStrings);
-Var I: Integer;
-begin
-    Strings.AddPair('valid', bool_array[AOp.Valid]);
-    Strings.AddPair('errors', AOp.Errors);
-    Strings.AddPair('block', AOp.Block.ToString);
-    Strings.AddPair('time', AOp.Time.ToString);
-    Strings.AddPair('opblock', AOp.Opblock.ToString);
-    Strings.AddPair('maturation', AOp.Maturation.ToString);
-    Strings.AddPair('optype', AOp.Optype.ToString);
-    Strings.AddPair('OperationType', TRttiEnumerationType.GetName<TOperationType>(AOp.OperationType));
-    Strings.AddPair('optxt', AOp.Optxt);
-    Strings.AddPair('account', AOp.Account.ToString);
-    Strings.AddPair('amount', CurrToStr(AOp.Amount));
-    Strings.AddPair('fee', CurrToStr(AOp.Fee));
-    Strings.AddPair('balance', CurrToStr(AOp.Balance));
-    Strings.AddPair('sender_account', AOp.Sender_account.ToString);
-    Strings.AddPair('dest_account', AOp.Dest_account.ToString);
-    Strings.AddPair('enc_pubkey', AOp.Enc_PubKey);
-    Strings.AddPair('ophash', AOp.Ophash);
-    Strings.AddPair('old_ophash', AOp.Old_ophash);
-    Strings.AddPair('subtype', AOp.Subtype);
-    Strings.AddPair('signer_account', AOp.Signer_account.ToString);
-    Strings.AddPair('n_operation', AOp.N_Operation.ToString);
-    Strings.AddPair('payload', AOp.Payload);
-    Strings.AddPair('enc_pubkey', AOp.Enc_PubKey);
+  If AOp.SendersCount = 0 Then
+    Strings.AddPair('Senders', '0')
+  Else
+  Begin
+    Strings.AddPair('SENDERS', AOp.SendersCount.ToString);
+    For I := 0 To AOp.SendersCount - 1 Do
+    Begin
+      Strings.AddPair('  ' + I.ToString + ': ' + 'account', AOp.sender[I].account.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'n_operation', AOp.sender[I].n_operation.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'amount', CurrToStr(AOp.sender[I].Amount));
+      Strings.AddPair('  ' + I.ToString + ': ' + 'amount_s', AOp.sender[I].Amount_s);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'payload', AOp.sender[I].payload);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'payloadtype', AOp.sender[I].PayloadType.ToString);
+      Strings.Add('');
+    End;
+  End;
 
-    if AOp.SendersCount = 0 then
-       Strings.AddPair('Senders', '0')
-    else
-    begin
-      Strings.AddPair('SENDERS', AOp.SendersCount.ToString);
-      for I := 0 to AOp.SendersCount - 1 do
-      begin
-         Strings.AddPair('  ' + I.ToString + ': ' + 'account', AOp.sender[I].Account.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'n_operation', AOp.sender[I].N_Operation.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'amount', CurrToStr(AOp.sender[I].Amount));
-         Strings.AddPair('  ' + I.ToString + ': ' + 'amount_s', AOp.sender[I].Amount_s);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'payload', AOp.sender[I].Payload);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'payloadtype', AOp.sender[I].PayloadType.ToString);
-         Strings.Add('');
-      end;
-    end;
+  If AOp.ReceiversCount = 0 Then
+    Strings.AddPair('Receivers', '0')
+  Else
+  Begin
+    Strings.AddPair('RECEIVERS', AOp.SendersCount.ToString);
+    For I := 0 To AOp.ReceiversCount - 1 Do
+    Begin
+      Strings.AddPair('  ' + I.ToString + ': ' + 'account', AOp.receiver[I].account.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'amount', CurrToStr(AOp.receiver[I].Amount));
+      Strings.AddPair('  ' + I.ToString + ': ' + 'amount_s', AOp.receiver[I].Amount_s);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'payload', AOp.receiver[I].payload);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'payloadtype', AOp.receiver[I].PayloadType.ToString);
+      Strings.Add('');
+    End;
+  End;
 
-    if AOp.ReceiversCount= 0 then
-       Strings.AddPair('Receivers', '0')
-    else
-    begin
-      Strings.AddPair('RECEIVERS', AOp.SendersCount.ToString);
-      for I := 0 to AOp.ReceiversCount - 1 do
-      begin
-         Strings.AddPair('  ' + I.ToString + ': ' + 'account', AOp.receiver[I].Account.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'amount', CurrToStr(AOp.receiver[I].Amount));
-         Strings.AddPair('  ' + I.ToString + ': ' + 'amount_s', AOp.receiver[I].Amount_s);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'payload', AOp.receiver[I].Payload);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'payloadtype', AOp.receiver[I].PayloadType.ToString);
-         Strings.Add('');
-      end;
-    end;
+  If AOp.ChangersCount = 0 Then
+    Strings.AddPair('Changers', '0')
+  Else
+  Begin
+    Strings.AddPair('CHANGERS', AOp.ChangersCount.ToString);
+    For I := 0 To AOp.ChangersCount - 1 Do
+    Begin
+      Strings.AddPair('  ' + I.ToString + ': ' + 'account', AOp.changers[I].account.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'n_operation', AOp.changers[I].n_operation.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'new_enc_pubkey', AOp.changers[I].new_enc_pubkey);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'new_type', AOp.changers[I].new_type);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'seller_account', AOp.changers[I].seller_account.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'amount', CurrToStr(AOp.changers[I].account_price));
+      Strings.AddPair('  ' + I.ToString + ': ' + 'locker_until_block', AOp.changers[I].locked_until_block.ToString);
+      Strings.AddPair('  ' + I.ToString + ': ' + 'fee', CurrToStr(AOp.changers[I].fee));
+      Strings.Add('');
+    End;
+  End;
 
-    if AOp.ChangersCount = 0 then
-       Strings.AddPair('Changers', '0')
-    else
-    begin
-      Strings.AddPair('CHANGERS', AOp.ChangersCount.ToString);
-      for I := 0 to AOp.ChangersCount - 1 do
-      begin
-         Strings.AddPair('  ' + I.ToString + ': ' + 'account', AOp.changers[I].Account.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'n_operation', AOp.changers[I].N_Operation.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'new_enc_pubkey', AOp.changers[I].new_enc_pubkey);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'new_type', AOp.changers[I].new_type);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'seller_account', AOp.changers[I].seller_account.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'amount', CurrToStr(AOp.changers[I].account_price));
-         Strings.AddPair('  ' + I.ToString + ': ' + 'locker_until_block', AOp.changers[I].locked_until_block.ToString);
-         Strings.AddPair('  ' + I.ToString + ': ' + 'fee', CurrToStr(AOp.changers[I].fee));
-         Strings.Add('');
-      end;
-    end;
+End;
 
-end;
-
-end.
+End.

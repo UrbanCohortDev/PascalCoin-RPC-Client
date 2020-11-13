@@ -1,36 +1,42 @@
-unit PascalCoin.RPC.Exceptions;
+Unit PascalCoin.RPC.Exceptions;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses System.SysUtils;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.SysUtils;
 
 Type
 
-  ERPCException = Class(Exception)
-  private
-    FStatusCode: Integer;
-  public
-    constructor Create(AStatusCode: Integer; AMessage: string);
-    property StatusCode: Integer read FStatusCode write FStatusCode;
+  ENotImplementedInFramework = Class(Exception)
+  Public
+    Constructor Create;
   End;
 
-  ERPCExceptionClass = Class of ERPCException;
+  ERPCException = Class(Exception)
+  Private
+    FStatusCode: Integer;
+  Public
+    Constructor Create(AStatusCode: Integer; AMessage: String);
+    Property StatusCode: Integer Read FStatusCode Write FStatusCode;
+  End;
+
+  ERPCExceptionClass = Class Of ERPCException;
 
   EHTTPException = Class(ERPCException);
   ERPCGeneralException = Class(ERPCException);
@@ -49,41 +55,62 @@ Type
   EInvalidSignatureException = Class(ERPCException);
   ENotAllowedException = Class(ERPCException);
 
+Function GetRPCExceptionClass(AStatusCode: Integer): ERPCExceptionClass;
 
-  Function GetRPCExceptionClass(AStatusCode: Integer): ERPCExceptionClass;
+Implementation
 
-implementation
-
-uses PascalCoin.RPC.Consts;
+Uses
+  PascalCoin.RPC.Consts;
 
 Function GetRPCExceptionClass(AStatusCode: Integer): ERPCExceptionClass;
-begin
-  case AStatusCode of
+Begin
+  Case AStatusCode Of
 
-  RPC_ERRNUM_INTERNALERROR: Result := EInternalException;
-  RPC_ERRNUM_NOTIMPLEMENTED: Result := ENotImplementedException;
+    RPC_ERRNUM_INTERNALERROR:
+      Result := EInternalException;
+    RPC_ERRNUM_NOTIMPLEMENTED:
+      Result := ENotImplementedException;
 
-  RPC_ERRNUM_METHODNOTFOUND: Result := EMethodNotFoundException;
-  RPC_ERRNUM_INVALIDACCOUNT: Result := EInvalidException;
-  RPC_ERRNUM_INVALIDBLOCK: Result := EInvalidBlockException;
-  RPC_ERRNUM_INVALIDOPERATION: Result := EInvalidOperationException;
-  RPC_ERRNUM_INVALIDPUBKEY: Result := EInvalidPubKeyException;
-  RPC_ERRNUM_INVALIDACCOUNTNAME: Result := EInvalidAccountNameException;
-  RPC_ERRNUM_NOTFOUND: Result := ENotFoundException;
-  RPC_ERRNUM_WALLETPASSWORDPROTECTED: Result := EPasswordProtectedException;
-  RPC_ERRNUM_INVALIDDATA: Result := EInvalidDataException;
-  RPC_ERRNUM_INVALIDSIGNATURE: Result := EInvalidSignatureException;
-  RPC_ERRNUM_NOTALLOWEDCALL: Result := ENotAllowedException;
-  else Result :=  ERPCGeneralException;
-  end;
-end;
+    RPC_ERRNUM_METHODNOTFOUND:
+      Result := EMethodNotFoundException;
+    RPC_ERRNUM_INVALIDACCOUNT:
+      Result := EInvalidException;
+    RPC_ERRNUM_INVALIDBLOCK:
+      Result := EInvalidBlockException;
+    RPC_ERRNUM_INVALIDOPERATION:
+      Result := EInvalidOperationException;
+    RPC_ERRNUM_INVALIDPUBKEY:
+      Result := EInvalidPubKeyException;
+    RPC_ERRNUM_INVALIDACCOUNTNAME:
+      Result := EInvalidAccountNameException;
+    RPC_ERRNUM_NOTFOUND:
+      Result := ENotFoundException;
+    RPC_ERRNUM_WALLETPASSWORDPROTECTED:
+      Result := EPasswordProtectedException;
+    RPC_ERRNUM_INVALIDDATA:
+      Result := EInvalidDataException;
+    RPC_ERRNUM_INVALIDSIGNATURE:
+      Result := EInvalidSignatureException;
+    RPC_ERRNUM_NOTALLOWEDCALL:
+      Result := ENotAllowedException;
+  Else
+    Result := ERPCGeneralException;
+  End;
+End;
 
 { ERPCException }
 
-constructor ERPCException.Create(AStatusCode: Integer; AMessage: string);
-begin
-  inherited Create(AMessage);
+Constructor ERPCException.Create(AStatusCode: Integer; AMessage: String);
+Begin
+  Inherited Create(AMessage);
   FStatusCode := AStatusCode;
-end;
+End;
 
-end.
+{ ENotImplementedInFramework }
+
+Constructor ENotImplementedInFramework.Create;
+Begin
+  self.Message := 'Not yet implemented in framework';
+End;
+
+End.

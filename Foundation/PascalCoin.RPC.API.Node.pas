@@ -1,56 +1,95 @@
-unit PascalCoin.RPC.API.Node;
+Unit PascalCoin.RPC.API.Node;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
 
 Uses
   System.JSON,
   System.Generics.Collections,
   PascalCoin.RPC.Interfaces,
-  PascalCoin.RPC.API.Base;
+  PascalCoin.RPC.API.Base,
+  PascalCoin.RPC.Exceptions;
 
 Type
 
   TPascalCoinNodeAPI = Class(TPascalCoinAPIBase, IPascalCoinNodeAPI)
-  protected
+  Protected
     Function NodeStatus: IPascalCoinNodeStatus;
-  public
-  Constructor Create(AClient: IPascalCoinRPCClient);
+    Function addnode(Const nodes: String): integer;
+    Function getconnections: IPascalCoinConnections;
+    Function stopnode: boolean;
+    Function startnode: boolean;
+    Function cleanblacklist: boolean;
+    Function node_ip_stats: IPascalNetStats;
+
+  Public
+    Constructor Create(AClient: IPascalCoinRPCClient);
   End;
 
-implementation
+Implementation
 
 { TPascalCoinNodeAPI }
 
-uses PascalCoin.RPC.Node;
+Uses
+  PascalCoin.RPC.Node;
 
-constructor TPascalCoinNodeAPI.Create(AClient: IPascalCoinRPCClient);
-begin
-  inherited Create(AClient);
-end;
+Function TPascalCoinNodeAPI.addnode(Const nodes: String): integer;
+Begin
+  Raise ENotImplementedInFramework.Create;
+End;
 
-function TPascalCoinNodeAPI.NodeStatus: IPascalCoinNodeStatus;
-begin
+Function TPascalCoinNodeAPI.cleanblacklist: boolean;
+Begin
+  Raise ENotImplementedInFramework.Create;
+End;
+
+Constructor TPascalCoinNodeAPI.Create(AClient: IPascalCoinRPCClient);
+Begin
+  Inherited Create(AClient);
+End;
+
+Function TPascalCoinNodeAPI.getconnections: IPascalCoinConnections;
+Begin
+  Raise ENotImplementedInFramework.Create;
+End;
+
+Function TPascalCoinNodeAPI.NodeStatus: IPascalCoinNodeStatus;
+Begin
   result := Nil;
   If FClient.RPCCall('nodestatus', []) Then
   Begin
     result := TPascalCoinNodeStatus.FromJsonValue(GetJSONResult);
   End;
-end;
+End;
 
-end.
+Function TPascalCoinNodeAPI.node_ip_stats: IPascalNetStats;
+Begin
+  Raise ENotImplementedInFramework.Create;
+End;
+
+Function TPascalCoinNodeAPI.startnode: boolean;
+Begin
+  Raise ENotImplementedInFramework.Create;
+End;
+
+Function TPascalCoinNodeAPI.stopnode: boolean;
+Begin
+  Raise ENotImplementedInFramework.Create;
+End;
+
+End.

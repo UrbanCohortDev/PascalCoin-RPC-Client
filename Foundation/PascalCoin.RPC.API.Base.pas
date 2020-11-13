@@ -1,22 +1,22 @@
-unit PascalCoin.RPC.API.Base;
+Unit PascalCoin.RPC.API.Base;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
 
 Uses
   System.JSON,
@@ -49,39 +49,40 @@ Type
 
   End;
 
-implementation
+Implementation
 
-Uses PascalCoin.Utils;
+Uses
+  PascalCoin.Utils;
 
 { TPascalCoinAPIBase }
 
-constructor TPascalCoinAPIBase.Create(AClient: IPascalCoinRPCClient);
-begin
-  inherited Create;
+Constructor TPascalCoinAPIBase.Create(AClient: IPascalCoinRPCClient);
+Begin
+  Inherited Create;
   FClient := AClient;
-end;
+End;
 
-function TPascalCoinAPIBase.GetJSONResult: TJSONValue;
-begin
-    result := FClient.ResponseObject.GetValue('result');
-end;
+Function TPascalCoinAPIBase.GetJSONResult: TJSONValue;
+Begin
+  result := FClient.ResponseObject.GetValue('result');
+End;
 
-function TPascalCoinAPIBase.GetJSONResultStr: String;
-begin
-    result := FClient.ResponseStr;
-end;
+Function TPascalCoinAPIBase.GetJSONResultStr: String;
+Begin
+  result := FClient.ResponseStr;
+End;
 
-function TPascalCoinAPIBase.GetLastError: String;
-begin
-result := FLastError;
-end;
+Function TPascalCoinAPIBase.GetLastError: String;
+Begin
+  result := FLastError;
+End;
 
-function TPascalCoinAPIBase.GetNodeURI: String;
-begin
+Function TPascalCoinAPIBase.GetNodeURI: String;
+Begin
   result := FClient.NodeURI;
-end;
+End;
 
-function TPascalCoinAPIBase.PublicKeyParam(const AKey: String; const AKeyStyle: TKeyStyle): TParamPair;
+Function TPascalCoinAPIBase.PublicKeyParam(Const AKey: String; Const AKeyStyle: TKeyStyle): TParamPair;
 Const
   _KeyType: Array [Boolean] Of String = ('b58_pubkey', 'enc_pubkey');
 Begin
@@ -93,21 +94,21 @@ Begin
     ksB58Key:
       result := TParamPair.Create('b58_pubkey', AKey);
   End;
-end;
+End;
 
-function TPascalCoinAPIBase.ResultAsArray: TJSONArray;
-begin
-  Result := GetJSONResult as TJSONArray;
-end;
+Function TPascalCoinAPIBase.ResultAsArray: TJSONArray;
+Begin
+  result := GetJSONResult As TJSONArray;
+End;
 
-function TPascalCoinAPIBase.ResultAsObj: TJSONObject;
-begin
-  Result := GetJSONResult as TJSONObject;
-end;
+Function TPascalCoinAPIBase.ResultAsObj: TJSONObject;
+Begin
+  result := GetJSONResult As TJSONObject;
+End;
 
-procedure TPascalCoinAPIBase.SetNodeURI(const Value: String);
-begin
+Procedure TPascalCoinAPIBase.SetNodeURI(Const Value: String);
+Begin
   FClient.NodeURI := Value;
-end;
+End;
 
-end.
+End.

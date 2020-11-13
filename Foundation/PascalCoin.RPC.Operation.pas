@@ -1,20 +1,20 @@
 Unit PascalCoin.RPC.Operation;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -32,7 +32,7 @@ Type
     FAmount: Currency;
     FAmount_s: String;
     FPayload: HexaStr;
-    FPayloadType: integer;
+    FPayloadType: Integer;
   Protected
     Function GetAccount: Cardinal;
     Function GetN_operation: Integer;
@@ -49,7 +49,7 @@ Type
     FAmount: Currency;
     FAmount_s: String;
     FPayload: HexaStr;
-    FPayloadType: integer;
+    FPayloadType: Integer;
   Protected
     Function GetAccount: Cardinal;
     Function GetAmount: Currency;
@@ -81,8 +81,7 @@ Type
   Public
   End;
 
-
-TPascalCoinOperation = Class(TInterfacedObject, IPascalCoinOperation)
+  TPascalCoinOperation = Class(TInterfacedObject, IPascalCoinOperation)
   Private
     FValid: Boolean;
     FErrors: String;
@@ -140,24 +139,23 @@ TPascalCoinOperation = Class(TInterfacedObject, IPascalCoinOperation)
     Function ReceiversCount: Integer;
     Function ChangersCount: Integer;
 
-    Function GetSender(const index: integer): IPascalCoinSender;
-    Function GetReceiver(const index: integer): IPascalCoinReceiver;
-    Function GetChanger(const index: integer): IPascalCoinChanger;
+    Function GetSender(Const index: Integer): IPascalCoinSender;
+    Function GetReceiver(Const index: Integer): IPascalCoinReceiver;
+    Function GetChanger(Const index: Integer): IPascalCoinChanger;
 
   Public
-    class function FromJSONValue(Value: TJSONValue): TPascalCoinOperation;
+    Class Function FromJSONValue(Value: TJSONValue): TPascalCoinOperation;
   End;
 
-  TPascalCoinOperations = class(TInterfacedObject, IPascalCoinOperations)
+  TPascalCoinOperations = Class(TInterfacedObject, IPascalCoinOperations)
   Private
     FOperations: TArray<TPascalCoinOperation>;
-  protected
-      Function GetOperation(const index: integer): IPascalCoinOperation;
-      Function Count: Integer;
-  public
-  class function FromJsonValue(AOps: TJSONArray): TPascalCoinOperations;
-  end;
-
+  Protected
+    Function GetOperation(Const index: Integer): IPascalCoinOperation;
+    Function Count: Integer;
+  Public
+    Class Function FromJSONValue(AOps: TJSONArray): TPascalCoinOperations;
+  End;
 
 Implementation
 
@@ -166,12 +164,12 @@ Implementation
 Uses
   REST.JSON;
 
-function TPascalCoinOperation.ChangersCount: Integer;
-begin
+Function TPascalCoinOperation.ChangersCount: Integer;
+Begin
   Result := Length(FChangers)
-end;
+End;
 
-class function TPascalCoinOperation.FromJSONValue(Value: TJSONValue): TPascalCoinOperation;
+Class Function TPascalCoinOperation.FromJSONValue(Value: TJSONValue): TPascalCoinOperation;
 Var
   lObj: TJSONObject;
   lArr: TJSONArray;
@@ -181,226 +179,226 @@ Var
   C: Currency;
 Begin
   lObj := Value As TJSONObject;
-  result := TPascalCoinOperation.Create;
+  Result := TPascalCoinOperation.Create;
 
   If lObj.TryGetValue<String>('valid', S) Then
-    result.FValid := (S <> 'false')
+    Result.FValid := (S <> 'false')
   Else
-    result.FValid := True;
+    Result.FValid := True;
 
-  result.FBlock := lObj.Values['block'].AsType<UInt64>; // 279915
-  result.FTime := lObj.Values['time'].AsType<Integer>; // 0,
-  result.FOpBlock := lObj.Values['opblock'].AsType<UInt64>; // 1,
+  Result.FBlock := lObj.Values['block'].AsType<UInt64>; // 279915
+  Result.FTime := lObj.Values['time'].AsType<Integer>; // 0,
+  Result.FOpBlock := lObj.Values['opblock'].AsType<UInt64>; // 1,
 
-  lObj.Values['maturation'].TryGetValue<Integer>(result.FMaturation); // null,
-  result.FOpType := lObj.Values['optype'].AsType<Integer>; // 1,
+  lObj.Values['maturation'].TryGetValue<Integer>(Result.FMaturation); // null,
+  Result.FOpType := lObj.Values['optype'].AsType<Integer>; // 1,
   { TODO : should be Int? }
-  result.FSubType := lObj.Values['subtype'].AsType<String>; // 12,
-  result.FAccount := lObj.Values['account'].AsType<Cardinal>; // 865822,
-  result.FSigner_account := lObj.Values['signer_account'].AsType<Cardinal>;
+  Result.FSubType := lObj.Values['subtype'].AsType<String>; // 12,
+  Result.FAccount := lObj.Values['account'].AsType<Cardinal>; // 865822,
+  Result.FSigner_account := lObj.Values['signer_account'].AsType<Cardinal>;
   // 865851,
-  result.FN_Operation := lObj.Values['n_operation'].AsType<Integer>;
-  result.FOpTxt := lObj.Values['optxt'].AsType<String>;
+  Result.FN_Operation := lObj.Values['n_operation'].AsType<Integer>;
+  Result.FOpTxt := lObj.Values['optxt'].AsType<String>;
   // "Tx-In 16.0000 PASC from 865851-95 to 865822-14",
-  result.FFee := lObj.Values['fee'].AsType<Currency>; // 0.0000,
-  result.FFee_s := lObj.Values['fee_s'].AsType<String>;
-  result.FAmount := lObj.Values['amount'].AsType<Currency>; // 16.0000,
-  result.FAmount_s := lObj.Values['amount_s'].AsType<String>;
-  result.FPayload := lObj.Values['payload'].AsType<HexaStr>;
+  Result.FFee := lObj.Values['fee'].AsType<Currency>; // 0.0000,
+  Result.FFee_s := lObj.Values['fee_s'].AsType<String>;
+  Result.FAmount := lObj.Values['amount'].AsType<Currency>; // 16.0000,
+  Result.FAmount_s := lObj.Values['amount_s'].AsType<String>;
+  Result.FPayload := lObj.Values['payload'].AsType<HexaStr>;
   // "7A6962626564656520646F6F646168",
-  if lObj.TryGetValue<Currency>('balance', C) then
-     result.FBalance := C; // 19.1528,
-  if lObj.TryGetValue<Cardinal>('sender_account', CD) then
-     result.FSender_Account := CD;
-  if lObj.TryGetValue<Cardinal>('dest_account', CD) then
-     result.FDest_Account := CD;
+  If lObj.TryGetValue<Currency>('balance', C) Then
+    Result.FBalance := C; // 19.1528,
+  If lObj.TryGetValue<Cardinal>('sender_account', CD) Then
+    Result.FSender_Account := CD;
+  If lObj.TryGetValue<Cardinal>('dest_account', CD) Then
+    Result.FDest_Account := CD;
   // 865822,
-  result.FOpHash := lObj.Values['ophash'].AsType<HexaStr>;
+  Result.FOpHash := lObj.Values['ophash'].AsType<HexaStr>;
 
   lArr := lObj.Values['senders'] As TJSONArray;
-  SetLength(result.FSenders, lArr.Count);
-  For I := 0 to lArr.Count - 1 Do
+  SetLength(Result.FSenders, lArr.Count);
+  For I := 0 To lArr.Count - 1 Do
   Begin
-    result.FSenders[I] := TJSON.JsonToObject<TPascalCoinSender>(lArr[I] As TJSONObject);
+    Result.FSenders[I] := TJSON.JsonToObject<TPascalCoinSender>(lArr[I] As TJSONObject);
   End;
 
   lArr := lObj.Values['receivers'] As TJSONArray;
-  SetLength(result.FReceivers, lArr.Count);
-  For I := 0 to lArr.Count -1 Do
+  SetLength(Result.FReceivers, lArr.Count);
+  For I := 0 To lArr.Count - 1 Do
   Begin
-    result.FReceivers[I] := TJSON.JsonToObject<TPascalCoinReceiver>(lArr[I] As TJSONObject);
+    Result.FReceivers[I] := TJSON.JsonToObject<TPascalCoinReceiver>(lArr[I] As TJSONObject);
   End;
 
   lArr := lObj.Values['changers'] As TJSONArray;
-  SetLength(result.FChangers, lArr.Count);
-  For I := 0 to lArr.Count - 1 do
+  SetLength(Result.FChangers, lArr.Count);
+  For I := 0 To lArr.Count - 1 Do
   Begin
-    result.FChangers[I] := TJSON.JsonToObject<TPascalCoinChanger>(lArr[I] As TJSONObject);
+    Result.FChangers[I] := TJSON.JsonToObject<TPascalCoinChanger>(lArr[I] As TJSONObject);
   End;
 
-end;
+End;
 
 Function TPascalCoinOperation.GetAccount: Cardinal;
 Begin
-  result := FAccount;
+  Result := FAccount;
 End;
 
 Function TPascalCoinOperation.GetAmount: Currency;
 Begin
-  result := FAmount;
+  Result := FAmount;
 End;
 
-function TPascalCoinOperation.GetAmount_s: String;
-begin
+Function TPascalCoinOperation.GetAmount_s: String;
+Begin
   Result := FAmount_s;
-end;
+End;
 
 Function TPascalCoinOperation.GetBalance: Currency;
 Begin
-  result := FBalance;
+  Result := FBalance;
 End;
 
 Function TPascalCoinOperation.GetBlock: UInt64;
 Begin
-  result := FBlock;
+  Result := FBlock;
 End;
 
-function TPascalCoinOperation.GetChanger(const index: integer): IPascalCoinChanger;
-begin
-  Result := FChangers[index] as IPascalCoinChanger;
-end;
+Function TPascalCoinOperation.GetChanger(Const index: Integer): IPascalCoinChanger;
+Begin
+  Result := FChangers[Index] As IPascalCoinChanger;
+End;
 
 Function TPascalCoinOperation.GetDest_account: Cardinal;
 Begin
-  result := FDest_Account;
+  Result := FDest_Account;
 End;
 
 Function TPascalCoinOperation.GetEnc_pubkey: HexaStr;
 Begin
-  result := FEnc_Pubkey;
+  Result := FEnc_Pubkey;
 End;
 
 Function TPascalCoinOperation.GetErrors: String;
 Begin
-  result := FErrors;
+  Result := FErrors;
 End;
 
 Function TPascalCoinOperation.GetFee: Currency;
 Begin
-  result := FFee;
+  Result := FFee;
 End;
 
-function TPascalCoinOperation.GetFee_s: String;
-begin
- Result := FFee_s;
-end;
+Function TPascalCoinOperation.GetFee_s: String;
+Begin
+  Result := FFee_s;
+End;
 
 Function TPascalCoinOperation.GetMaturation: Integer;
 Begin
-  result := FMaturation;
+  Result := FMaturation;
 End;
 
 Function TPascalCoinOperation.GetN_operation: Integer;
 Begin
-  result := FN_Operation;
+  Result := FN_Operation;
 End;
 
 Function TPascalCoinOperation.GetOld_ophash: HexaStr;
 Begin
-  result := FOld_Ophash;
+  Result := FOld_Ophash;
 End;
 
 Function TPascalCoinOperation.GetOpblock: Integer;
 Begin
-  result := FOpBlock;
+  Result := FOpBlock;
 End;
 
 Function TPascalCoinOperation.GetOperationType: TOperationType;
 Begin
-  result := TOperationType(FOpType);
+  Result := TOperationType(FOpType);
 End;
 
 Function TPascalCoinOperation.GetOphash: HexaStr;
 Begin
-  result := FOpHash;
+  Result := FOpHash;
 End;
 
 Function TPascalCoinOperation.GetOptxt: String;
 Begin
-  result := FOpTxt;
+  Result := FOpTxt;
 End;
 
 Function TPascalCoinOperation.GetOptype: Integer;
 Begin
-  result := FOpType;
+  Result := FOpType;
 End;
 
 Function TPascalCoinOperation.GetPayload: HexaStr;
 Begin
-  result := FPayload;
+  Result := FPayload;
 End;
 
-function TPascalCoinOperation.GetReceiver(const index: integer): IPascalCoinReceiver;
-begin
-  Result := FReceivers[index] as IPascalCoinReceiver;
-end;
+Function TPascalCoinOperation.GetReceiver(Const index: Integer): IPascalCoinReceiver;
+Begin
+  Result := FReceivers[Index] As IPascalCoinReceiver;
+End;
 
-function TPascalCoinOperation.GetSender(const index: integer): IPascalCoinSender;
-begin
-  Result := FSenders[index] as IPascalCoinSender;
-end;
+Function TPascalCoinOperation.GetSender(Const index: Integer): IPascalCoinSender;
+Begin
+  Result := FSenders[Index] As IPascalCoinSender;
+End;
 
 Function TPascalCoinOperation.GetSender_account: Cardinal;
 Begin
-  result := FSender_Account;
+  Result := FSender_Account;
 End;
 
 Function TPascalCoinOperation.GetSigner_account: Cardinal;
 Begin
-  result := FSigner_account;
+  Result := FSigner_account;
 End;
 
 Function TPascalCoinOperation.GetSubtype: String;
 Begin
-  result := FSubType;
+  Result := FSubType;
 End;
 
 Function TPascalCoinOperation.GetTime: Integer;
 Begin
-  result := FTime;
+  Result := FTime;
 End;
 
 Function TPascalCoinOperation.GetValid: Boolean;
 Begin
-  result := FValid;
+  Result := FValid;
 End;
 
-function TPascalCoinOperation.ReceiversCount: Integer;
-begin
+Function TPascalCoinOperation.ReceiversCount: Integer;
+Begin
   Result := Length(FReceivers);
-end;
+End;
 
-function TPascalCoinOperation.SendersCount: Integer;
-begin
+Function TPascalCoinOperation.SendersCount: Integer;
+Begin
   Result := Length(FSenders);
-end;
+End;
 
 { TPascalCoinSender }
 
 Function TPascalCoinSender.GetAccount: Cardinal;
 Begin
-  result := FAccount;
+  Result := FAccount;
 End;
 
 Function TPascalCoinSender.GetAmount: Currency;
 Begin
-  result := FAmount;
+  Result := FAmount;
 End;
 
-function TPascalCoinSender.GetAmount_s: String;
-begin
-  result := FAmount_s;
-end;
+Function TPascalCoinSender.GetAmount_s: String;
+Begin
+  Result := FAmount_s;
+End;
 
 Function TPascalCoinSender.GetN_operation: Integer;
 Begin
@@ -412,10 +410,10 @@ Begin
   Result := FPayload;
 End;
 
-function TPascalCoinSender.GetPayloadType: Integer;
-begin
+Function TPascalCoinSender.GetPayloadType: Integer;
+Begin
   Result := FPayloadType;
-end;
+End;
 
 { TPascalCoinReceiver }
 
@@ -429,31 +427,31 @@ Begin
   Result := FAmount;
 End;
 
-function TPascalCoinReceiver.GetAmount_s: String;
-begin
+Function TPascalCoinReceiver.GetAmount_s: String;
+Begin
   Result := FAmount_s;
-end;
+End;
 
 Function TPascalCoinReceiver.GetPayload: HexaStr;
 Begin
   Result := FPayload;
 End;
 
-function TPascalCoinReceiver.GetPayloadType: Integer;
-begin
+Function TPascalCoinReceiver.GetPayloadType: Integer;
+Begin
   Result := FPayloadType;
-end;
+End;
 
 { TPascalCoinChanger }
 
 Function TPascalCoinChanger.GetAccount: Cardinal;
 Begin
- Result := FAccount;
+  Result := FAccount;
 End;
 
 Function TPascalCoinChanger.GetAccount_price: Currency;
 Begin
-  Result := FAccount_Price;
+  Result := FAccount_price;
 End;
 
 Function TPascalCoinChanger.GetFee: Currency;
@@ -478,7 +476,7 @@ End;
 
 Function TPascalCoinChanger.GetN_operation: Integer;
 Begin
-  Result := FN_operation;
+  Result := FN_Operation;
 End;
 
 Function TPascalCoinChanger.GetSeller_account: Cardinal;
@@ -488,27 +486,27 @@ End;
 
 { TPascalCoinOperations }
 
-function TPascalCoinOperations.Count: Integer;
-begin
+Function TPascalCoinOperations.Count: Integer;
+Begin
   Result := Length(FOperations);
-end;
+End;
 
-class function TPascalCoinOperations.FromJsonValue(AOps: TJSONArray): TPascalCoinOperations;
-var
+Class Function TPascalCoinOperations.FromJSONValue(AOps: TJSONArray): TPascalCoinOperations;
+Var
   I: Integer;
-begin
+Begin
   Result := TPascalCoinOperations.Create;
 
   SetLength(Result.FOperations, AOps.Count);
-  for I := 0 to AOps.Count - 1 do
-    begin
-      Result.FOperations[I] := TPascalCoinOperation.FromJSONValue(AOps[I]);
-    end;
-end;
+  For I := 0 To AOps.Count - 1 Do
+  Begin
+    Result.FOperations[I] := TPascalCoinOperation.FromJSONValue(AOps[I]);
+  End;
+End;
 
-function TPascalCoinOperations.GetOperation(const index: integer): IPascalCoinOperation;
-begin
-  Result := FOperations[index] as IPascalCoinOperation;
-end;
+Function TPascalCoinOperations.GetOperation(Const index: Integer): IPascalCoinOperation;
+Begin
+  Result := FOperations[Index] As IPascalCoinOperation;
+End;
 
 End.

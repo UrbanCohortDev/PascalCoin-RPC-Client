@@ -1,29 +1,31 @@
-unit PascalCoin.RPC.Account;
+Unit PascalCoin.RPC.Account;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses System.Generics.Collections, PascalCoin.RPC.Interfaces;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
-type
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.Generics.Collections,
+  PascalCoin.RPC.Interfaces;
+
+Type
 
   TPascalCoinAccount = Class(TInterfacedObject, IPascalCoinAccount)
-  private
+  Private
     FAccount: Int64;
     Fenc_pubkey: HexaStr;
     FBalance: Currency;
@@ -32,7 +34,7 @@ type
     FUpdated_b: Integer;
     FUpdated_b_active_mode: Integer;
     FUpdated_b_passive_Mode: Integer;
-    FState: string;
+    FState: String;
     FLocked_Until_Block: Integer;
     FPrice: Currency;
     FSeller_Account: Integer;
@@ -42,59 +44,59 @@ type
     FAccountType: Integer;
     FSeal: String;
     FData: TAccountData;
-  protected
-    function GetAccount: Int64;
-    function GetPubKey: HexaStr;
-    function GetBalance: Currency;
-    function GetN_Operation: Integer;
-    function GetUpdated_b: Integer;
-    function GetState: String;
-    function GetLocked_Until_Block: Integer;
-    function GetPrice: Currency;
-    function GetSeller_Account: Integer;
-    function GetPrivate_Sale: Boolean;
-    function GetNew_Enc_PubKey: HexaStr;
-    function GetName: String;
-    function GetAccount_Type: Integer;
+  Protected
+    Function GetAccount: Int64;
+    Function GetPubKey: HexaStr;
+    Function GetBalance: Currency;
+    Function GetN_Operation: Integer;
+    Function GetUpdated_b: Integer;
+    Function GetState: String;
+    Function GetLocked_Until_Block: Integer;
+    Function GetPrice: Currency;
+    Function GetSeller_Account: Integer;
+    Function GetPrivate_Sale: Boolean;
+    Function GetNew_Enc_PubKey: HexaStr;
+    Function GetName: String;
+    Function GetAccount_Type: Integer;
     Function GetBalance_s: String;
     Function GetUpdated_b_active_mode: Integer;
     Function GetUpdated_b_passive_mode: Integer;
     Function GetSeal: String;
     Function GetData: TAccountData;
 
-
-    function SameAs(AAccount: IPascalCoinAccount): Boolean;
-    procedure Assign(AAccount: IPascalCoinAccount);
-  public
+    Function SameAs(AAccount: IPascalCoinAccount): Boolean;
+    Procedure Assign(AAccount: IPascalCoinAccount);
+  Public
   End;
 
-  TPascalCoinAccounts = class(TInterfacedObject, IPascalCoinAccounts)
-  private
+  TPascalCoinAccounts = Class(TInterfacedObject, IPascalCoinAccounts)
+  Private
     { Use TList as simpler to add to than a TArray }
     { TODO : Maybe switch to TDictionary }
     FAccounts: TList<IPascalCoinAccount>;
-  protected
-    function GetAccount(const Index: Integer): IPascalCoinAccount;
-    function FindAccount(const Value: Integer): IPascalCoinAccount; overload;
-    function FindAccount(const Value: String): IPascalCoinAccount; overload;
+  Protected
+    Function GetAccount(Const Index: Integer): IPascalCoinAccount;
+    Function FindAccount(Const Value: Integer): IPascalCoinAccount; Overload;
+    Function FindAccount(Const Value: String): IPascalCoinAccount; Overload;
     Function FindNamedAccount(Const Value: String): IPascalCoinAccount;
-    function Count: Integer;
-    procedure Clear;
-    function AddAccount(Value: IPascalCoinAccount): Integer;
-  public
-    constructor Create;
-    destructor Destroy; override;
-  end;
+    Function Count: Integer;
+    Procedure Clear;
+    Function AddAccount(Value: IPascalCoinAccount): Integer;
+  Public
+    Constructor Create;
+    Destructor Destroy; Override;
+  End;
 
-implementation
+Implementation
 
-uses System.SysUtils;
+Uses
+  System.SysUtils;
 
 { TPascalCoinAccount }
 
-procedure TPascalCoinAccount.Assign(AAccount: IPascalCoinAccount);
-begin
-  FAccount := AAccount.account;
+Procedure TPascalCoinAccount.Assign(AAccount: IPascalCoinAccount);
+Begin
+  FAccount := AAccount.Account;
   Fenc_pubkey := AAccount.enc_pubkey;
   FBalance := AAccount.balance;
   FBalance_s := AAccount.balance_s;
@@ -112,184 +114,174 @@ begin
   FAccountType := AAccount.account_type;
   FSeal := AAccount.Seal;
   FData := AAccount.Data;
-end;
+End;
 
-function TPascalCoinAccount.GetAccount: Int64;
-begin
+Function TPascalCoinAccount.GetAccount: Int64;
+Begin
   result := FAccount;
-end;
+End;
 
-function TPascalCoinAccount.GetAccount_Type: Integer;
-begin
+Function TPascalCoinAccount.GetAccount_Type: Integer;
+Begin
   result := FAccountType;
-end;
+End;
 
-function TPascalCoinAccount.GetBalance: Currency;
-begin
+Function TPascalCoinAccount.GetBalance: Currency;
+Begin
   result := FBalance;
-end;
+End;
 
-function TPascalCoinAccount.GetBalance_s: String;
-begin
-  Result := FBalance_s;
-end;
+Function TPascalCoinAccount.GetBalance_s: String;
+Begin
+  result := FBalance_s;
+End;
 
-function TPascalCoinAccount.GetData: TAccountData;
-begin
-  Result := FData;
-end;
+Function TPascalCoinAccount.GetData: TAccountData;
+Begin
+  result := FData;
+End;
 
-function TPascalCoinAccount.GetLocked_Until_Block: Integer;
-begin
+Function TPascalCoinAccount.GetLocked_Until_Block: Integer;
+Begin
   result := FLocked_Until_Block;
-end;
+End;
 
-function TPascalCoinAccount.GetName: String;
-begin
+Function TPascalCoinAccount.GetName: String;
+Begin
   result := FName;
-end;
+End;
 
-function TPascalCoinAccount.GetNew_Enc_PubKey: String;
-begin
+Function TPascalCoinAccount.GetNew_Enc_PubKey: String;
+Begin
   result := FNew_Enc_PubKey;
-end;
+End;
 
-function TPascalCoinAccount.GetN_Operation: Integer;
-begin
+Function TPascalCoinAccount.GetN_Operation: Integer;
+Begin
   result := FN_Operation;
-end;
+End;
 
-function TPascalCoinAccount.GetPrice: Currency;
-begin
+Function TPascalCoinAccount.GetPrice: Currency;
+Begin
   result := FPrice;
-end;
+End;
 
-function TPascalCoinAccount.GetPrivate_Sale: Boolean;
-begin
+Function TPascalCoinAccount.GetPrivate_Sale: Boolean;
+Begin
   result := FPrivate_Sale;
-end;
+End;
 
-function TPascalCoinAccount.GetPubKey: String;
-begin
+Function TPascalCoinAccount.GetPubKey: String;
+Begin
   result := Fenc_pubkey;
-end;
+End;
 
-function TPascalCoinAccount.GetSeal: String;
-begin
-  Result := FSeal;
-end;
+Function TPascalCoinAccount.GetSeal: String;
+Begin
+  result := FSeal;
+End;
 
-function TPascalCoinAccount.GetSeller_Account: Integer;
-begin
+Function TPascalCoinAccount.GetSeller_Account: Integer;
+Begin
   result := FSeller_Account;
-end;
+End;
 
-function TPascalCoinAccount.GetState: String;
-begin
+Function TPascalCoinAccount.GetState: String;
+Begin
   result := FState;
-end;
+End;
 
-function TPascalCoinAccount.GetUpdated_b: Integer;
-begin
+Function TPascalCoinAccount.GetUpdated_b: Integer;
+Begin
   result := FUpdated_b;
-end;
+End;
 
-function TPascalCoinAccount.GetUpdated_b_active_mode: Integer;
-begin
-  Result := FUpdated_b_active_mode;
-end;
+Function TPascalCoinAccount.GetUpdated_b_active_mode: Integer;
+Begin
+  result := FUpdated_b_active_mode;
+End;
 
-function TPascalCoinAccount.GetUpdated_b_passive_mode: Integer;
-begin
-  Result := FUpdated_b_passive_Mode;
-end;
+Function TPascalCoinAccount.GetUpdated_b_passive_mode: Integer;
+Begin
+  result := FUpdated_b_passive_Mode;
+End;
 
-function TPascalCoinAccount.SameAs(AAccount: IPascalCoinAccount): Boolean;
-begin
-   result := (FAccount = AAccount.account)
-    and (Fenc_pubkey = AAccount.enc_pubkey)
-    and (FBalance = AAccount.balance)
-    and (FN_Operation = AAccount.n_operation)
-    and (FUpdated_b = AAccount.updated_b)
-    and (FState = AAccount.state)
-    and (FLocked_Until_Block = AAccount.locked_until_block)
-    and (FPrice = AAccount.price)
-    and (FSeller_Account = AAccount.seller_account)
-    and (FPrivate_Sale = AAccount.private_sale)
-    and (FNew_Enc_PubKey = AAccount.new_enc_pubkey)
-    and (FName = AAccount.name)
-    and (FAccountType = AAccount.account_type);
-end;
+Function TPascalCoinAccount.SameAs(AAccount: IPascalCoinAccount): Boolean;
+Begin
+  result := (FAccount = AAccount.Account) And (Fenc_pubkey = AAccount.enc_pubkey) And (FBalance = AAccount.balance) And
+    (FN_Operation = AAccount.n_operation) And (FUpdated_b = AAccount.updated_b) And (FState = AAccount.state) And
+    (FLocked_Until_Block = AAccount.locked_until_block) And (FPrice = AAccount.price) And
+    (FSeller_Account = AAccount.seller_account) And (FPrivate_Sale = AAccount.private_sale) And
+    (FNew_Enc_PubKey = AAccount.new_enc_pubkey) And (FName = AAccount.name) And (FAccountType = AAccount.account_type);
+End;
 
 { TPascalCoinAccounts }
 
-function TPascalCoinAccounts.AddAccount(Value: IPascalCoinAccount): Integer;
-begin
+Function TPascalCoinAccounts.AddAccount(Value: IPascalCoinAccount): Integer;
+Begin
   result := FAccounts.Add(Value);
-end;
+End;
 
-procedure TPascalCoinAccounts.Clear;
-begin
+Procedure TPascalCoinAccounts.Clear;
+Begin
   FAccounts.Clear;
-end;
+End;
 
-function TPascalCoinAccounts.Count: Integer;
-begin
+Function TPascalCoinAccounts.Count: Integer;
+Begin
   result := FAccounts.Count;
-end;
+End;
 
-constructor TPascalCoinAccounts.Create;
-begin
-  inherited Create;
+Constructor TPascalCoinAccounts.Create;
+Begin
+  Inherited Create;
   FAccounts := TList<IPascalCoinAccount>.Create;
-end;
+End;
 
-destructor TPascalCoinAccounts.Destroy;
-begin
+Destructor TPascalCoinAccounts.Destroy;
+Begin
   FAccounts.Free;
-  inherited;
-end;
+  Inherited;
+End;
 
-function TPascalCoinAccounts.FindAccount(const Value: String)
-  : IPascalCoinAccount;
-var
+Function TPascalCoinAccounts.FindAccount(Const Value: String): IPascalCoinAccount;
+Var
   lPos, lValue: Integer;
-begin
+Begin
   lPos := Value.IndexOf('-');
-  if lPos > -1 then
+  If lPos > -1 Then
     lValue := Value.Substring(0, lPos).ToInteger
-  else
+  Else
     lValue := Value.ToInteger;
 
   result := FindAccount(lValue);
 
-end;
+End;
 
-function TPascalCoinAccounts.FindNamedAccount(const Value: String): IPascalCoinAccount;
-var
+Function TPascalCoinAccounts.FindNamedAccount(Const Value: String): IPascalCoinAccount;
+Var
   lAccount: IPascalCoinAccount;
-begin
-  result := nil;
-  for lAccount in FAccounts do
-    if SameText(lAccount.Name, Value) then
+Begin
+  result := Nil;
+  For lAccount In FAccounts Do
+    If SameText(lAccount.name, Value) Then
       Exit(lAccount);
 
-end;
+End;
 
-function TPascalCoinAccounts.FindAccount(const Value: Integer) : IPascalCoinAccount;
-var
+Function TPascalCoinAccounts.FindAccount(Const Value: Integer): IPascalCoinAccount;
+Var
   lAccount: IPascalCoinAccount;
-begin
-  result := nil;
-  for lAccount in FAccounts do
-    if lAccount.Account = Value then
+Begin
+  result := Nil;
+  For lAccount In FAccounts Do
+    If lAccount.Account = Value Then
       Exit(lAccount);
-end;
+End;
 
-function TPascalCoinAccounts.GetAccount(const Index: Integer)
-  : IPascalCoinAccount;
-begin
+Function TPascalCoinAccounts.GetAccount(Const Index: Integer): IPascalCoinAccount;
+Begin
   result := FAccounts[Index];
-end;
+End;
 
-end.
+End.

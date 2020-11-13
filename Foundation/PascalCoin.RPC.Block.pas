@@ -1,33 +1,36 @@
-unit PascalCoin.RPC.Block;
+Unit PascalCoin.RPC.Block;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses System.Generics.Collections, System.JSON, PascalCoin.RPC.Interfaces;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
-type
+  PASC Donations welcome: Account (PASA) 1922-23
 
-  TPascalCoinBlock = class(TInterfacedObject, IPascalCoinBlock)
-  private
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.Generics.Collections,
+  System.JSON,
+  PascalCoin.RPC.Interfaces;
+
+Type
+
+  TPascalCoinBlock = Class(TInterfacedObject, IPascalCoinBlock)
+  Private
     Fblock: Integer;
     Fenc_pubkey: String;
     Freward: Currency;
-    Freward_s: string;
+    Freward_s: String;
     Ffee: Currency;
     Ffee_s: String;
     Fver: Integer;
@@ -42,179 +45,181 @@ type
     Foperations: Integer;
     Fhashratekhs: Integer;
     Fmaturation: Integer;
-  protected
-    function GetBlock: Integer;
-    function GetEnc_PubKey: String;
-    function GetFee: Currency;
-    function GetFee_s: String;
-    function GetHashRateKHS: Integer;
-    function GetMaturation: Integer;
-    function GetNonce: Integer;
-    function GetOperations: Integer;
-    function GetOPH: String;
-    function GetPayload: String;
-    function GetPOW: String;
-    function GetReward: Currency;
-    function GetReward_s: String;
-    function GetSBH: String;
-    function GetTarget: Integer;
-    function GetTimeStamp: Integer;
-    function GetVer: Integer;
-    function GetVer_a: Integer;
+  Protected
+    Function GetBlock: Integer;
+    Function GetEnc_PubKey: String;
+    Function GetFee: Currency;
+    Function GetFee_s: String;
+    Function GetHashRateKHS: Integer;
+    Function GetMaturation: Integer;
+    Function GetNonce: Integer;
+    Function GetOperations: Integer;
+    Function GetOPH: String;
+    Function GetPayload: String;
+    Function GetPOW: String;
+    Function GetReward: Currency;
+    Function GetReward_s: String;
+    Function GetSBH: String;
+    Function GetTarget: Integer;
+    Function GetTimeStamp: Integer;
+    Function GetVer: Integer;
+    Function GetVer_a: Integer;
 
-    function GetTimeStampAsDateTime: TDateTime;
-  public
-  end;
-
-  TPascalCoinBlocks = Class(TInterfacedObject, IPascalCoinBlocks)
-  private
-     {TDictionary blockNum, BlockInfo ?}
-     FBlocks: TArray<IPascalCoinBlock>;
-  protected
-      Function GetBlock(Const Index: integer): IPascalCoinBlock;
-    Function GetBlockNumber(Const Index: integer): IPascalCoinBlock;
-    Function Count: integer;
-  public
-  class function FromJsonValue(ABlocks: TJSONArray): TPascalCoinBlocks;
+    Function GetTimeStampAsDateTime: TDateTime;
+  Public
   End;
 
-implementation
+  TPascalCoinBlocks = Class(TInterfacedObject, IPascalCoinBlocks)
+  Private
+    { TDictionary blockNum, BlockInfo ? }
+    FBlocks: TArray<IPascalCoinBlock>;
+  Protected
+    Function GetBlock(Const Index: Integer): IPascalCoinBlock;
+    Function GetBlockNumber(Const Index: Integer): IPascalCoinBlock;
+    Function Count: Integer;
+  Public
+    Class Function FromJsonValue(ABlocks: TJSONArray): TPascalCoinBlocks;
+  End;
 
-uses System.DateUtils, Rest.Json;
+Implementation
+
+Uses
+  System.DateUtils,
+  Rest.JSON;
 
 { TPascalCoinBlock }
 
-function TPascalCoinBlock.GetBlock: Integer;
-begin
+Function TPascalCoinBlock.GetBlock: Integer;
+Begin
   result := Fblock;
-end;
+End;
 
-function TPascalCoinBlock.GetTimeStampAsDateTime: TDateTime;
-begin
+Function TPascalCoinBlock.GetTimeStampAsDateTime: TDateTime;
+Begin
   result := UnixToDateTime(Ftimestamp);
-end;
+End;
 
-function TPascalCoinBlock.GetEnc_PubKey: String;
-begin
+Function TPascalCoinBlock.GetEnc_PubKey: String;
+Begin
   result := Fenc_pubkey;
-end;
+End;
 
-function TPascalCoinBlock.GetFee: Currency;
-begin
+Function TPascalCoinBlock.GetFee: Currency;
+Begin
   result := Ffee;
-end;
+End;
 
-function TPascalCoinBlock.GetFee_s: String;
-begin
-  result := FFee_s;
-end;
+Function TPascalCoinBlock.GetFee_s: String;
+Begin
+  result := Ffee_s;
+End;
 
-function TPascalCoinBlock.GetHashRateKHS: Integer;
-begin
+Function TPascalCoinBlock.GetHashRateKHS: Integer;
+Begin
   result := Fhashratekhs;
-end;
+End;
 
-function TPascalCoinBlock.GetMaturation: Integer;
-begin
+Function TPascalCoinBlock.GetMaturation: Integer;
+Begin
   result := Fmaturation;
-end;
+End;
 
-function TPascalCoinBlock.GetNonce: Integer;
-begin
+Function TPascalCoinBlock.GetNonce: Integer;
+Begin
   result := Fnonce;
-end;
+End;
 
-function TPascalCoinBlock.GetOperations: Integer;
-begin
+Function TPascalCoinBlock.GetOperations: Integer;
+Begin
   result := Foperations;
-end;
+End;
 
-function TPascalCoinBlock.GetOPH: String;
-begin
+Function TPascalCoinBlock.GetOPH: String;
+Begin
   result := Foph;
-end;
+End;
 
-function TPascalCoinBlock.GetPayload: String;
-begin
+Function TPascalCoinBlock.GetPayload: String;
+Begin
   result := Fpayload;
-end;
+End;
 
-function TPascalCoinBlock.GetPOW: String;
-begin
+Function TPascalCoinBlock.GetPOW: String;
+Begin
   result := Fpow;
-end;
+End;
 
-function TPascalCoinBlock.GetReward: Currency;
-begin
+Function TPascalCoinBlock.GetReward: Currency;
+Begin
   result := Freward;
-end;
+End;
 
-function TPascalCoinBlock.GetReward_s: String;
-begin
-  result := FReward_s;
-end;
+Function TPascalCoinBlock.GetReward_s: String;
+Begin
+  result := Freward_s;
+End;
 
-function TPascalCoinBlock.GetSBH: String;
-begin
+Function TPascalCoinBlock.GetSBH: String;
+Begin
   result := Fsbh;
-end;
+End;
 
-function TPascalCoinBlock.GetTarget: Integer;
-begin
+Function TPascalCoinBlock.GetTarget: Integer;
+Begin
   result := Ftarget;
-end;
+End;
 
-function TPascalCoinBlock.GetTimeStamp: Integer;
-begin
+Function TPascalCoinBlock.GetTimeStamp: Integer;
+Begin
   result := Ftimestamp;
-end;
+End;
 
-function TPascalCoinBlock.GetVer: Integer;
-begin
+Function TPascalCoinBlock.GetVer: Integer;
+Begin
   result := Fver;
-end;
+End;
 
-function TPascalCoinBlock.GetVer_a: Integer;
-begin
+Function TPascalCoinBlock.GetVer_a: Integer;
+Begin
   result := Fver_a;
-end;
-
+End;
 
 { TPascalCoinBlocks }
 
-function TPascalCoinBlocks.Count: integer;
-begin
-  Result := Length(FBlocks);
-end;
+Function TPascalCoinBlocks.Count: Integer;
+Begin
+  result := Length(FBlocks);
+End;
 
-class function TPascalCoinBlocks.FromJsonValue(ABlocks: TJSONArray): TPascalCoinBlocks;
-var
+Class Function TPascalCoinBlocks.FromJsonValue(ABlocks: TJSONArray): TPascalCoinBlocks;
+Var
   I: Integer;
-begin
-  Result := TPascalCoinBlocks.Create;
+Begin
+  result := TPascalCoinBlocks.Create;
 
-  SetLength(Result.FBlocks, ABlocks.Count);
-  for I := 0 to ABlocks.Count - 1 do
-    begin
-      Result.FBlocks[I] := TJSON.JsonToObject<TPascalCoinBlock>(ABlocks[I] As TJSONObject);
-    end;
+  SetLength(result.FBlocks, ABlocks.Count);
+  For I := 0 To ABlocks.Count - 1 Do
+  Begin
+    result.FBlocks[I] := TJSON.JsonToObject<TPascalCoinBlock>(ABlocks[I] As TJSONObject);
+  End;
 
-end;
+End;
 
-function TPascalCoinBlocks.GetBlock(const Index: integer): IPascalCoinBlock;
-begin
-  Result := FBlocks[Index];
-end;
+Function TPascalCoinBlocks.GetBlock(Const Index: Integer): IPascalCoinBlock;
+Begin
+  result := FBlocks[Index];
+End;
 
-function TPascalCoinBlocks.GetBlockNumber(const Index: integer): IPascalCoinBlock;
-var lBlock: IPascalCoinBlock;
-begin
-  Result := Nil;
-  for lBlock in FBlocks do
-  begin
-    if lBlock.block = Index then
-       Exit(lBlock);
-  end;
-end;
+Function TPascalCoinBlocks.GetBlockNumber(Const Index: Integer): IPascalCoinBlock;
+Var
+  lBlock: IPascalCoinBlock;
+Begin
+  result := Nil;
+  For lBlock In FBlocks Do
+  Begin
+    If lBlock.Block = Index Then
+      Exit(lBlock);
+  End;
+End;
 
-end.
+End.

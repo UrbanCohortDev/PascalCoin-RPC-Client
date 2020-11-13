@@ -1,20 +1,20 @@
 Unit DevApp.Form.BlockInfo;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
+
+  PascalCoin website http:pascalcoin.org
+
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
+
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
 
 Interface
 
@@ -80,7 +80,7 @@ Type
     Procedure HandleRange(Value: IPascalCoinBlocks);
     Procedure ShowBlockOps(Const Row: Integer);
     Procedure ShowMultiOp(block: Integer);
-    procedure ShowSingleOp(block: Integer; OpIndex: Integer = 0);
+    Procedure ShowSingleOp(block: Integer; OpIndex: Integer = 0);
   Public
     { Public declarations }
     Procedure InitialiseThis; Override;
@@ -224,18 +224,19 @@ Begin
 End;
 
 Procedure TBlockInfoForm.ShowMultiOp(block: Integer);
-var lOps: IPascalCoinOperations;
+Var
+  lOps: IPascalCoinOperations;
   I: Integer;
 Begin
   Memo1.Lines.Clear;
   lOps := ExplorerAPI.GetBlockOperations(block);
-  for I := 0 to lOps.Count - 1 do
-  begin
+  For I := 0 To lOps.Count - 1 Do
+  Begin
     Memo1.Lines.Add('Operation ' + I.ToString);
     Memo1.Lines.Add('===================');
     TDevAppUtils.OperationInfo(lOps[I], Memo1.Lines);
     Memo1.Lines.Add('');
-  end;
+  End;
 End;
 
 Procedure TBlockInfoForm.ShowSingleOp(block: Integer; OpIndex: Integer = 0);

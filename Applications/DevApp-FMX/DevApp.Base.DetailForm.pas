@@ -1,111 +1,124 @@
-unit DevApp.Base.DetailForm;
+Unit DevApp.Base.DetailForm;
 
-//************************************************************************//
-//                copyright 2019-2020  Russell Weetch                     //
-// Distributed under the MIT software license, see the accompanying file  //
-//  LICENSE or visit http://www.opensource.org/licenses/mit-license.php.  //
-//                                                                        //
-//               PascalCoin website http://pascalcoin.org                 //
-//                                                                        //
-//                 PascalCoin Delphi RPC Client Repository                //
-//        https://github.com/UrbanCohortDev/PascalCoin-RPC-Client         //
-//                                                                        //
-//             PASC Donations welcome: Account (PASA) 1922-23             //
-//                                                                        //
-//                THIS LICENSE HEADER MUST NOT BE REMOVED.                //
-//                                                                        //
-//************************************************************************//
+(* ***********************************************************************
+  copyright 2019-2020  Russell Weetch
+  Distributed under the MIT software license, see the accompanying file
+  LICENSE or visit http:www.opensource.org/licenses/mit-license.php.
 
-interface
+  PascalCoin website http:pascalcoin.org
 
-uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  PascalCoin.RPC.Interfaces, FMX.Controls.Presentation, FMX.StdCtrls, PascalCoin.RPC.Exceptions;
+  PascalCoin Delphi RPC Client Repository
+  https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
-type
-  TDevBaseForm = class(TForm)
+  PASC Donations welcome: Account (PASA) 1922-23
+
+  THIS LICENSE HEADER MUST NOT BE REMOVED.
+
+  *********************************************************************** *)
+
+Interface
+
+Uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+  FMX.Types,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Graphics,
+  FMX.Dialogs,
+  FMX.Layouts,
+  PascalCoin.RPC.Interfaces,
+  FMX.Controls.Presentation,
+  FMX.StdCtrls,
+  PascalCoin.RPC.Exceptions;
+
+Type
+  TDevBaseForm = Class(TForm)
     HeaderLayout: TLayout;
     FooterLayout: TLayout;
     ContentLayout: TLayout;
     FormCaption: TLabel;
-  private
+  Private
     FDefaultURI: String;
-    procedure SetDefaultURI(const Value: String);
+    Procedure SetDefaultURI(Const Value: String);
     { Private declarations }
-  protected
-    function NodeAPI: IPascalCoinNodeAPI;
-    function ExplorerAPI: IPascalCoinExplorerAPI;
-    function WalletExplorerAPI: IPascalCoinWalletAPI;
+  Protected
+    Function NodeAPI: IPascalCoinNodeAPI;
+    Function ExplorerAPI: IPascalCoinExplorerAPI;
+    Function WalletExplorerAPI: IPascalCoinWalletAPI;
 
-    function UseURI: String; virtual;
-    procedure HandleAPIException(E: Exception);
-  public
+    Function UseURI: String; Virtual;
+    Procedure HandleAPIException(E: Exception);
+  Public
     { Public declarations }
-    procedure InitialiseThis; virtual;
-    function CanClose: Boolean; Virtual;
-    procedure TearDown; virtual;
-    property DefaultURI: String read FDefaultURI write SetDefaultURI;
-  end;
+    Procedure InitialiseThis; Virtual;
+    Function CanClose: Boolean; Virtual;
+    Procedure TearDown; Virtual;
+    Property DefaultURI: String Read FDefaultURI Write SetDefaultURI;
+  End;
 
-var
+Var
   DevBaseForm: TDevBaseForm;
 
-implementation
+Implementation
 
 {$R *.fmx}
 
-uses DevApp.Shared, FMX.DialogService;
+Uses
+  DevApp.Shared,
+  FMX.DialogService;
 
 { TDevBaseForm }
 
-function TDevBaseForm.CanClose: Boolean;
-begin
+Function TDevBaseForm.CanClose: Boolean;
+Begin
   Result := True;
-end;
+End;
 
-function TDevBaseForm.ExplorerAPI: IPascalCoinExplorerAPI;
-begin
+Function TDevBaseForm.ExplorerAPI: IPascalCoinExplorerAPI;
+Begin
   Result := Config.ExplorerAPI;
   Result.NodeURI := UseURI;
-end;
+End;
 
-function TDevBaseForm.NodeAPI: IPascalCoinNodeAPI;
-begin
+Function TDevBaseForm.NodeAPI: IPascalCoinNodeAPI;
+Begin
   Result := Config.NodeAPI;
   Result.NodeURI := UseURI;
-end;
+End;
 
-procedure TDevBaseForm.HandleAPIException(E: Exception);
-begin
-   TDialogService.ShowMessage(E.Message);
-end;
+Procedure TDevBaseForm.HandleAPIException(E: Exception);
+Begin
+  TDialogService.ShowMessage(E.Message);
+End;
 
-procedure TDevBaseForm.InitialiseThis;
-begin
-//for descendants; not abstract as this is easier
-end;
+Procedure TDevBaseForm.InitialiseThis;
+Begin
+  // for descendants; not abstract as this is easier
+End;
 
-procedure TDevBaseForm.SetDefaultURI(const Value: String);
-begin
+Procedure TDevBaseForm.SetDefaultURI(Const Value: String);
+Begin
   FDefaultURI := Value;
-end;
+End;
 
-procedure TDevBaseForm.TearDown;
-begin
-//for descendants; not abstract as this is easier
-end;
+Procedure TDevBaseForm.TearDown;
+Begin
+  // for descendants; not abstract as this is easier
+End;
 
-function TDevBaseForm.UseURI: String;
-begin
+Function TDevBaseForm.UseURI: String;
+Begin
   Result := FDefaultURI;
-end;
+End;
 
-function TDevBaseForm.WalletExplorerAPI: IPascalCoinWalletAPI;
-begin
+Function TDevBaseForm.WalletExplorerAPI: IPascalCoinWalletAPI;
+Begin
   Result := Config.WalletAPI;
   Result.NodeURI := UseURI;
-end;
+End;
 
-end.
-
+End.
