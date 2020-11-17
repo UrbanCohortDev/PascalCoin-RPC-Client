@@ -22,10 +22,12 @@ object DevBaseForm: TDevBaseForm
     TabOrder = 1
     object FormCaption: TLabel
       Align = Left
+      StyledSettings = [Family, Size, Style]
       Size.Width = 633.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'listboxheaderlabel'
+      TextSettings.FontColor = claCornsilk
       Text = 'FormCaption'
       TabOrder = 0
     end

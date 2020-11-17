@@ -11,6 +11,7 @@ Unit PascalCoin.RPC.Interfaces;
   https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
   PASC Donations welcome: Account (PASA) 1922-23
+  BitCoin: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
 
   THIS LICENSE HEADER MUST NOT BE REMOVED.
 
@@ -745,6 +746,59 @@ Type
     Function GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount;
 
     /// <summary>
+    /// Find Accounts
+    /// </summary>
+    /// <param name="AName">
+    /// returns the account that matches this name
+    /// </param>
+    /// <param name="AExact">
+    /// Default: True. If False, then any accounts whose name includes AName
+    /// will be returned
+    /// </param>
+    /// <param name="AType">
+    /// returns any accounts with this type
+    /// </param>
+    /// <param name="AStart">
+    /// Start account (by default, 0) - NOTE: Is the "start account number",
+    /// when executing multiple calls you must set start value to the latest
+    /// returned account number + 1. When searching by public key the start
+    /// param value is the position of indexed public keys list instead of
+    /// accounts numbers. <br />
+    /// </param>
+    /// <param name="AMax">
+    /// Max of accounts returned in array (by default, 100)
+    /// </param>
+    /// <param name="AMin_Balance">
+    /// If have value, will filter by current account balance
+    /// </param>
+    /// <param name="AMax_Balance">
+    /// If have value, will filter by current account balance
+    /// </param>
+    /// <param name="APubKey">
+    /// Will return accounts with this public key
+    /// </param>
+    /// <param name="AKeyStyle">
+    /// ksEncKey, ksB58Key
+    /// </param>
+    Function FindAccounts(Const AName: String; Const AExact: boolean; Const AType: integer; Const AStart: integer;
+      Const Amax: integer; Const AMin_Balance: PascCurrency; AMax_Balance: PascCurrency; Const APubKey: HexaStr;
+      Const AKeyStyle: TKeyStyle): IPascalCoinAccounts;
+    /// <summary>
+    /// Simplified call for finding account by name. Exact = True
+    /// </summary>
+    Function FindAccountByName(Const AName: String): IPascalCoinAccount;
+    /// <summary>
+    /// Simplified call for finding accounts by name. Exact = False
+    /// </summary>
+    Function FindAccountsByName(Const AName: String; Const AStart: integer = 0; Const Amax: integer = 100)
+      : IPascalCoinAccounts;
+    /// <summary>
+    /// Simplified call for finding accounts by key
+    /// </summary>
+    Function FindAccountsByKey(Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle = ksEncKey; Const AStart: integer = 0;
+      Const Amax: integer = 100): IPascalCoinAccounts;
+
+    /// <summary>
     /// Get operations made to an account <br />
     /// </summary>
     /// <param name="AAcoount">
@@ -832,6 +886,9 @@ Type
     // Function verifysign
 
   End;
+
+Const
+  KEY_STYLE_NAME: Array[TKeyStyle] Of String = ('', 'enc_pubkey', 'b58_pubkey');
 
 Implementation
 

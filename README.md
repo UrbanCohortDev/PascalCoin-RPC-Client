@@ -41,3 +41,12 @@ I have broken the RPC down into 4 areas:
 4. Operations - processing Raw Operations and others
 
 The current framework covers 1 (partially) and 2. I'm leaving 3 for the moment (some of this has been done though) as the aim is to provide a functional framework to work with remote RPC Nodes. So 4. is now in play.
+
+## Donations always welcome
+
+if you like this development and want to support it by making a donation then please feel free :-)
+
+PASC donations: PASA/Account Number 1922/23
+BitCoin donations: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
+
+Thank you

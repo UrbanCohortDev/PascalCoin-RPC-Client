@@ -11,6 +11,7 @@ Unit PascalCoin.RPC.API.Wallet;
   https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
   PASC Donations welcome: Account (PASA) 1922-23
+  BitCoin: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
 
   THIS LICENSE HEADER MUST NOT BE REMOVED.
 
@@ -72,18 +73,10 @@ End;
 
 Function TPascalCoinWalletAPI.getwalletaccounts(Const APublicKey: String; Const AKeyStyle: TKeyStyle;
   Const AStartIndex, AMaxCount: Integer): IPascalCoinAccounts;
-Var
-  lAccounts: TJSONArray;
-  lAccount: TJSONValue;
 Begin
   If FClient.RPCCall('getwalletaccounts', [PublicKeyParam(APublicKey, AKeyStyle), TParamPair.Create('start',
     AStartIndex), TParamPair.Create('max', AMaxCount)]) Then
-  Begin
-    result := TPascalCoinAccounts.Create;
-    lAccounts := (GetJSONResult As TJSONArray);
-    For lAccount In lAccounts Do
-      result.AddAccount(TJSON.JsonToObject<TPascalCoinAccount>((lAccount As TJSONObject)));
-  End;
+    result := TPascalCoinAccounts.FromJSONValue(GetJSONResult);
 End;
 
 Function TPascalCoinWalletAPI.getwalletaccountscount(Const APublicKey: String; Const AKeyStyle: TKeyStyle): Integer;

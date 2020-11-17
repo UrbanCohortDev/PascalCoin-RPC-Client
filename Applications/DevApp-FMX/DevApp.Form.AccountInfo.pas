@@ -11,6 +11,7 @@ Unit DevApp.Form.AccountInfo;
   https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
   PASC Donations welcome: Account (PASA) 1922-23
+  BitCoin: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
 
   THIS LICENSE HEADER MUST NOT BE REMOVED.
 
@@ -56,8 +57,6 @@ Type
     AccountList: TStringGrid;
     StringColumn1: TStringColumn;
     Col2: TStringColumn;
-    NumAccountsLabel: TLabel;
-    NumAccounts: TLabel;
     LiveCol: TStringColumn;
     LinkedAccountsBtn: TSpeedButton;
     CopyPubKeyBtn: TSpeedButton;
@@ -168,7 +167,7 @@ Var
   I, lastRow: Integer;
 Begin
   FLatestBlock := ExplorerAPI.GetBlockCount;
-  lAccounts := WalletExplorerAPI.getwalletaccounts(PublicKey.Text, TKeyStyle.ksEncKey, FLastAccountIndex);
+  lAccounts := ExplorerAPI.FindAccountsByKey(PublicKey.Text, TKeyStyle.ksEncKey, FLastAccountIndex);
 
   FLastAccountIndex := FLastAccountIndex + lAccounts.Count;
   lastRow := AccountList.RowCount - 1;
@@ -189,13 +188,6 @@ Begin
   Inherited;
   AccountList.RowCount := 0;
   FLastAccountIndex := -1;
-  Try
-    FAccounts := WalletExplorerAPI.getwalletaccountscount(PublicKey.Text, TKeyStyle.ksEncKey);
-  Except
-    On e: Exception Do
-      HandleAPIException(e);
-  End;
-  NumAccounts.Text := FormatFloat('#,##0', FAccounts);
   FetchNextAccounts;
   AccountList.Visible := True;
 End;

@@ -11,6 +11,7 @@ Unit PascalCoin.RPC.Account;
   https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
   PASC Donations welcome: Account (PASA) 1922-23
+  BitCoin: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
 
   THIS LICENSE HEADER MUST NOT BE REMOVED.
 
@@ -20,6 +21,7 @@ Interface
 
 Uses
   System.Generics.Collections,
+  System.JSON,
   PascalCoin.RPC.Interfaces;
 
 Type
@@ -85,12 +87,14 @@ Type
   Public
     Constructor Create;
     Destructor Destroy; Override;
+    class function FromJSONValue(Value: TJSONValue): TPascalCoinAccounts;
   End;
 
 Implementation
 
 Uses
-  System.SysUtils;
+  System.SysUtils,
+  REST.Json;
 
 { TPascalCoinAccount }
 
@@ -268,6 +272,16 @@ Begin
       Exit(lAccount);
 
 End;
+
+class function TPascalCoinAccounts.FromJSONValue(Value: TJSONValue): TPascalCoinAccounts;
+var lAccount: TJSONValue;
+    lAccounts: TJSONArray;
+begin
+  Result := TPascalCoinAccounts.Create;
+  lAccounts := (Value as TJSONArray);
+  For lAccount In lAccounts Do
+      result.AddAccount(TJSON.JsonToObject<TPascalCoinAccount>((lAccount As TJSONObject)));
+end;
 
 Function TPascalCoinAccounts.FindAccount(Const Value: Integer): IPascalCoinAccount;
 Var

@@ -11,6 +11,7 @@ Unit PascalCoin.RPC.API.Base;
   https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
   PASC Donations welcome: Account (PASA) 1922-23
+  BitCoin: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
 
   THIS LICENSE HEADER MUST NOT BE REMOVED.
 
@@ -45,6 +46,7 @@ Type
     Function ResultAsObj: TJSONObject;
     Function ResultAsArray: TJSONArray;
 
+  Public
     Constructor Create(AClient: IPascalCoinRPCClient);
 
   End;

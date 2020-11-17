@@ -11,6 +11,8 @@ Unit DevApp.Main;
   https:github.com/UrbanCohortDev/PascalCoin-RPC-Client
 
   PASC Donations welcome: Account (PASA) 1922-23
+  BitCoin: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
+
 
   THIS LICENSE HEADER MUST NOT BE REMOVED.
 
@@ -61,6 +63,7 @@ Type
         BlockButton: TButton;
         PendingsButton: TButton;
         YourIPLabel: TLabel;
+    StyleBook1: TStyleBook;
         Procedure AccountInfoBtnClick(Sender: TObject);
         Procedure AddNodeButtonClick(Sender: TObject);
         Procedure BlockButtonClick(Sender: TObject);
