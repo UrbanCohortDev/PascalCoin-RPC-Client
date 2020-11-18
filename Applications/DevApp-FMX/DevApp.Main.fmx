@@ -16,176 +16,13 @@ object MainForm: TMainForm
     Padding.Top = 3.000000000000000000
     Padding.Right = 3.000000000000000000
     Padding.Bottom = 3.000000000000000000
-    Margins.Left = 253.000000000000000000
+    Margins.Left = 250.000000000000000000
     Margins.Top = 3.000000000000000000
     Margins.Right = 3.000000000000000000
     Margins.Bottom = 3.000000000000000000
-    Size.Width = 618.000000000000000000
+    Size.Width = 621.000000000000000000
     Size.Height = 582.000000000000000000
     Size.PlatformDefault = False
-  end
-  object MultiView1: TMultiView
-    TargetControl = Layout1
-    MasterButton = SpeedButton1
-    NavigationPaneOptions.CollapsedWidth = 250.000000000000000000
-    Padding.Left = 3.000000000000000000
-    Padding.Top = 3.000000000000000000
-    Padding.Right = 3.000000000000000000
-    Padding.Bottom = 3.000000000000000000
-    Size.Width = 250.000000000000000000
-    Size.Height = 50.000000000000000000
-    Size.PlatformDefault = False
-    object ToolBar1: TToolBar
-      Size.Width = 244.000000000000000000
-      Size.Height = 40.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-      object SpeedButton1: TSpeedButton
-        Align = Right
-        Position.X = 202.000000000000000000
-        Size.Width = 42.000000000000000000
-        Size.Height = 40.000000000000000000
-        Size.PlatformDefault = False
-        StyleLookup = 'drawertoolbuttonbordered'
-        Text = 'SpeedButton1'
-      end
-    end
-    object NodeLayoout: TLayout
-      Align = Top
-      Margins.Top = 3.000000000000000000
-      Margins.Bottom = 3.000000000000000000
-      Position.Y = 43.000000000000000000
-      Size.Width = 244.000000000000000000
-      Size.Height = 78.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 1
-      object NodeList: TComboBox
-        Align = Top
-        Position.Y = 33.000000000000000000
-        Size.Width = 244.000000000000000000
-        Size.Height = 22.000000000000000000
-        Size.PlatformDefault = False
-        OnChange = NodeListChange
-      end
-      object NodeStatusLabel: TLabel
-        Align = Bottom
-        Margins.Left = 3.000000000000000000
-        Margins.Top = 3.000000000000000000
-        Margins.Right = 3.000000000000000000
-        Margins.Bottom = 3.000000000000000000
-        Position.X = 3.000000000000000000
-        Position.Y = 58.000000000000000000
-        Size.Width = 238.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        Text = 'NodeStatusLabel'
-        TabOrder = 0
-      end
-      object Layout2: TLayout
-        Align = Top
-        Size.Width = 244.000000000000000000
-        Size.Height = 33.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 1
-        object NodeButton: TSpeedButton
-          Align = Left
-          Size.Width = 33.000000000000000000
-          Size.Height = 33.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'refreshtoolbuttonbordered'
-          Text = 'NodeButton'
-          OnClick = NodeButtonClick
-        end
-        object AddNodeButton: TSpeedButton
-          Align = Left
-          Position.X = 33.000000000000000000
-          Size.Width = 33.000000000000000000
-          Size.Height = 33.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'addtoolbuttonbordered'
-          Text = 'AddNodeButton'
-          OnClick = AddNodeButtonClick
-        end
-        object OpenFolderBtn: TSpeedButton
-          Align = Right
-          Hint = 'Open data folder'
-          Position.X = 211.000000000000000000
-          Size.Width = 33.000000000000000000
-          Size.Height = 33.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'escapetoolbutton'
-          Text = 'OpenFolderBtn'
-          OnClick = OpenFolderBtnClick
-        end
-      end
-    end
-    object Panel1: TPanel
-      Align = Bottom
-      Position.Y = 532.000000000000000000
-      Size.Width = 244.000000000000000000
-      Size.Height = 50.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 2
-      object YourIPLabel: TLabel
-        Align = Top
-        Size.Width = 244.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        Text = 'YourIPLabel'
-        TabOrder = 0
-      end
-    end
-    object FlowLayout1: TFlowLayout
-      Align = Client
-      Size.Width = 244.000000000000000000
-      Size.Height = 408.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 3
-      Justify = Left
-      JustifyLastLine = Left
-      FlowDirection = LeftToRight
-      HorizontalGap = 2.000000000000000000
-      VerticalGap = 2.000000000000000000
-      object NodeStatusBtn: TButton
-        TabOrder = 0
-        Text = 'Node Status'
-        OnClick = NodeStatusBtnClick
-      end
-      object AccountInfoBtn: TButton
-        Position.X = 82.000000000000000000
-        TabOrder = 1
-        Text = 'Account Info'
-        OnClick = AccountInfoBtnClick
-      end
-      object BlockButton: TButton
-        Position.X = 164.000000000000000000
-        TabOrder = 2
-        Text = 'Block Info'
-        OnClick = BlockButtonClick
-      end
-      object PendingsButton: TButton
-        Position.Y = 24.000000000000000000
-        Size.Width = 161.000000000000000000
-        Size.Height = 22.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 3
-        Text = 'Pending && Find Op'
-        OnClick = PendingsButtonClick
-      end
-    end
-  end
-  object FormStand1: TFormStand
-    AnimationShow = 'OnShow*'
-    AnimationHide = 'OnHide*'
-    CommonActionPrefix = 'ca_'
-    DefaultHideAndCloseDeferTimeMS = 100
-    DefaultStyleName = 'formstand'
-    DefaultStandName = 'formstand'
-    DefaultParent = Layout1
-    StyleBook = StyleBook1
-    StandBook = StyleBook1
-    Left = 424
-    Top = 312
   end
   object StyleBook1: TStyleBook
     Styles = <
@@ -3174,5 +3011,177 @@ object MainForm: TMainForm
       end>
     Left = 418
     Top = 376
+  end
+  object MultiView1: TMultiView
+    TargetControl = Layout1
+    MasterButton = SpeedButton1
+    NavigationPaneOptions.CollapsedWidth = 250.000000000000000000
+    Padding.Left = 3.000000000000000000
+    Padding.Top = 3.000000000000000000
+    Padding.Right = 3.000000000000000000
+    Padding.Bottom = 3.000000000000000000
+    Size.Width = 250.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    object ToolBar1: TToolBar
+      Size.Width = 244.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object SpeedButton1: TSpeedButton
+        Align = Right
+        Position.X = 202.000000000000000000
+        Size.Width = 42.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'drawertoolbuttonbordered'
+        Text = 'SpeedButton1'
+      end
+    end
+    object NodeLayoout: TLayout
+      Align = Top
+      Margins.Top = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Position.Y = 43.000000000000000000
+      Size.Width = 244.000000000000000000
+      Size.Height = 78.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object NodeList: TComboBox
+        Align = Top
+        Position.Y = 33.000000000000000000
+        Size.Width = 244.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        OnChange = NodeListChange
+      end
+      object NodeStatusLabel: TLabel
+        Align = Bottom
+        Margins.Left = 3.000000000000000000
+        Margins.Top = 3.000000000000000000
+        Margins.Right = 3.000000000000000000
+        Margins.Bottom = 3.000000000000000000
+        Position.X = 3.000000000000000000
+        Position.Y = 58.000000000000000000
+        Size.Width = 238.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'NodeStatusLabel'
+        TabOrder = 0
+      end
+      object Layout2: TLayout
+        Align = Top
+        Size.Width = 244.000000000000000000
+        Size.Height = 33.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object NodeButton: TSpeedButton
+          Align = Left
+          Size.Width = 33.000000000000000000
+          Size.Height = 33.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'refreshtoolbuttonbordered'
+          Text = 'NodeButton'
+          OnClick = NodeButtonClick
+        end
+        object AddNodeButton: TSpeedButton
+          Align = Left
+          Position.X = 33.000000000000000000
+          Size.Width = 33.000000000000000000
+          Size.Height = 33.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'addtoolbuttonbordered'
+          Text = 'AddNodeButton'
+          OnClick = AddNodeButtonClick
+        end
+        object OpenFolderBtn: TSpeedButton
+          Align = Right
+          Hint = 'Open data folder'
+          Position.X = 211.000000000000000000
+          Size.Width = 33.000000000000000000
+          Size.Height = 33.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'escapetoolbutton'
+          Text = 'OpenFolderBtn'
+          OnClick = OpenFolderBtnClick
+        end
+      end
+    end
+    object Panel1: TPanel
+      Align = Bottom
+      Position.Y = 532.000000000000000000
+      Size.Width = 244.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object YourIPLabel: TLabel
+        Align = Top
+        Size.Width = 244.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'YourIPLabel'
+        TabOrder = 1
+      end
+      object LocalIPLabel: TLabel
+        Align = Top
+        Position.Y = 17.000000000000000000
+        Size.Width = 244.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'LocalIPLabel'
+        TabOrder = 0
+      end
+    end
+    object FlowLayout1: TFlowLayout
+      Align = Client
+      Size.Width = 244.000000000000000000
+      Size.Height = 408.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Justify = Left
+      JustifyLastLine = Left
+      FlowDirection = LeftToRight
+      HorizontalGap = 2.000000000000000000
+      VerticalGap = 2.000000000000000000
+      object NodeStatusBtn: TButton
+        TabOrder = 0
+        Text = 'Node Status'
+        OnClick = NodeStatusBtnClick
+      end
+      object AccountInfoBtn: TButton
+        Position.X = 82.000000000000000000
+        TabOrder = 1
+        Text = 'Account Info'
+        OnClick = AccountInfoBtnClick
+      end
+      object BlockButton: TButton
+        Position.X = 164.000000000000000000
+        TabOrder = 2
+        Text = 'Block Info'
+        OnClick = BlockButtonClick
+      end
+      object PendingsButton: TButton
+        Position.Y = 24.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Pending && Find Op'
+        OnClick = PendingsButtonClick
+      end
+    end
+  end
+  object FormStand1: TFormStand
+    AnimationShow = 'OnShow*'
+    AnimationHide = 'OnHide*'
+    CommonActionPrefix = 'ca_'
+    DefaultHideAndCloseDeferTimeMS = 100
+    DefaultStyleName = 'formstand'
+    DefaultStandName = 'formstand'
+    DefaultParent = Layout1
+    StyleBook = StyleBook1
+    StandBook = StyleBook1
+    Left = 424
+    Top = 312
   end
 end

@@ -27,6 +27,7 @@ Type
 
   TDevAppConfig = Class
   Private
+    FConfigFolder: String;
     FConfigFile: String;
     FConfigData: TJSONObject;
     Function GetServers: TJSONArray;
@@ -72,11 +73,23 @@ End;
 Constructor TDevAppConfig.Create;
 Begin
   Inherited Create;
-  FConfigFile := TPath.Combine(TPath.Combine(TPath.GetHomePath, 'PascalCoin_UrbanCohort'), 'DevApp') + 'Config.json';
+
+  {$IFDEF TESTNET}
+   FConfigFolder := TPath.Combine(TPath.Combine(TPath.GetHomePath, 'PascalCoin_UrbanCohort_TestNet'), 'DevApp');
+  {$ELSE}
+  FConfigFolder := TPath.Combine(TPath.Combine(TPath.GetHomePath, 'PascalCoin_UrbanCohort'), 'DevApp');
+  {$ENDIF}
+
+  FConfigFile := TPath.Combine(FConfigFolder, 'Config.json');
+
   If TFile.Exists(FConfigFile) Then
     FConfigData := TJSONObject.ParseJSONValue(TFile.ReadAllText(FConfigFile)) As TJSONObject
   Else
-    FConfigData := TJSONObject.ParseJSONValue('{"app":"DevApp", "Servers":[]}') As TJSONObject;
+    {$IFDEF TESTNET}
+    FConfigData := TJSONObject.ParseJSONValue('{"app":"DevApp", "TestNet":true, "Servers":[]}') As TJSONObject;
+    {$ELSE}
+    FConfigData := TJSONObject.ParseJSONValue('{"app":"DevApp", "TestNet":false, "Servers":[]}') As TJSONObject;
+    {$ENDIF}
 End;
 
 Destructor TDevAppConfig.Destroy;

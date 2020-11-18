@@ -66,6 +66,7 @@ Type
     OpsButton: TButton;
     OpDepth: TEdit;
     Label3: TLabel;
+    Splitter1: TSplitter;
     Procedure AccountListCellClick(Const Column: TColumn; Const Row: Integer);
     Procedure Button1Click(Sender: TObject);
     Procedure CopyPubKeyBtnClick(Sender: TObject);

@@ -205,11 +205,20 @@ inherited AccountInfoForm: TAccountInfoForm
           DataDetectorTypes = []
           Align = Client
           Size.Width = 326.000000000000000000
-          Size.Height = 128.000000000000000000
+          Size.Height = 115.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
           Viewport.Width = 322.000000000000000000
-          Viewport.Height = 124.000000000000000000
+          Viewport.Height = 111.000000000000000000
+        end
+        object Splitter1: TSplitter
+          Align = Top
+          Cursor = crVSplit
+          MinSize = 20.000000000000000000
+          Position.Y = 180.000000000000000000
+          Size.Width = 326.000000000000000000
+          Size.Height = 13.000000000000000000
+          Size.PlatformDefault = False
         end
       end
     end

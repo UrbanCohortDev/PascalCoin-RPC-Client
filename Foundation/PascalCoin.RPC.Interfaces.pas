@@ -34,12 +34,29 @@ Type
   // Currency is limited to 4 decimals (actually stored as Int64)
   PascCurrency = Currency;
 
+  TAccountData = String; // Array [0 .. 31] Of Byte;
+
   // PASC64Encode = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-+{}[]_:`|<>,.?/~';
   // PASC64EncodeInit = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+{}[]_:`|<>,.?/~';
   // See PascalCoin.RPC.Consts.pas
 
   TStringPair = TPair<String, String>;
   TParamPair = TPair<String, variant>;
+  TKeyStyle = (ksUnkown, ksEncKey, ksB58Key);
+
+  TSearchType = (stExact, stStartsWith, stNotStartsWith, stContains, stNotContains, stEndsWith, stNotEndsWith);
+
+  TAccountStatusType = (
+  astall,  //Default option)
+  astForSale,
+  astForPublicSale,
+  astForPrivateSale,
+  astForSwap,
+  astForAccountSwap,
+  astForCoinSwap,
+  astForSaleSwap,
+  astNotForSaleSwap
+  );
 
   IPascalCoinNodeStatus = Interface;
 
@@ -55,10 +72,6 @@ Type
     Property ResponseStr: String Read GetResponseStr;
     Property NodeURI: String Read GetNodeURI Write SetNodeURI;
   End;
-
-  TKeyStyle = (ksUnkown, ksEncKey, ksB58Key);
-
-  TAccountData = String; // Array [0 .. 31] Of Byte;
 
   IPascalCoinAccount = Interface
     ['{10B1816D-A796-46E6-94DA-A4C6C2125F82}']
@@ -687,19 +700,41 @@ Type
     Function GetBlock(Const BlockNumber: integer): IPascalCoinBlock;
 
     /// <summary>
-    /// Returns a JSON Array with blocks information from "start" to "end"
+    /// getblocks returns a JSON Array with blocks information from "start" to "end"
     /// (or "last" n blocks) Blocks are returned in DESCENDING order See
     /// getblock <br />Note: Must use param <b>last</b> alone, or <b>start</b>
     /// and end <br />
-    /// Function GetBlocks(const Alast, Astart, Aend: Integer): IPascalCoinBlocks; <br />
-    /// Simplifying Methods Implemented
+    /// This are implemnted as two methods to simplify usage. This calls getblocks with the "last" param<br />
     /// </summary>
-    /// <param name="Alast">
+    /// <param name="ACount">
     /// Last n blocks inthe blockchain (n&gt;0 and n&lt;=1000) <br />
     /// </param>
-
     Function GetLastBlocks(Const ACount: integer): IPascalCoinBlocks;
+    /// <summary>
+    ///   makes a call to getblocks with "start" to "end"
+    /// </summary>
     Function GetBlockRange(Const AStart, AEnd: integer): IPascalCoinBlocks;
+
+    /// <summary>
+    ///   Find blocks by name/type
+    /// </summary>
+    /// <param name="APayload">
+    ///   value to search payload with
+    /// </param>
+    /// <param name="ASearchType">
+    ///   default "startswith"
+    /// </param>
+    /// <param name="AStart">
+    ///   default = 0
+    /// </param>
+    /// <param name="AEnd">
+    ///   default = -1 (no limit)
+    /// </param>
+    /// <param name="AMax">
+    ///   default = 100
+    /// </param>
+    Function FindBlocks(const APayload: String; const ASearchType: TSearchType; const APubKey: HexaStr;
+      Const AKeyStyle: TKeyStyle; const AStart: Integer = 0; Const AEnd: Integer = -1; Const AMax: Integer = 100): IPascalCoinBlocks;
 
     /// <summary>
     /// Params <br />block : Integer - Block number <br />opblock : Integer -
@@ -751,9 +786,8 @@ Type
     /// <param name="AName">
     /// returns the account that matches this name
     /// </param>
-    /// <param name="AExact">
-    /// Default: True. If False, then any accounts whose name includes AName
-    /// will be returned
+    /// <param name="ASearchType">
+    /// Default: exact. the exact param has been deprecated
     /// </param>
     /// <param name="AType">
     /// returns any accounts with this type
@@ -780,9 +814,9 @@ Type
     /// <param name="AKeyStyle">
     /// ksEncKey, ksB58Key
     /// </param>
-    Function FindAccounts(Const AName: String; Const AExact: boolean; Const AType: integer; Const AStart: integer;
+    Function FindAccounts(Const AName: String; Const ASearchType: TSearchType; Const AType: integer; Const AStart: integer;
       Const Amax: integer; Const AMin_Balance: PascCurrency; AMax_Balance: PascCurrency; Const APubKey: HexaStr;
-      Const AKeyStyle: TKeyStyle): IPascalCoinAccounts;
+      Const AKeyStyle: TKeyStyle; Const AAccountStatus: TAccountStatusType = astAll): IPascalCoinAccounts;
     /// <summary>
     /// Simplified call for finding account by name. Exact = True
     /// </summary>
@@ -790,7 +824,7 @@ Type
     /// <summary>
     /// Simplified call for finding accounts by name. Exact = False
     /// </summary>
-    Function FindAccountsByName(Const AName: String; Const AStart: integer = 0; Const Amax: integer = 100)
+    Function FindAccountsByName(Const AName: String; Const ASearchType: TSearchType = stContains; Const AStart: integer = 0; Const Amax: integer = 100)
       : IPascalCoinAccounts;
     /// <summary>
     /// Simplified call for finding accounts by key
@@ -889,6 +923,31 @@ Type
 
 Const
   KEY_STYLE_NAME: Array[TKeyStyle] Of String = ('', 'enc_pubkey', 'b58_pubkey');
+
+  SEARCH_TYPE: Array[TSearchType] Of String = (
+  'exact',
+  'startswith',
+  'not-startswith',
+  'contains',
+  'not-contains',
+  'endswith',
+  'not-endswith');
+
+  DEFAULT_NAME_SEARCH = stExact;
+  DEFAULT_BLOCK_SEARCH = stStartsWith;
+
+  ACCOUNT_STATUS_TYPE: Array[TAccountStatusType] Of String = (
+  'all',
+  'for-sale',
+  'for-public-sale',
+  'for-private-sale',
+  'for-swap',
+  'for-account-swap',
+  'for-coin-swap',
+  'for-sale-swap',
+  'not-for-sale-swap');
+
+  DEFAULT_ACCOUNT_STATUS_TYPE = astAll;
 
 Implementation
 

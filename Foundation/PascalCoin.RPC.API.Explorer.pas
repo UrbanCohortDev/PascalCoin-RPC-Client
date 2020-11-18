@@ -34,11 +34,13 @@ Type
     Function getaccountoperations(Const AAccount: Cardinal; Const ADepth: Integer = 100; Const AStart: Integer = 0;
       Const AMax: Integer = 100): IPascalCoinOperations;
 
-    Function FindAccounts(Const AName: String; Const AExact: boolean; Const AType: Integer; Const AStart: Integer;
-      Const AMax: Integer; Const AMin_Balance: PascCurrency; AMax_Balance: PascCurrency; Const APubKey: HexaStr;
-      Const AKeyStyle: TKeyStyle): IPascalCoinAccounts;
+    function FindAccounts(Const AName: String; Const ASearchType: TSearchType;
+        Const AType: Integer; Const AStart: Integer; Const AMax: Integer; Const
+        AMin_Balance: PascCurrency; AMax_Balance: PascCurrency; Const APubKey:
+        HexaStr; Const AKeyStyle: TKeyStyle; Const AAccountStatus:
+        TAccountStatusType = astAll): IPascalCoinAccounts;
     Function FindAccountByName(Const AName: String): IPascalCoinAccount;
-    Function FindAccountsByName(Const AName: String; Const AStart: Integer = 0; Const AMax: Integer = 100)
+    Function FindAccountsByName(Const AName: String; Const ASearchType: TSearchType = stContains; Const AStart: Integer = 0; Const AMax: Integer = 100)
       : IPascalCoinAccounts;
     Function FindAccountsByKey(Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle = ksEncKey; Const AStart: Integer = 0;
       Const AMax: Integer = 100): IPascalCoinAccounts;
@@ -47,6 +49,9 @@ Type
     Function GetBlockCount: Integer;
     Function GetLastBlocks(Const ACount: Integer): IPascalCoinBlocks;
     Function GetBlockRange(Const AStart, AEnd: Integer): IPascalCoinBlocks;
+    Function FindBlocks(const APayload: String; const ASearchType: TSearchType; const APubKey: HexaStr;
+      Const AKeyStyle: TKeyStyle; const AStart: Integer = 0; Const AEnd: Integer = -1; Const AMax: Integer = 100): IPascalCoinBlocks;
+
 
     Function getblockoperation(Const Ablock, Aopblock: Integer): IPascalCoinOperation;
     Function getblockoperations(Const Ablock: Integer; Const AStart: Integer = 0; Const AMax: Integer = 100)
@@ -65,6 +70,7 @@ Implementation
 
 Uses
   System.SysUtils,
+  System.Rtti,
   System.DateUtils,
   REST.JSON,
   PascalCoin.RPC.Account,
@@ -84,16 +90,18 @@ End;
 Function TPascalCoinExplorerAPI.FindAccountByName(Const AName: String): IPascalCoinAccount;
 var lAccountList: IPascalCoinAccounts;
 Begin
-  lAccountList := FindAccounts(AName, True, 0, 0, 100, 0, 0, '', ksUnkown);
+  lAccountList := FindAccounts(AName, stExact, 0, 0, 100, 0, 0, '', ksUnkown);
   if lAccountList.Count = 0 then
      Result := Nil
   else
      Result := lAccountList[0];
 End;
 
-Function TPascalCoinExplorerAPI.FindAccounts(Const AName: String; Const AExact: boolean;
-  Const AType, AStart, AMax: Integer; Const AMin_Balance: PascCurrency; AMax_Balance: PascCurrency;
-  Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle): IPascalCoinAccounts;
+function TPascalCoinExplorerAPI.FindAccounts(Const AName: String; Const
+    ASearchType: TSearchType; Const AType: Integer; Const AStart: Integer;
+    Const AMax: Integer; Const AMin_Balance: PascCurrency; AMax_Balance:
+    PascCurrency; Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle;
+    Const AAccountStatus: TAccountStatusType = astAll): IPascalCoinAccounts;
 Var
   lParams: TArray<TParamPair>;
   lLastParam: Integer;
@@ -109,8 +117,8 @@ Begin
   If AName <> '' Then
   Begin
     AddParam(TParamPair.Create('name', AName));
-    if Not AExact then
-       AddParam(TParamPair.Create('exact', false));
+    if (ASearchType <> stExact) then
+       AddParam(TParamPair.Create('namesearchtype', SEARCH_TYPE[ASearchType]));
   End;
 
   if AType >= 0 then
@@ -127,6 +135,9 @@ Begin
 
   if AMax_Balance > 0 then
      AddParam(TParamPair.Create('max_balance', AMax_Balance));
+
+  if AAccountStatus <> astAll then
+     AddParam(TParamPair.Create('statustype', ACCOUNT_STATUS_TYPE[AAccountStatus]));
 
   if APubKey <> '' then
   begin
@@ -146,14 +157,55 @@ End;
 Function TPascalCoinExplorerAPI.FindAccountsByKey(Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle;
   Const AStart, AMax: Integer): IPascalCoinAccounts;
 Begin
-  Result := FindAccounts('', True, -1, AStart, AMax, 0, 0, APubKey, AKeyStyle);
+  Result := FindAccounts('', stExact, -1, AStart, AMax, 0, 0, APubKey, AKeyStyle);
 End;
 
-Function TPascalCoinExplorerAPI.FindAccountsByName(Const AName: String; Const AStart, AMax: Integer)
-  : IPascalCoinAccounts;
+function TPascalCoinExplorerAPI.FindAccountsByName(Const AName: String; Const
+    ASearchType: TSearchType = stContains; Const AStart: Integer = 0; Const
+    AMax: Integer = 100): IPascalCoinAccounts;
 Begin
-  Result := FindAccounts(AName, False, -1, AStart, AMax, 0, 0, '', ksUnkown);
+  Result := FindAccounts(AName, ASearchType, -1, AStart, AMax, 0, 0, '', ksUnkown);
 End;
+
+function TPascalCoinExplorerAPI.FindBlocks(const APayload: String; const
+    ASearchType: TSearchType; const APubKey: HexaStr; Const AKeyStyle:
+    TKeyStyle; const AStart: Integer = 0; Const AEnd: Integer = -1; Const AMax:
+    Integer = 100): IPascalCoinBlocks;
+var
+  lParams: TArray<TParamPair>;
+  lLastParam: Integer;
+  Procedure AddParam(lPair: TParamPair);
+  Begin
+    Inc(lLastParam);
+    lParams[lLastParam] := lPair;
+  End;
+
+Begin
+  SetLength(lParams, 6);
+  lLastParam := -1;
+  if APayload <> '' then
+  begin
+    AddParam(TParamPair.Create('payload', APayload));
+    AddParam(TParamPair.Create('payloadsearchtype', SEARCH_TYPE[ASearchType]));
+  end;
+
+  AddParam(TParamPair.Create('start', AStart));
+  AddParam(TParamPair.Create('end', AEnd));
+  AddParam(TParamPair.Create('max', AMax));
+
+  if APubKey <> '' then
+  begin
+    case AKeyStyle of
+      ksUnkown: AddParam(TParamPair.Create(KEY_STYLE_NAME[TPascalCoinUtils.KeyStyle(APubKey)], APubKey));
+      else AddParam(TParamPair.Create(KEY_STYLE_NAME[AKeyStyle], APubKey));
+    end;
+  end;
+
+  SetLength(lParams, lLastParam + 1);
+
+  If FClient.RPCCall('findblocks', lParams) Then
+     Result := TPascalCoinBlocks.FromJSONValue(ResultAsArray);
+end;
 
 Function TPascalCoinExplorerAPI.findoperation(Const AOpHash: HexaStr): IPascalCoinOperation;
 Begin
