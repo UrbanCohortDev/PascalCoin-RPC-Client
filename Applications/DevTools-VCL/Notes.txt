@@ -1,0 +1,5 @@
+Using the CryptoLib's from UGO requires quite a few paths to be set if you want to use them as source.
+
+This app will create a directory for each library and copy all the files into it. It will also change the includes to the new path.
+
+To use the app you need to have a master directory which contains the libraries.

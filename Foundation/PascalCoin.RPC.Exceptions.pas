@@ -20,7 +20,7 @@ Unit PascalCoin.RPC.Exceptions;
 Interface
 
 Uses
-  System.SysUtils;
+  System.SysUtils, PascalCoin.RPC.Messages;
 
 Type
 
@@ -28,6 +28,41 @@ Type
   Public
     Constructor Create;
   End;
+
+  EHexException = class(Exception)
+  Public
+    Constructor Create(const AValue: string);
+  End;
+
+  EBase58Exception = class(Exception)
+  Public
+    Constructor Create(const AValue: string);
+  End;
+
+  EAccountNumberException = class(Exception)
+  Public
+    constructor Create(const AValue: string);
+  End;
+
+  EAccountNameException = class(Exception)
+  Public
+    constructor Create(const AValue, AReason: string);
+  End;
+
+  EDecryptException = class(Exception)
+  public
+    constructor Create;
+  end;
+
+  EUnrecognisedKeyStyle = class(Exception)
+  Public
+  constructor Create(const AValue: string);
+  end;
+
+  EKeyException = class(Exception)
+  public
+  constructor Create(const AType, AProblem: string);
+  end;
 
   ERPCException = Class(Exception)
   Private
@@ -61,7 +96,7 @@ Function GetRPCExceptionClass(AStatusCode: Integer): ERPCExceptionClass;
 Implementation
 
 Uses
-  PascalCoin.RPC.Consts;
+  PascalCoin.Consts;
 
 Function GetRPCExceptionClass(AStatusCode: Integer): ERPCExceptionClass;
 Begin
@@ -111,7 +146,56 @@ End;
 
 Constructor ENotImplementedInFramework.Create;
 Begin
-  self.Message := 'Not yet implemented in framework';
+  inherited Create(NOT_IMPLEMENTED_IN_FRAMEWORK);
 End;
+
+{ EHexaStrException }
+
+constructor EHexException.Create(const AValue: string);
+begin
+  inherited Create(HEX_ERROR.Replace('$V', AValue));
+end;
+
+{ EBase58Exception }
+
+constructor EBase58Exception.Create(const AValue: string);
+begin
+  inherited Create(BASE58_ERROR.Replace('$V', AValue));
+end;
+
+{ EAccountNumberException }
+
+constructor EAccountNumberException.Create(const AValue: string);
+begin
+  inherited Create(ACCOUNT_NUM_INVALID_FORMAT.Replace('$V', AValue));
+end;
+
+{ EAccountNameException }
+
+constructor EAccountNameException.Create(const AValue, AReason: string);
+begin
+   inherited Create(NAME_INVALID_CONNECTOR.Replace('$V', AValue).Replace('$R', AReason));
+end;
+
+{ EDecryptException }
+
+constructor EDecryptException.Create;
+begin
+  inherited Create(DECRYPTION_FAILED);
+end;
+
+{ EUnrecognisedKeyStyle }
+
+constructor EUnrecognisedKeyStyle.Create(const AValue: string);
+begin
+  inherited Create(UNRECOGNISED_KEY.Replace('$V', AValue));
+end;
+
+{ EPublicKeyException }
+
+constructor EKeyException.Create(const AType, AProblem: string);
+begin
+  inherited Create(PUBLIC_KEY_FAIL.Replace('$T', AType).Replace('$V', AProblem));
+end;
 
 End.

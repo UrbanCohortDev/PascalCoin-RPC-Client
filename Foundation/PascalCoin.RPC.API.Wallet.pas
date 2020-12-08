@@ -22,6 +22,7 @@ Interface
 Uses
   System.JSON,
   System.Generics.Collections,
+  PascalCoin.Consts,
   PascalCoin.RPC.Interfaces,
   PascalCoin.RPC.API.Base,
   PascalCoin.RPC.API.Explorer,

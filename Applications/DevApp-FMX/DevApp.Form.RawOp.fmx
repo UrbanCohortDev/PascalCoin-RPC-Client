@@ -1,0 +1,386 @@
+inherited RawOpForm: TRawOpForm
+  Caption = 'DevBaseForm1'
+  ClientWidth = 866
+  DesignerMasterStyle = 0
+  inherited HeaderLayout: TLayout
+    Size.Width = 860.000000000000000000
+    inherited FormCaption: TLabel
+      Text = 'Raw Operations'
+    end
+    object Button1: TButton
+      Action = StandardDataAction
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Position.X = 780.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+    end
+    object Button2: TButton
+      Action = ClearAction
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Margins.Left = 3.000000000000000000
+      Margins.Right = 3.000000000000000000
+      Position.X = 697.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+    end
+  end
+  inherited FooterLayout: TLayout
+    Size.Width = 860.000000000000000000
+  end
+  inherited ContentLayout: TLayout
+    Size.Width = 860.000000000000000000
+    object KeyLayout: TLayout
+      Align = Top
+      Padding.Bottom = 3.000000000000000000
+      Size.Width = 860.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Label1: TLabel
+        Align = Left
+        Size.Width = 145.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Private Key (Hex Encoded)'
+        TabOrder = 0
+      end
+      object PrivateKey: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Client
+        TabOrder = 1
+        Margins.Right = 3.000000000000000000
+        Size.Width = 566.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object KeyTypeCombo: TComboBox
+        Align = Right
+        Position.X = 714.000000000000000000
+        Size.Width = 146.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+      end
+    end
+    object Layout2: TLayout
+      Align = Top
+      Padding.Left = 3.000000000000000000
+      Padding.Top = 3.000000000000000000
+      Padding.Right = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Position.Y = 27.000000000000000000
+      Size.Width = 860.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object Label2: TLabel
+        Align = Left
+        Position.X = 3.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 142.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'From Account'
+        TabOrder = 2
+      end
+      object FromAccount: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 3
+        Position.X = 145.000000000000000000
+        Position.Y = 3.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label3: TLabel
+        Align = Left
+        Position.X = 311.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'To Account'
+        TabOrder = 4
+      end
+      object ToAccount: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 5
+        Position.X = 391.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        OnExit = ToAccountExit
+      end
+      object Label4: TLabel
+        Align = Left
+        Margins.Left = 3.000000000000000000
+        Position.X = 555.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 106.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Sender Next N_Op'
+        TabOrder = 0
+      end
+      object NextNOp: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 1
+        Position.X = 661.000000000000000000
+        Position.Y = 3.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Size.Width = 72.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object Layout3: TLayout
+      Align = Top
+      Padding.Left = 3.000000000000000000
+      Padding.Top = 3.000000000000000000
+      Padding.Right = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Position.Y = 57.000000000000000000
+      Size.Width = 860.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object Label5: TLabel
+        Align = Left
+        Position.X = 3.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 142.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Amount'
+        TabOrder = 3
+      end
+      object Amount: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 5
+        Position.X = 145.000000000000000000
+        Position.Y = 3.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object OpNumber: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 4
+        Text = '1'
+        Position.X = 391.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 34.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label10: TLabel
+        Align = Left
+        Position.X = 311.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Op Number'
+        TabOrder = 2
+      end
+      object Label6: TLabel
+        Align = Left
+        Margins.Left = 3.000000000000000000
+        Position.X = 428.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 69.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Fee'
+        TabOrder = 0
+      end
+      object Fee: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 1
+        Position.X = 497.000000000000000000
+        Position.Y = 3.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object Layout4: TLayout
+      Align = Top
+      Padding.Left = 3.000000000000000000
+      Padding.Top = 3.000000000000000000
+      Padding.Right = 3.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.Y = 117.000000000000000000
+      Size.Width = 860.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      object Label9: TLabel
+        Align = Left
+        Position.X = 3.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 142.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'K (random)'
+        TabOrder = 0
+      end
+      object KRandom: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 1
+        Position.X = 145.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 448.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object UseClass: TCheckBox
+        Align = Left
+        IsChecked = True
+        Position.X = 593.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 193.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Use Class'
+      end
+    end
+    object Layout5: TLayout
+      Align = Top
+      Padding.Left = 3.000000000000000000
+      Padding.Top = 3.000000000000000000
+      Padding.Right = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Position.Y = 87.000000000000000000
+      Size.Width = 860.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Label8: TLabel
+        Align = Left
+        Position.X = 3.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 142.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Payload'
+        TabOrder = 0
+      end
+      object Payload: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Left
+        TabOrder = 1
+        Position.X = 145.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 280.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object PayloadEncryptionCombo: TComboBox
+        Align = Left
+        Position.X = 497.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 136.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        OnChange = PayloadEncryptionComboChange
+      end
+      object Label7: TLabel
+        Align = Left
+        Margins.Left = 3.000000000000000000
+        Position.X = 428.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 69.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Encryption'
+        TabOrder = 3
+      end
+      object PasswordLayout: TLayout
+        Align = Client
+        Padding.Left = 3.000000000000000000
+        Size.Width = 224.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        object Label11: TLabel
+          Align = Left
+          Position.X = 3.000000000000000000
+          Size.Width = 70.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Password'
+          TabOrder = 0
+        end
+        object PasswordEdit: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          TabOrder = 1
+          Size.Width = 151.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+        end
+      end
+    end
+    object Layout1: TLayout
+      Align = Top
+      Position.Y = 149.000000000000000000
+      Size.Width = 860.000000000000000000
+      Size.Height = 28.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 6
+      object ExecuteButton: TButton
+        Align = Center
+        TabOrder = 0
+        Text = 'Execute'
+        OnClick = ExecuteButtonClick
+      end
+    end
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      StyledSettings = [Size, Style, FontColor]
+      TextSettings.Font.Family = 'Consolas'
+      Align = Client
+      Size.Width = 860.000000000000000000
+      Size.Height = 191.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 7
+      Viewport.Width = 856.000000000000000000
+      Viewport.Height = 187.000000000000000000
+    end
+  end
+  object ActionList1: TActionList
+    Left = 416
+    Top = 224
+    object ClearAction: TAction
+      Text = 'Clear'
+      OnExecute = ClearActionExecute
+    end
+    object StandardDataAction: TAction
+      Text = 'Standard Test'
+      OnExecute = StandardDataActionExecute
+    end
+  end
+end

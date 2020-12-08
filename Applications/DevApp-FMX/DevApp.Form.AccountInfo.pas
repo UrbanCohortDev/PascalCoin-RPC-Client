@@ -99,7 +99,7 @@ Uses
   PascalCoin.RPC.Interfaces,
   DevApp.Utils,
   FMX.PlatformUtils,
-  PascalCoin.RPC.Consts;
+  PascalCoin.Consts;
 
 Procedure TAccountInfoForm.AccountListCellClick(Const Column: TColumn; Const Row: Integer);
 Begin
@@ -142,7 +142,7 @@ Function TAccountInfoForm.DisplayAccountInfo(Const AnAccount: String): String;
 Var
   lAccount: IPascalCoinAccount;
 Begin
-  If Not TPascalCoinUtils.ValidAccountNumber(AnAccount) Then
+  If Not TPascalCoinUtils.IsAccountNumberValid(AnAccount) Then
   Begin
     ShowMessage('Not a valid account number');
     Exit;

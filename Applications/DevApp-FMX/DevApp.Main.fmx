@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'Form1'
   ClientHeight = 588
-  ClientWidth = 874
+  ClientWidth = 1020
   StyleBook = StyleBook1
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -16,11 +16,11 @@ object MainForm: TMainForm
     Padding.Top = 3.000000000000000000
     Padding.Right = 3.000000000000000000
     Padding.Bottom = 3.000000000000000000
-    Margins.Left = 250.000000000000000000
+    Margins.Left = 225.000000000000000000
     Margins.Top = 3.000000000000000000
     Margins.Right = 3.000000000000000000
     Margins.Bottom = 3.000000000000000000
-    Size.Width = 621.000000000000000000
+    Size.Width = 792.000000000000000000
     Size.Height = 582.000000000000000000
     Size.PlatformDefault = False
   end
@@ -3015,7 +3015,7 @@ object MainForm: TMainForm
   object MultiView1: TMultiView
     TargetControl = Layout1
     MasterButton = SpeedButton1
-    NavigationPaneOptions.CollapsedWidth = 250.000000000000000000
+    NavigationPaneOptions.CollapsedWidth = 225.000000000000000000
     Padding.Left = 3.000000000000000000
     Padding.Top = 3.000000000000000000
     Padding.Right = 3.000000000000000000
@@ -3024,13 +3024,13 @@ object MainForm: TMainForm
     Size.Height = 50.000000000000000000
     Size.PlatformDefault = False
     object ToolBar1: TToolBar
-      Size.Width = 244.000000000000000000
+      Size.Width = 219.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       object SpeedButton1: TSpeedButton
         Align = Right
-        Position.X = 202.000000000000000000
+        Position.X = 177.000000000000000000
         Size.Width = 42.000000000000000000
         Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
@@ -3043,14 +3043,14 @@ object MainForm: TMainForm
       Margins.Top = 3.000000000000000000
       Margins.Bottom = 3.000000000000000000
       Position.Y = 43.000000000000000000
-      Size.Width = 244.000000000000000000
+      Size.Width = 219.000000000000000000
       Size.Height = 78.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       object NodeList: TComboBox
         Align = Top
         Position.Y = 33.000000000000000000
-        Size.Width = 244.000000000000000000
+        Size.Width = 219.000000000000000000
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         OnChange = NodeListChange
@@ -3063,7 +3063,7 @@ object MainForm: TMainForm
         Margins.Bottom = 3.000000000000000000
         Position.X = 3.000000000000000000
         Position.Y = 58.000000000000000000
-        Size.Width = 238.000000000000000000
+        Size.Width = 213.000000000000000000
         Size.Height = 17.000000000000000000
         Size.PlatformDefault = False
         Text = 'NodeStatusLabel'
@@ -3071,7 +3071,7 @@ object MainForm: TMainForm
       end
       object Layout2: TLayout
         Align = Top
-        Size.Width = 244.000000000000000000
+        Size.Width = 219.000000000000000000
         Size.Height = 33.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
@@ -3097,7 +3097,7 @@ object MainForm: TMainForm
         object OpenFolderBtn: TSpeedButton
           Align = Right
           Hint = 'Open data folder'
-          Position.X = 211.000000000000000000
+          Position.X = 186.000000000000000000
           Size.Width = 33.000000000000000000
           Size.Height = 33.000000000000000000
           Size.PlatformDefault = False
@@ -3110,13 +3110,13 @@ object MainForm: TMainForm
     object Panel1: TPanel
       Align = Bottom
       Position.Y = 532.000000000000000000
-      Size.Width = 244.000000000000000000
+      Size.Width = 219.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       object YourIPLabel: TLabel
         Align = Top
-        Size.Width = 244.000000000000000000
+        Size.Width = 219.000000000000000000
         Size.Height = 17.000000000000000000
         Size.PlatformDefault = False
         Text = 'YourIPLabel'
@@ -3125,7 +3125,7 @@ object MainForm: TMainForm
       object LocalIPLabel: TLabel
         Align = Top
         Position.Y = 17.000000000000000000
-        Size.Width = 244.000000000000000000
+        Size.Width = 219.000000000000000000
         Size.Height = 17.000000000000000000
         Size.PlatformDefault = False
         Text = 'LocalIPLabel'
@@ -3134,7 +3134,7 @@ object MainForm: TMainForm
     end
     object FlowLayout1: TFlowLayout
       Align = Client
-      Size.Width = 244.000000000000000000
+      Size.Width = 219.000000000000000000
       Size.Height = 408.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
@@ -3144,30 +3144,43 @@ object MainForm: TMainForm
       HorizontalGap = 2.000000000000000000
       VerticalGap = 2.000000000000000000
       object NodeStatusBtn: TButton
+        Size.Width = 81.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
         TabOrder = 0
         Text = 'Node Status'
         OnClick = NodeStatusBtnClick
       end
       object AccountInfoBtn: TButton
-        Position.X = 82.000000000000000000
+        Position.X = 83.000000000000000000
         TabOrder = 1
         Text = 'Account Info'
         OnClick = AccountInfoBtnClick
       end
       object BlockButton: TButton
-        Position.X = 164.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 73.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
         TabOrder = 2
         Text = 'Block Info'
         OnClick = BlockButtonClick
       end
       object PendingsButton: TButton
+        Position.X = 75.000000000000000000
         Position.Y = 24.000000000000000000
-        Size.Width = 161.000000000000000000
+        Size.Width = 137.000000000000000000
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
         Text = 'Pending && Find Op'
         OnClick = PendingsButtonClick
+      end
+      object RawOpsButton: TButton
+        Position.Y = 48.000000000000000000
+        TabOrder = 4
+        Text = 'Raw Ops'
+        OnClick = RawOpsButtonClick
       end
     end
   end

@@ -53,7 +53,7 @@ Uses
   System.SysUtils,
   System.IOUtils,
   PascalCoin.RPC.Exceptions,
-  PascalCoin.RPC.Consts;
+  PascalCoin.Consts;
 
 { TPascalCoinRPCClient }
 

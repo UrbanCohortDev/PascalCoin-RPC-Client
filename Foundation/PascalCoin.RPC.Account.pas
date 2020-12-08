@@ -22,6 +22,7 @@ Interface
 Uses
   System.Generics.Collections,
   System.JSON,
+  PascalCoin.Consts,
   PascalCoin.RPC.Interfaces;
 
 Type
@@ -29,7 +30,7 @@ Type
   TPascalCoinAccount = Class(TInterfacedObject, IPascalCoinAccount)
   Private
     FAccount: Int64;
-    Fenc_pubkey: HexaStr;
+    Fenc_pubkey: HexStr;
     FBalance: Currency;
     FBalance_s: String;
     FN_Operation: Integer;
@@ -41,14 +42,14 @@ Type
     FPrice: Currency;
     FSeller_Account: Integer;
     FPrivate_Sale: Boolean;
-    FNew_Enc_PubKey: HexaStr;
+    FNew_Enc_PubKey: HexStr;
     FName: String;
     FAccountType: Integer;
     FSeal: String;
     FData: TAccountData;
   Protected
     Function GetAccount: Int64;
-    Function GetPubKey: HexaStr;
+    Function GetPubKey: HexStr;
     Function GetBalance: Currency;
     Function GetN_Operation: Integer;
     Function GetUpdated_b: Integer;
@@ -57,7 +58,7 @@ Type
     Function GetPrice: Currency;
     Function GetSeller_Account: Integer;
     Function GetPrivate_Sale: Boolean;
-    Function GetNew_Enc_PubKey: HexaStr;
+    Function GetNew_Enc_PubKey: HexStr;
     Function GetName: String;
     Function GetAccount_Type: Integer;
     Function GetBalance_s: String;

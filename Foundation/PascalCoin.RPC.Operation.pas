@@ -21,8 +21,9 @@ Interface
 
 Uses
   System.Generics.Collections,
-  PascalCoin.RPC.Interfaces,
-  System.JSON;
+  System.JSON,
+  PascalCoin.Consts,
+  PascalCoin.RPC.Interfaces;
 
 Type
 
@@ -32,14 +33,14 @@ Type
     FN_Operation: Integer;
     FAmount: Currency;
     FAmount_s: String;
-    FPayload: HexaStr;
+    FPayload: HexStr;
     FPayloadType: Integer;
   Protected
     Function GetAccount: Cardinal;
     Function GetN_operation: Integer;
     Function GetAmount: Currency;
     Function GetAmount_s: String;
-    Function GetPayload: HexaStr;
+    Function GetPayload: HexStr;
     Function GetPayloadType: Integer;
   Public
   End;
@@ -49,13 +50,13 @@ Type
     FAccount: Cardinal;
     FAmount: Currency;
     FAmount_s: String;
-    FPayload: HexaStr;
+    FPayload: HexStr;
     FPayloadType: Integer;
   Protected
     Function GetAccount: Cardinal;
     Function GetAmount: Currency;
     Function GetAmount_s: String;
-    Function GetPayload: HexaStr;
+    Function GetPayload: HexStr;
     Function GetPayloadType: Integer;
   Public
   End;
@@ -64,7 +65,7 @@ Type
   Private
     FAccount: Cardinal;
     FN_Operation: Integer;
-    FNew_enc_pubkey: HexaStr;
+    FNew_enc_pubkey: HexStr;
     FNew_Type: String;
     FSeller_account: Cardinal;
     FAccount_price: Currency;
@@ -100,13 +101,13 @@ Type
     FBalance: Currency;
     FSender_Account: Cardinal;
     FDest_Account: Cardinal;
-    FEnc_Pubkey: HexaStr;
-    FOpHash: HexaStr;
-    FOld_Ophash: HexaStr;
+    FEnc_Pubkey: HexStr;
+    FOpHash: HexStr;
+    FOld_Ophash: HexStr;
     FSubType: String;
     FSigner_account: Cardinal;
     FN_Operation: Integer;
-    FPayload: HexaStr;
+    FPayload: HexStr;
     FSenders: TArray<IPascalCoinSender>;
     FReceivers: TArray<IPascalCoinReceiver>;
     FChangers: TArray<IPascalCoinChanger>;
@@ -128,13 +129,13 @@ Type
     Function GetBalance: Currency;
     Function GetSender_account: Cardinal;
     Function GetDest_account: Cardinal;
-    Function GetEnc_pubkey: HexaStr;
-    Function GetOphash: HexaStr;
-    Function GetOld_ophash: HexaStr;
+    Function GetEnc_pubkey: HexStr;
+    Function GetOphash: HexStr;
+    Function GetOld_ophash: HexStr;
     Function GetSubtype: String;
     Function GetSigner_account: Cardinal;
     Function GetN_operation: Integer;
-    Function GetPayload: HexaStr;
+    Function GetPayload: HexStr;
 
     Function SendersCount: Integer;
     Function ReceiversCount: Integer;
@@ -205,7 +206,7 @@ Begin
   Result.FFee_s := lObj.Values['fee_s'].AsType<String>;
   Result.FAmount := lObj.Values['amount'].AsType<Currency>; // 16.0000,
   Result.FAmount_s := lObj.Values['amount_s'].AsType<String>;
-  Result.FPayload := lObj.Values['payload'].AsType<HexaStr>;
+  Result.FPayload := lObj.Values['payload'].AsType<HexStr>;
   // "7A6962626564656520646F6F646168",
   If lObj.TryGetValue<Currency>('balance', C) Then
     Result.FBalance := C; // 19.1528,
@@ -214,7 +215,7 @@ Begin
   If lObj.TryGetValue<Cardinal>('dest_account', CD) Then
     Result.FDest_Account := CD;
   // 865822,
-  Result.FOpHash := lObj.Values['ophash'].AsType<HexaStr>;
+  Result.FOpHash := lObj.Values['ophash'].AsType<HexStr>;
 
   lArr := lObj.Values['senders'] As TJSONArray;
   SetLength(Result.FSenders, lArr.Count);
@@ -274,7 +275,7 @@ Begin
   Result := FDest_Account;
 End;
 
-Function TPascalCoinOperation.GetEnc_pubkey: HexaStr;
+Function TPascalCoinOperation.GetEnc_pubkey: HexStr;
 Begin
   Result := FEnc_Pubkey;
 End;
@@ -304,7 +305,7 @@ Begin
   Result := FN_Operation;
 End;
 
-Function TPascalCoinOperation.GetOld_ophash: HexaStr;
+Function TPascalCoinOperation.GetOld_ophash: HexStr;
 Begin
   Result := FOld_Ophash;
 End;
@@ -319,7 +320,7 @@ Begin
   Result := TOperationType(FOpType);
 End;
 
-Function TPascalCoinOperation.GetOphash: HexaStr;
+Function TPascalCoinOperation.GetOphash: HexStr;
 Begin
   Result := FOpHash;
 End;
@@ -334,7 +335,7 @@ Begin
   Result := FOpType;
 End;
 
-Function TPascalCoinOperation.GetPayload: HexaStr;
+Function TPascalCoinOperation.GetPayload: HexStr;
 Begin
   Result := FPayload;
 End;
@@ -406,7 +407,7 @@ Begin
   Result := FN_Operation;
 End;
 
-Function TPascalCoinSender.GetPayload: HexaStr;
+Function TPascalCoinSender.GetPayload: HexStr;
 Begin
   Result := FPayload;
 End;
@@ -433,7 +434,7 @@ Begin
   Result := FAmount_s;
 End;
 
-Function TPascalCoinReceiver.GetPayload: HexaStr;
+Function TPascalCoinReceiver.GetPayload: HexStr;
 Begin
   Result := FPayload;
 End;

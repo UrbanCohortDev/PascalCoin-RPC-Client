@@ -22,6 +22,7 @@ Interface
 Uses
   System.JSON,
   System.Generics.Collections,
+  PascalCoin.Consts,
   PascalCoin.RPC.Interfaces,
   PascalCoin.RPC.API.Base;
 
@@ -30,27 +31,29 @@ Type
   TPascalCoinExplorerAPI = Class(TPascalCoinAPIBase, IPascalCoinExplorerAPI)
   Private
   Protected
-    Function GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount;
+    Function GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount; overload;
+    Function GetAccount(Const AAccountNumber: String): IPascalCoinAccount; overload;
     Function getaccountoperations(Const AAccount: Cardinal; Const ADepth: Integer = 100; Const AStart: Integer = 0;
       Const AMax: Integer = 100): IPascalCoinOperations;
 
     function FindAccounts(Const AName: String; Const ASearchType: TSearchType;
         Const AType: Integer; Const AStart: Integer; Const AMax: Integer; Const
-        AMin_Balance: PascCurrency; AMax_Balance: PascCurrency; Const APubKey:
-        HexaStr; Const AKeyStyle: TKeyStyle; Const AAccountStatus:
+        AMin_Balance: Currency; AMax_Balance: Currency; Const APubKey:
+        String; Const AKeyStyle: TKeyStyle; Const AAccountStatus:
         TAccountStatusType = astAll): IPascalCoinAccounts;
     Function FindAccountByName(Const AName: String): IPascalCoinAccount;
     Function FindAccountsByName(Const AName: String; Const ASearchType: TSearchType = stContains; Const AStart: Integer = 0; Const AMax: Integer = 100)
       : IPascalCoinAccounts;
-    Function FindAccountsByKey(Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle = ksEncKey; Const AStart: Integer = 0;
-      Const AMax: Integer = 100): IPascalCoinAccounts;
+    function FindAccountsByKey(Const APubKey: String; Const AKeyStyle: TKeyStyle;
+        Const AStart, AMax: Integer): IPascalCoinAccounts;
 
     Function getblock(Const BlockNumber: Integer): IPascalCoinBlock;
     Function GetBlockCount: Integer;
     Function GetLastBlocks(Const ACount: Integer): IPascalCoinBlocks;
     Function GetBlockRange(Const AStart, AEnd: Integer): IPascalCoinBlocks;
-    Function FindBlocks(const APayload: String; const ASearchType: TSearchType; const APubKey: HexaStr;
-      Const AKeyStyle: TKeyStyle; const AStart: Integer = 0; Const AEnd: Integer = -1; Const AMax: Integer = 100): IPascalCoinBlocks;
+    function FindBlocks(const APayload: String; const ASearchType: TSearchType;
+        const APubKey: String; Const AKeyStyle: TKeyStyle; const AStart: Integer =
+        0; Const AEnd: Integer = -1; Const AMax: Integer = 100): IPascalCoinBlocks;
 
 
     Function getblockoperation(Const Ablock, Aopblock: Integer): IPascalCoinOperation;
@@ -60,7 +63,7 @@ Type
     Function getpendingscount: Integer;
     Function getpendings(Const AStart: Integer = 0; Const AMax: Integer = 100): IPascalCoinOperations;
 
-    Function findoperation(Const AOpHash: HexaStr): IPascalCoinOperation;
+    Function findoperation(Const AOpHash: HexStr): IPascalCoinOperation;
 
   Public
     Constructor Create(AClient: IPascalCoinRPCClient);
@@ -77,7 +80,6 @@ Uses
   PascalCoin.RPC.Node,
   PascalCoin.RPC.Operation,
   PascalCoin.Utils,
-  PascalCoin.RPC.Consts,
   PascalCoin.RPC.Block;
 
 { TPascalCoinAPI }
@@ -90,7 +92,7 @@ End;
 Function TPascalCoinExplorerAPI.FindAccountByName(Const AName: String): IPascalCoinAccount;
 var lAccountList: IPascalCoinAccounts;
 Begin
-  lAccountList := FindAccounts(AName, stExact, 0, 0, 100, 0, 0, '', ksUnkown);
+  lAccountList := FindAccounts(AName, stExact, 0, 0, 100, 0, 0, '', ksUnknown);
   if lAccountList.Count = 0 then
      Result := Nil
   else
@@ -99,9 +101,9 @@ End;
 
 function TPascalCoinExplorerAPI.FindAccounts(Const AName: String; Const
     ASearchType: TSearchType; Const AType: Integer; Const AStart: Integer;
-    Const AMax: Integer; Const AMin_Balance: PascCurrency; AMax_Balance:
-    PascCurrency; Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle;
-    Const AAccountStatus: TAccountStatusType = astAll): IPascalCoinAccounts;
+    Const AMax: Integer; Const AMin_Balance: Currency; AMax_Balance: Currency;
+    Const APubKey: String; Const AKeyStyle: TKeyStyle; Const AAccountStatus:
+    TAccountStatusType = astAll): IPascalCoinAccounts;
 Var
   lParams: TArray<TParamPair>;
   lLastParam: Integer;
@@ -140,12 +142,7 @@ Begin
      AddParam(TParamPair.Create('statustype', ACCOUNT_STATUS_TYPE[AAccountStatus]));
 
   if APubKey <> '' then
-  begin
-    case AKeyStyle of
-      ksUnkown: AddParam(TParamPair.Create(KEY_STYLE_NAME[TPascalCoinUtils.KeyStyle(APubKey)], APubKey));
-      else AddParam(TParamPair.Create(KEY_STYLE_NAME[AKeyStyle], APubKey));
-    end;
-  end;
+     AddParam(PublicKeyParam(APubKey, AKeyStyle));
 
   SetLength(lParams, lLastParam + 1);
 
@@ -154,9 +151,10 @@ Begin
 
 End;
 
-Function TPascalCoinExplorerAPI.FindAccountsByKey(Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle;
+Function TPascalCoinExplorerAPI.FindAccountsByKey(Const APubKey: String; Const AKeyStyle: TKeyStyle;
   Const AStart, AMax: Integer): IPascalCoinAccounts;
 Begin
+  TPascalCoinUtils.ValidHex(APubKey);
   Result := FindAccounts('', stExact, -1, AStart, AMax, 0, 0, APubKey, AKeyStyle);
 End;
 
@@ -164,11 +162,11 @@ function TPascalCoinExplorerAPI.FindAccountsByName(Const AName: String; Const
     ASearchType: TSearchType = stContains; Const AStart: Integer = 0; Const
     AMax: Integer = 100): IPascalCoinAccounts;
 Begin
-  Result := FindAccounts(AName, ASearchType, -1, AStart, AMax, 0, 0, '', ksUnkown);
+  Result := FindAccounts(AName, ASearchType, -1, AStart, AMax, 0, 0, '', ksUnknown);
 End;
 
 function TPascalCoinExplorerAPI.FindBlocks(const APayload: String; const
-    ASearchType: TSearchType; const APubKey: HexaStr; Const AKeyStyle:
+    ASearchType: TSearchType; const APubKey: String; Const AKeyStyle:
     TKeyStyle; const AStart: Integer = 0; Const AEnd: Integer = -1; Const AMax:
     Integer = 100): IPascalCoinBlocks;
 var
@@ -194,12 +192,7 @@ Begin
   AddParam(TParamPair.Create('max', AMax));
 
   if APubKey <> '' then
-  begin
-    case AKeyStyle of
-      ksUnkown: AddParam(TParamPair.Create(KEY_STYLE_NAME[TPascalCoinUtils.KeyStyle(APubKey)], APubKey));
-      else AddParam(TParamPair.Create(KEY_STYLE_NAME[AKeyStyle], APubKey));
-    end;
-  end;
+     AddParam(PublicKeyParam(APubKey, AKeyStyle));
 
   SetLength(lParams, lLastParam + 1);
 
@@ -207,11 +200,17 @@ Begin
      Result := TPascalCoinBlocks.FromJSONValue(ResultAsArray);
 end;
 
-Function TPascalCoinExplorerAPI.findoperation(Const AOpHash: HexaStr): IPascalCoinOperation;
+Function TPascalCoinExplorerAPI.findoperation(Const AOpHash: HexStr): IPascalCoinOperation;
 Begin
+  TPascalCoinUtils.ValidHex(AOpHash);
   If FClient.RPCCall('findoperation', [TParamPair.Create('ophash', AOpHash)]) Then
     Result := TPascalCoinOperation.FromJSONValue(self.GetJSONResult);
 End;
+
+function TPascalCoinExplorerAPI.GetAccount(const AAccountNumber: String): IPascalCoinAccount;
+begin
+  Result := GetAccount(TPascalCoinUtils.AccountNumber(AAccountNumber));
+end;
 
 Function TPascalCoinExplorerAPI.GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount;
 Begin

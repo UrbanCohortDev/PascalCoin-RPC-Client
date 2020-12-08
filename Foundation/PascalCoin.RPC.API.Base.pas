@@ -22,7 +22,9 @@ Interface
 Uses
   System.JSON,
   System.Generics.Collections,
-  PascalCoin.RPC.Interfaces;
+  PascalCoin.Consts,
+  PascalCoin.RPC.Interfaces,
+  PascalCoin.RPC.Exceptions;
 
 Type
 
@@ -87,14 +89,30 @@ End;
 Function TPascalCoinAPIBase.PublicKeyParam(Const AKey: String; Const AKeyStyle: TKeyStyle): TParamPair;
 Const
   _KeyType: Array [Boolean] Of String = ('b58_pubkey', 'enc_pubkey');
+Var
+  lKS: TKeyStyle;
 Begin
-  Case AKeyStyle Of
-    ksUnkown:
-      result := TParamPair.Create(_KeyType[TPascalCoinUtils.IsHexaString(AKey)], AKey);
+  If AKeyStyle = ksUnknown Then
+  Begin
+    If TPascalCoinUtils.IsHex(AKey) Then
+      lKS := TKeyStyle.ksEncKey
+    Else
+      lKS := TKeyStyle.ksB58Key;
+  End
+  Else
+    lKS := AKeyStyle;
+
+  Case lKS Of
     ksEncKey:
-      result := TParamPair.Create('enc_pubkey', AKey);
+      Begin
+        TPascalCoinUtils.ValidHex(AKey);
+        result := TParamPair.Create('enc_pubkey', AKey);
+      End;
     ksB58Key:
-      result := TParamPair.Create('b58_pubkey', AKey);
+      Begin
+        TPascalCoinUtils.ValidBase58(AKey);
+        result := TParamPair.Create('b58_pubkey', AKey);
+      End;
   End;
 End;
 

@@ -1,4 +1,4 @@
-Unit PascalCoin.RPC.Interfaces;
+﻿Unit PascalCoin.RPC.Interfaces;
 
 (* ***********************************************************************
   copyright 2019-2020  Russell Weetch
@@ -25,38 +25,19 @@ Uses
   System.JSON,
   System.SysUtils,
   System.Rtti,
+  PascalCoin.Consts,
   PascalCoin.RPC.Exceptions;
 
 Type
-  // HEXASTRING: String that contains an hexadecimal value (ex. "4423A39C"). An hexadecimal string is always an even character length.
-  HexaStr = String;
-  // PASCURRENCY: Pascal Coin currency is a maximum 4 decimal number (ex. 12.1234). Decimal separator is a "." (dot)
-  // Currency is limited to 4 decimals (actually stored as Int64)
-  PascCurrency = Currency;
-
-  TAccountData = String; // Array [0 .. 31] Of Byte;
-
-  // PASC64Encode = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-+{}[]_:`|<>,.?/~';
-  // PASC64EncodeInit = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+{}[]_:`|<>,.?/~';
-  // See PascalCoin.RPC.Consts.pas
 
   TStringPair = TPair<String, String>;
   TParamPair = TPair<String, variant>;
-  TKeyStyle = (ksUnkown, ksEncKey, ksB58Key);
 
   TSearchType = (stExact, stStartsWith, stNotStartsWith, stContains, stNotContains, stEndsWith, stNotEndsWith);
 
-  TAccountStatusType = (
-  astall,  //Default option)
-  astForSale,
-  astForPublicSale,
-  astForPrivateSale,
-  astForSwap,
-  astForAccountSwap,
-  astForCoinSwap,
-  astForSaleSwap,
-  astNotForSaleSwap
-  );
+  TAccountStatusType = (astall, // Default option)
+    astForSale, astForPublicSale, astForPrivateSale, astForSwap, astForAccountSwap, astForCoinSwap, astForSaleSwap,
+    astNotForSaleSwap);
 
   IPascalCoinNodeStatus = Interface;
 
@@ -77,7 +58,7 @@ Type
     ['{10B1816D-A796-46E6-94DA-A4C6C2125F82}']
 
     Function GetAccount: Int64;
-    Function GetPubKey: HexaStr;
+    Function GetPubKey: HexStr;
     Function GetBalance: Currency;
     Function GetN_Operation: integer;
     Function GetUpdated_b: integer;
@@ -86,7 +67,7 @@ Type
     Function GetPrice: Currency;
     Function GetSeller_Account: integer;
     Function GetPrivate_Sale: boolean;
-    Function GetNew_Enc_PubKey: HexaStr;
+    Function GetNew_Enc_PubKey: HexStr;
     Function GetName: String;
     Function GetAccount_Type: integer;
     Function GetBalance_s: String;
@@ -105,7 +86,7 @@ Type
     /// <summary>
     /// HEXASTRING - Encoded public key value (See decodepubkey)
     /// </summary>
-    Property enc_pubkey: HexaStr Read GetPubKey;
+    Property enc_pubkey: HexStr Read GetPubKey;
     /// <summary>
     /// Account Balance
     /// </summary>
@@ -154,7 +135,7 @@ Type
     /// HEXSTRING - Private buyers public key. Only set if state is listed and
     /// private_sale is true
     /// </summary>
-    Property new_enc_pubkey: HexaStr Read GetNew_Enc_PubKey;
+    Property new_enc_pubkey: HexStr Read GetNew_Enc_PubKey;
     /// <summary>
     /// Public name of account. Follows PascalCoin64 Encoding. Min Length = 3;
     /// Max Length = 64
@@ -396,7 +377,7 @@ Type
     Function GetN_Operation: integer;
     Function GetAmount: Currency;
     Function GetAmount_s: String;
-    Function GetPayload: HexaStr;
+    Function GetPayload: HexStr;
     Function GetPayloadType: integer;
 
     /// <summary>
@@ -409,7 +390,7 @@ Type
     /// </summary>
     Property amount: Currency Read GetAmount;
     Property amount_s: String Read GetAmount_s;
-    Property payload: HexaStr Read GetPayload;
+    Property payload: HexStr Read GetPayload;
     Property payloadtype: integer Read GetPayloadType;
   End;
 
@@ -418,7 +399,7 @@ Type
     Function GetAccount: Cardinal;
     Function GetAmount: Currency;
     Function GetAmount_s: String;
-    Function GetPayload: HexaStr;
+    Function GetPayload: HexStr;
     Function GetPayloadType: integer;
 
     /// <summary>
@@ -430,7 +411,7 @@ Type
     /// </summary>
     Property amount: Currency Read GetAmount;
     Property amount_s: String Read GetAmount_s;
-    Property payload: HexaStr Read GetPayload;
+    Property payload: HexStr Read GetPayload;
     Property payloadtype: integer Read GetPayloadType;
   End;
 
@@ -438,7 +419,7 @@ Type
     ['{860CE51D-D0D5-4AF0-9BD3-E2858BF1C59F}']
     Function GetAccount: Cardinal;
     Function GetN_Operation: integer;
-    Function GetNew_Enc_PubKey: HexaStr;
+    Function GetNew_Enc_PubKey: HexStr;
     Function GetNew_Type: String;
     Function GetSeller_Account: Cardinal;
     Function GetAccount_price: Currency;
@@ -454,7 +435,7 @@ Type
     /// If public key is changed or when is listed for a private sale <br />
     /// property new_name: If name is changed
     /// </summary>
-    Property new_enc_pubkey: HexaStr Read GetNew_Enc_PubKey;
+    Property new_enc_pubkey: HexStr Read GetNew_Enc_PubKey;
     /// <summary>
     /// if type is changed
     /// </summary>
@@ -503,13 +484,13 @@ Type
     Function GetBalance: Currency;
     Function GetSender_account: Cardinal;
     Function GetDest_account: Cardinal;
-    Function GetEnc_PubKey: HexaStr;
-    Function GetOphash: HexaStr;
-    Function GetOld_ophash: HexaStr;
+    Function GetEnc_PubKey: HexStr;
+    Function GetOphash: HexStr;
+    Function GetOld_ophash: HexStr;
     Function GetSubtype: String;
     Function GetSigner_account: Cardinal;
     Function GetN_Operation: integer;
-    Function GetPayload: HexaStr;
+    Function GetPayload: HexStr;
 
     Function GetSender(Const Index: integer): IPascalCoinSender;
     Function GetReceiver(Const Index: integer): IPascalCoinReceiver;
@@ -597,17 +578,17 @@ Type
     /// with other operation types: Will return both change key and the private
     /// sale public key value <b>DEPRECATED</b><br />
     /// </summary>
-    Property enc_pubkey: HexaStr Read GetEnc_PubKey;
+    Property enc_pubkey: HexStr Read GetEnc_PubKey;
     /// <summary>
     /// HEXASTRING - Operation hash used to find this operation in the blockchain
     /// </summary>
-    Property ophash: HexaStr Read GetOphash;
+    Property ophash: HexStr Read GetOphash;
     /// <summary>
     /// /// &lt;summary&gt; <br />/// HEXSTRING - Operation hash as calculated
     /// prior to V2. Will only be <br />/// populated for blocks prior to V2
     /// activation. <b>DEPRECATED</b><br />
     /// </summary>
-    Property old_ophash: HexaStr Read GetOld_ophash;
+    Property old_ophash: HexStr Read GetOld_ophash;
     /// <summary>
     /// Associated with optype param, can be used to discriminate from the point
     /// of view of operation (sender/receiver/buyer/seller ...)
@@ -620,12 +601,12 @@ Type
     Property signer_account: Cardinal Read GetSigner_account;
 
     Property n_operation: integer Read GetN_Operation;
-    Property payload: HexaStr Read GetPayload;
+    Property payload: HexStr Read GetPayload;
 
     /// <summary>
     /// Will return both change key and the private sale public key value <b>DEPRECATED</b>, use changers array instead
     /// </summary>
-    Property enc_pubkey: HexaStr Read GetEnc_PubKey;
+    Property enc_pubkey: HexStr Read GetEnc_PubKey;
 
     /// <summary>
     /// ARRAY of objects with senders, for example in a transaction (optype = 1)
@@ -711,30 +692,31 @@ Type
     /// </param>
     Function GetLastBlocks(Const ACount: integer): IPascalCoinBlocks;
     /// <summary>
-    ///   makes a call to getblocks with "start" to "end"
+    /// makes a call to getblocks with "start" to "end"
     /// </summary>
     Function GetBlockRange(Const AStart, AEnd: integer): IPascalCoinBlocks;
 
     /// <summary>
-    ///   Find blocks by name/type
+    /// Find blocks by name/type
     /// </summary>
     /// <param name="APayload">
-    ///   value to search payload with
+    /// value to search payload with
     /// </param>
     /// <param name="ASearchType">
-    ///   default "startswith"
+    /// default "startswith"
     /// </param>
     /// <param name="AStart">
-    ///   default = 0
+    /// default = 0
     /// </param>
     /// <param name="AEnd">
-    ///   default = -1 (no limit)
+    /// default = -1 (no limit)
     /// </param>
     /// <param name="AMax">
-    ///   default = 100
+    /// default = 100
     /// </param>
-    Function FindBlocks(const APayload: String; const ASearchType: TSearchType; const APubKey: HexaStr;
-      Const AKeyStyle: TKeyStyle; const AStart: Integer = 0; Const AEnd: Integer = -1; Const AMax: Integer = 100): IPascalCoinBlocks;
+    Function FindBlocks(Const APayload: String; Const ASearchType: TSearchType; Const APubKey: HexStr;
+      Const AKeyStyle: TKeyStyle; Const AStart: integer = 0; Const AEnd: integer = -1; Const AMax: integer = 100)
+      : IPascalCoinBlocks;
 
     /// <summary>
     /// Params <br />block : Integer - Block number <br />opblock : Integer -
@@ -757,7 +739,7 @@ Type
     /// <param name="Amax">
     /// Maximum number of operations to retrieve
     /// </param>
-    Function getblockoperations(Const Ablock: integer; Const AStart: integer = 0; Const Amax: integer = 100)
+    Function getblockoperations(Const Ablock: integer; Const AStart: integer = 0; Const AMax: integer = 100)
       : IPascalCoinOperations;
 
     /// <summary>
@@ -774,12 +756,15 @@ Type
     /// <param name="AMax">
     /// Number to return. Setting this as 0 returns all pending transactions
     /// </param>
-    Function getpendings(Const AStart: integer = 0; Const Amax: integer = 100): IPascalCoinOperations;
+    Function getpendings(Const AStart: integer = 0; Const AMax: integer = 100): IPascalCoinOperations;
 
-    Function findoperation(Const AOpHash: HexaStr): IPascalCoinOperation;
+    Function findoperation(Const AOpHash: HexStr): IPascalCoinOperation;
 
-    Function GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount;
-
+    /// <summary>
+    ///   Standard GetAccount using the base account number
+    /// </summary>
+    Function GetAccount(Const AAccountNumber: Cardinal): IPascalCoinAccount; overload;
+    Function GetAccount(Const AAccountNumber: String): IPascalCoinAccount; overload;
     /// <summary>
     /// Find Accounts
     /// </summary>
@@ -814,9 +799,10 @@ Type
     /// <param name="AKeyStyle">
     /// ksEncKey, ksB58Key
     /// </param>
-    Function FindAccounts(Const AName: String; Const ASearchType: TSearchType; Const AType: integer; Const AStart: integer;
-      Const Amax: integer; Const AMin_Balance: PascCurrency; AMax_Balance: PascCurrency; Const APubKey: HexaStr;
-      Const AKeyStyle: TKeyStyle; Const AAccountStatus: TAccountStatusType = astAll): IPascalCoinAccounts;
+    Function FindAccounts(Const AName: String; Const ASearchType: TSearchType; Const AType: integer;
+      Const AStart: integer; Const AMax: integer; Const AMin_Balance: Currency; AMax_Balance: Currency;
+      Const APubKey: HexStr; Const AKeyStyle: TKeyStyle; Const AAccountStatus: TAccountStatusType = astall)
+      : IPascalCoinAccounts;
     /// <summary>
     /// Simplified call for finding account by name. Exact = True
     /// </summary>
@@ -824,13 +810,13 @@ Type
     /// <summary>
     /// Simplified call for finding accounts by name. Exact = False
     /// </summary>
-    Function FindAccountsByName(Const AName: String; Const ASearchType: TSearchType = stContains; Const AStart: integer = 0; Const Amax: integer = 100)
-      : IPascalCoinAccounts;
+    Function FindAccountsByName(Const AName: String; Const ASearchType: TSearchType = stContains;
+      Const AStart: integer = 0; Const AMax: integer = 100): IPascalCoinAccounts;
     /// <summary>
     /// Simplified call for finding accounts by key
     /// </summary>
-    Function FindAccountsByKey(Const APubKey: HexaStr; Const AKeyStyle: TKeyStyle = ksEncKey; Const AStart: integer = 0;
-      Const Amax: integer = 100): IPascalCoinAccounts;
+    Function FindAccountsByKey(Const APubKey: HexStr; Const AKeyStyle: TKeyStyle = ksEncKey; Const AStart: integer = 0;
+      Const AMax: integer = 100): IPascalCoinAccounts;
 
     /// <summary>
     /// Get operations made to an account <br />
@@ -852,7 +838,7 @@ Type
     /// provided, max=100 by default
     /// </param>
     Function getaccountoperations(Const AAccount: Cardinal; Const ADepth: integer = 100; Const AStart: integer = 0;
-      Const Amax: integer = 100): IPascalCoinOperations;
+      Const AMax: integer = 100): IPascalCoinOperations;
 
   End;
 
@@ -922,32 +908,18 @@ Type
   End;
 
 Const
-  KEY_STYLE_NAME: Array[TKeyStyle] Of String = ('', 'enc_pubkey', 'b58_pubkey');
+  KEY_STYLE_NAME: Array [TKeyStyle] Of String = ('', 'enc_pubkey', 'b58_pubkey');
 
-  SEARCH_TYPE: Array[TSearchType] Of String = (
-  'exact',
-  'startswith',
-  'not-startswith',
-  'contains',
-  'not-contains',
-  'endswith',
-  'not-endswith');
+  SEARCH_TYPE: Array [TSearchType] Of String = ('exact', 'startswith', 'not-startswith', 'contains', 'not-contains',
+    'endswith', 'not-endswith');
 
   DEFAULT_NAME_SEARCH = stExact;
   DEFAULT_BLOCK_SEARCH = stStartsWith;
 
-  ACCOUNT_STATUS_TYPE: Array[TAccountStatusType] Of String = (
-  'all',
-  'for-sale',
-  'for-public-sale',
-  'for-private-sale',
-  'for-swap',
-  'for-account-swap',
-  'for-coin-swap',
-  'for-sale-swap',
-  'not-for-sale-swap');
+  ACCOUNT_STATUS_TYPE: Array [TAccountStatusType] Of String = ('all', 'for-sale', 'for-public-sale', 'for-private-sale',
+    'for-swap', 'for-account-swap', 'for-coin-swap', 'for-sale-swap', 'not-for-sale-swap');
 
-  DEFAULT_ACCOUNT_STATUS_TYPE = astAll;
+  DEFAULT_ACCOUNT_STATUS_TYPE = astall;
 
 Implementation
 

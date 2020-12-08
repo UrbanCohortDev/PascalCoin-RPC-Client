@@ -22,6 +22,7 @@ Interface
 Uses
   System.JSON,
   System.Generics.Collections,
+  PascalCoin.Consts,
   PascalCoin.RPC.Interfaces,
   PascalCoin.RPC.API.Base;
 
@@ -51,11 +52,12 @@ Begin
   Inherited Create(AClient);
 End;
 
-Function TPascalCoinOperationsAPI.executeoperation(Const RawOperation: String): IPascalCoinOperation;
+function TPascalCoinOperationsAPI.executeoperation(Const RawOperation: String):
+    IPascalCoinOperation;
 Begin
   If FClient.RPCCall('executeoperations', [TParamPair.Create('rawoperations', RawOperation)]) Then
   Begin
-    result := TJSON.JsonToObject<TPascalCoinOperation>((GetJSONResult As TJSONObject));
+    result := TPascalCoinOperation.FromJSONValue(GetJSONResult);
   End;
 End;
 

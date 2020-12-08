@@ -40,9 +40,10 @@ Uses
   DevApp.Shared,
   PascalCoin.RPC.Interfaces,
   SubjectStand,
-  UC.Internet.Support;
+  UC.Internet.Support, DevApp.Form.RawOp;
 
 Type
+
   TMainForm = Class(TForm)
     Layout1: TLayout;
     MultiView1: TMultiView;
@@ -65,6 +66,7 @@ Type
     YourIPLabel: TLabel;
     StyleBook1: TStyleBook;
     LocalIPLabel: TLabel;
+    RawOpsButton: TButton;
     Procedure AccountInfoBtnClick(Sender: TObject);
     Procedure AddNodeButtonClick(Sender: TObject);
     Procedure BlockButtonClick(Sender: TObject);
@@ -74,6 +76,7 @@ Type
     Procedure NodeStatusBtnClick(Sender: TObject);
     Procedure OpenFolderBtnClick(Sender: TObject);
     Procedure PendingsButtonClick(Sender: TObject);
+    procedure RawOpsButtonClick(Sender: TObject);
   Private
     { Private declarations }
     FDisplayedClass: TClass;
@@ -105,6 +108,7 @@ Uses
   FMX.PlatformUtils,
   PascalCoin.RPC.Exceptions,
   DevApp.Form.PendingInfo;
+
 
 Procedure TMainForm.AccountInfoBtnClick(Sender: TObject);
 Var
@@ -275,6 +279,20 @@ Begin
   LFormInfo.Form.InitialiseThis;
 End;
 
+procedure TMainForm.RawOpsButtonClick(Sender: TObject);
+Var
+  LFormInfo: TFormInfo<TRawOpForm>;
+Begin
+  If Not CloseDisplayedClass Then
+    Exit;
+  LFormInfo := FormStand1.GetFormInfo<TRawOpForm>(True, Layout1);
+  If Not LFormInfo.IsVisible Then
+    LFormInfo.Show;
+  LFormInfo.Form.DefaultURI := NodeList.Items[NodeList.ItemIndex];
+  FDisplayedClass := TRawOpForm;
+  LFormInfo.Form.InitialiseThis;
+end;
+
 Procedure TMainForm.ShowNodeStatusForm;
 Var
   LFormInfo: TFormInfo<TNodeStatusForm>;
@@ -287,7 +305,6 @@ Begin
   LFormInfo.Form.DefaultURI := NodeList.Items[NodeList.ItemIndex];
   FDisplayedClass := TNodeStatusForm;
   LFormInfo.Form.InitialiseThis;
-
 End;
 
 End.

@@ -20,25 +20,53 @@ Unit PascalCoin.Utils;
 Interface
 
 Uses
-  PascalCoin.RPC.Interfaces;
+  PascalCoin.Consts,
+  PascalCoin.RPC.Interfaces,
+  PascalCoin.RPC.Exceptions,
+  PascalCoin.RPC.Messages;
 
 Type
 
   TPascalCoinUtils = Class
   Private
   Public
-    Class Function IsHexaString(Const Value: String): Boolean; Static;
+    Class Function IsHex(Const Value: String): Boolean; Static;
+    /// <summary>
+    /// Raises a EHexaStrException if Value is not a PascalCoin valid hex
+    /// encoded string
+    /// </summary>
+    Class Procedure ValidHex(Const Value: String); Static;
+    Class Function IsBase58(Const Value: String): Boolean; Static;
+    /// <summary>
+    /// Raises a EBase58Exception if Value is not a PascalCoin valid hex
+    /// encoded string
+    /// </summary>
+    Class Procedure ValidBase58(Const Value: String); Static;
+
+    Class Function IsAccountNumberValid(Const Value: String): Boolean; Static;
+
+    /// <summary>
+    /// raises an EAccountNumberException if in valid format, or fails the
+    /// checksum
+    /// </summary>
+    Class Procedure VaildAccountNum(Const Value: String); Static;
+
+    Class Function IsValid64Encoded(Const Value: String): Boolean; Static;
+
     Class Function AccountNumberCheckSum(Const Value: Cardinal): Integer; Static;
     Class Function AccountNumberWithCheckSum(Const Value: Cardinal): String; Static;
-    Class Function ValidAccountNumber(Const Value: String): Boolean; Static;
     Class Function AccountNumber(Const Value: String): Cardinal; Static;
     Class Procedure SplitAccount(Const Value: String; Out AccountNumber: Cardinal; Out CheckSum: Integer); Static;
-    Class Function ValidateAccountName(Const Value: String): Boolean; Static;
+
+    Class Function IsAccountNameValid(Const Value: String; Var RejectReason: String): Boolean; Static;
+    Class Function IsValidAccountName(Const Value: String): Boolean; Static;
+    Class Procedure ValidAccountName(Const Value: String); Static;
 
     Class Function BlocksToRecovery(Const LatestBlock, LastActiveBlock: Integer): Integer; Static;
     Class Function DaysToRecovery(Const LatestBlock, LastActiveBlock: Integer): Double; Static;
 
     Class Function KeyStyle(Const AKey: String): TKeyStyle; Static;
+    Class Function KeyType(const AKey: String): TKeyType; static;
 
     Class Function UnixToLocalDate(Const Value: Integer): TDateTime; Static;
     Class Function StrToHex(Const Value: String): String; Static;
@@ -49,9 +77,12 @@ Implementation
 Uses
   System.SysUtils,
   System.DateUtils,
+  clpBits,
   clpConverters,
   clpEncoders,
-  PascalCoin.RPC.Consts;
+  clpDigestUtilities,
+  clpArrayUtils,
+  clpIDigest;
 
 { TPascalCoinTools }
 
@@ -85,7 +116,29 @@ Begin
   Result := BlocksToRecovery(LatestBlock, LastActiveBlock) / BLOCKS_PER_DAY;
 End;
 
-Class Function TPascalCoinUtils.IsHexaString(Const Value: String): Boolean;
+Class Procedure TPascalCoinUtils.ValidHex(Const Value: String);
+Begin
+  If Not IsHex(Value) Then
+    Raise EHexException.Create(Value);
+End;
+
+Class Function TPascalCoinUtils.IsBase58(Const Value: String): Boolean;
+Var
+  Chopped, DecodedPascalCoinBase58Key, OriginalChecksum, CalculatedChecksum: TBytes;
+  DecodedPascalCoinBase58KeyLength: Int32;
+Begin
+  DecodedPascalCoinBase58Key := TBase58.Decode(Value);
+  If DecodedPascalCoinBase58Key = Nil Then
+    Exit(False);
+  DecodedPascalCoinBase58KeyLength := System.Length(DecodedPascalCoinBase58Key);
+  CalculatedChecksum := System.Copy(DecodedPascalCoinBase58Key, DecodedPascalCoinBase58KeyLength - 4,
+    DecodedPascalCoinBase58KeyLength - 1);
+  Chopped := System.Copy(DecodedPascalCoinBase58Key, 1, DecodedPascalCoinBase58KeyLength - 5);
+  OriginalChecksum := System.Copy(TDigestUtilities.CalculateDigest('SHA-256', Chopped), 0, 4);
+  Result := TArrayUtils.AreEqual(OriginalChecksum, CalculatedChecksum);
+End;
+
+Class Function TPascalCoinUtils.IsHex(Const Value: String): Boolean;
 Var
   i: Integer;
 Begin
@@ -100,20 +153,61 @@ Begin
     End;
 End;
 
+Class Function TPascalCoinUtils.IsValid64Encoded(Const Value: String): Boolean;
+Var
+  i: Integer;
+Begin
+  For i := 0 To Value.Length - 1 Do
+  Begin
+    If Not CharInSet(Value.Chars[i], PASCALCOIN_ENCODING) Then
+      Exit(False);
+  End;
+  Result := true;
+End;
+
 Class Function TPascalCoinUtils.KeyStyle(Const AKey: String): TKeyStyle;
 Begin
-  If IsHexaString(AKey) Then
+  If IsHex(AKey) Then
     Result := TKeyStyle.ksEncKey
-  Else // if B58Key(AKey)
-    Result := TKeyStyle.ksB58Key;
-  // else
-  // Result := TKeyStyle.ksUnkown
+  Else If IsBase58(AKey) Then
+    Result := TKeyStyle.ksB58Key
+  Else
+    Raise EUnrecognisedKeyStyle.Create(AKey);
 End;
+
+class function TPascalCoinUtils.KeyType(const AKey: String): TKeyType;
+const
+AOFFSET = 1;
+var
+  ReversedSlice: TBytes;
+  lValue: Int32;
+  lKey: TBytes;
+begin
+  lKey := THex.Decode(AKey);
+
+  System.SetLength(ReversedSlice, 2);
+  TBits.ReverseByteArray(System.Copy(lKey, AOFFSET, 2), ReversedSlice, Length(ReversedSlice) * System.SizeOf(byte));
+  lValue := ('$' + THex.Encode(ReversedSlice)).ToInteger;
+
+  case lValue of
+    714:
+      Result := TKeyType.SECP256K1;
+    715:
+      Result := TKeyType.SECP384R1;
+    716:
+      Result := TKeyType.SECP521R1;
+    729:
+      Result := TKeyType.SECT283K1
+  else
+    raise EKeyException.Create('Public', INVALID_KEY_TYPE);
+  end;
+end;
 
 Class Procedure TPascalCoinUtils.SplitAccount(Const Value: String; Out AccountNumber: Cardinal; Out CheckSum: Integer);
 Var
   lVal: TArray<String>;
 Begin
+  VaildAccountNum(Value);
   If Value.IndexOf('-') > 0 Then
   Begin
     lVal := Value.Trim.Split(['-']);
@@ -137,7 +231,40 @@ Begin
   Result := TTimeZone.Local.ToLocalTime(UnixToDateTime(Value));
 End;
 
-Class Function TPascalCoinUtils.ValidAccountNumber(Const Value: String): Boolean;
+Class Function TPascalCoinUtils.IsAccountNameValid(Const Value: String; Var RejectReason: String): Boolean;
+Begin
+  Result := true;
+  RejectReason := '';
+  If Value = '' Then
+    Exit;
+
+  If Not CharInSet(Value.Chars[0], PASCALCOIN_ENCODING_START) Then
+  Begin
+    RejectReason := NAME_INVALID_START.Replace('$', Value.Chars[0]);
+    Exit(False);
+  End;
+
+  If Value.Length < 3 Then
+  Begin
+    RejectReason := NAME_TOO_SHORT;
+    Exit(False);
+  End;
+
+  If Value.Length > 64 Then
+  Begin
+    RejectReason := NAME_TOO_LONG;
+    Exit(False);
+  End;
+
+  If Not IsValid64Encoded(Value) Then
+  Begin
+    RejectReason := NAME_CONTAINS_INVALID_CHARACTERS;
+    Exit(False);
+  End;
+
+End;
+
+Class Function TPascalCoinUtils.IsAccountNumberValid(Const Value: String): Boolean;
 Var
   lVal: TArray<String>;
   lChk: Integer;
@@ -160,24 +287,31 @@ Begin
   End;
 End;
 
-Class Function TPascalCoinUtils.ValidateAccountName(Const Value: String): Boolean;
-Var
-  i: Integer;
+Class Procedure TPascalCoinUtils.VaildAccountNum(Const Value: String);
 Begin
-  Result := true;
-  If Value = '' Then
-    Exit;
-  If Not CharInSet(Value.Chars[0], PASCALCOIN_ENCODING_START) Then
-    Exit(False);
-  If Value.Length < 3 Then
-    Exit(False);
-  If Value.Length > 64 Then
-    Exit(False);
-  For i := 0 To Value.Length - 1 Do
-  Begin
-    If Not CharInSet(Value.Chars[i], PASCALCOIN_ENCODING) Then
-      Exit(False);
-  End;
+  If Not IsAccountNumberValid(Value) Then
+    Raise EAccountNumberException.Create(Value);
+End;
+
+Class Function TPascalCoinUtils.IsValidAccountName(Const Value: String): Boolean;
+Var
+  ARejectReason: String;
+Begin
+  Result := IsAccountNameValid(Value, ARejectReason);
+End;
+
+Class Procedure TPascalCoinUtils.ValidAccountName(Const Value: String);
+Var
+  lRejectReason: String;
+Begin
+  If Not IsAccountNameValid(Value, lRejectReason) Then
+    Raise EAccountNameException.Create(Value, lRejectReason);
+End;
+
+Class Procedure TPascalCoinUtils.ValidBase58(Const Value: String);
+Begin
+  If Not IsBase58(Value) Then
+    Raise EBase58Exception.Create(Value);
 End;
 
 End.

@@ -1,4 +1,4 @@
-Unit DevApp.Initialise;
+﻿Unit DevApp.Initialise;
 
 (* ***********************************************************************
   copyright 2019-2020  Russell Weetch
@@ -20,6 +20,7 @@ Unit DevApp.Initialise;
 Interface
 
 Uses
+  System.SysUtils,
   DevApp.Config.Impl;
 
 Procedure InitialiseApp(AConfig: TDevAppConfig);
@@ -38,6 +39,10 @@ Uses
 Procedure InitialiseApp(AConfig: TDevAppConfig);
 Begin
   // dropped Spring4d for the moment
+  FormatSettings.CurrencyString := 'Ƿ'; // U+01F7 &#503;
+  FormatSettings.CurrencyFormat := 0;
+  FormatSettings.CurrencyDecimals := 4;
+
 End;
 
 End.
