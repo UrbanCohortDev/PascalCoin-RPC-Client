@@ -1,6 +1,11 @@
 Program DevApp;
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   System.StartUpCopy,
   FMX.Forms,
   DevApp.Main in 'DevApp.Main.pas' {MainForm},
@@ -31,15 +36,17 @@ uses
   PascalCoin.RPC.Exceptions in '..\..\Foundation\PascalCoin.RPC.Exceptions.pas',
   DevApp.Form.PendingInfo in 'DevApp.Form.PendingInfo.pas' {PendingInfo},
   UC.Internet.Support in '..\..\AppUtils\UC.Internet.Support.pas',
-  PascalCoin.RPC.RawOp.Send in '..\..\Foundation\PascalCoin.RPC.RawOp.Send.pas',
-  PascalCoin.RPC.RawOp.Base in '..\..\Foundation\PascalCoin.RPC.RawOp.Base.pas',
+  PascalCoin.RawOp.Send in '..\..\Foundation\PascalCoin.RawOp.Send.pas',
+  PascalCoin.RawOp.Base in '..\..\Foundation\PascalCoin.RawOp.Base.pas',
   PascalCoin.RPC.Messages in '..\..\Foundation\PascalCoin.RPC.Messages.pas',
   DevApp.Form.RawOp in 'DevApp.Form.RawOp.pas' {RawOpForm},
   PascalCoin.Key.Interfaces in '..\..\Foundation\PascalCoin.Key.Interfaces.pas',
   PascalCoin.RawOp.Interfaces in '..\..\Foundation\PascalCoin.RawOp.Interfaces.pas',
   PascalCoin.Payload in '..\..\Foundation\PascalCoin.Payload.pas',
   PascalCoin.KeyUtils in '..\..\Foundation\PascalCoin.KeyUtils.pas',
-  PascalCoin.RawOp.MultiOperations in '..\..\Foundation\PascalCoin.RawOp.MultiOperations.pas';
+  PascalCoin.RawOp.MultiOperations in '..\..\Foundation\PascalCoin.RawOp.MultiOperations.pas',
+  DevApp.Form.MessAbout in 'DevApp.Form.MessAbout.pas' {MessAbout},
+  DevApp.Form.RawOp.Analysis in 'DevApp.Form.RawOp.Analysis.pas' {RawOpAnalysis};
 
 {$R *.res}
 

@@ -1,4 +1,4 @@
-Unit PascalCoin.RPC.RawOp.Send;
+Unit PascalCoin.RawOp.Send;
 
 (* ***********************************************************************
   copyright 2019-2020  Russell Weetch
@@ -23,7 +23,7 @@ Uses
   System.SysUtils,
   PascalCoin.Consts,
   PascalCoin.RawOp.Interfaces,
-  PascalCoin.RPC.RawOp.Base,
+  PascalCoin.RawOp.Base,
   PascalCoin.Utils,
   PascalCoin.KeyUtils;
 
@@ -94,10 +94,19 @@ Function TPascalCoinSendOperation.GetRawOp: String;
 Begin
   SignOperation;
 
-  Result := THEX.Encode(TConverters.ReadUInt32AsBytesLE(Op_Transaction)) + TKeyUtils.AsHex(FSendFrom) +
-    TKeyUtils.AsHex(FOpNumber) + TKeyUtils.AsHex(FSendTo) + TKeyUtils.AsHex(FAmount) + TKeyUtils.AsHex(FFee) +
-    LenAs2ByteHex(FPayload.PayloadLength) + FPayload.AsHex + '000000000000' + LenAs2ByteHex(FSignature.RLen) + FSignature.R +
-    LenAs2ByteHex(FSignature.SLen) + FSignature.S;
+  Result := THEX.Encode(TConverters.ReadUInt32AsBytesLE(Op_Transaction)) +
+            TKeyUtils.AsHex(FSendFrom) +
+            TKeyUtils.AsHex(FOpNumber) +
+            TKeyUtils.AsHex(FSendTo) +
+            TKeyUtils.AsHex(FAmount) +
+            TKeyUtils.AsHex(FFee) +
+            TKeyUtils.IntToTwoByteHex(FPayload.PayloadLength) +
+            FPayload.AsHex +
+            '000000000000' +
+            TKeyUtils.IntToTwoByteHex(FSignature.RLen) +
+            FSignature.R +
+            TKeyUtils.IntToTwoByteHex(FSignature.SLen) +
+            FSignature.S;
 End;
 
 Function TPascalCoinSendOperation.GetReceiverAccount: String;
@@ -165,7 +174,7 @@ Begin
   Else If lKey.Equals('FEE') Then
     Result := TKeyUtils.AsHex(FFee)
   Else If lKey.Equals('PAYLOADLEN') Then
-    Result := LenAs2ByteHex(Payload.PayloadLength)
+    Result := TKeyUtils.IntToTwoByteHex(Payload.PayloadLength)
   Else If lKey.Equals('VALUETOHASH') Then
     Result := ValueToHash
   Else If lKey.Equals('HASH') Then
@@ -175,9 +184,9 @@ Begin
   Else If lKey.Equals('SIG.S') Then
     Result := FSignature.S
   Else If lKey.Equals('SIG.R.LEN') Then
-    Result := LenAs2ByteHex(FSignature.RLen)
+    Result := TKeyUtils.IntToTwoByteHex(FSignature.RLen)
   Else If lKey.Equals('SIG.S.LEN') Then
-    Result := LenAs2ByteHex(FSignature.SLen)
+    Result := TKeyUtils.IntToTwoByteHex(FSignature.SLen)
   Else If lKey.Equals('KEY.HEX') Then
     Result := FPrivateKey
   Else If lKey.Equals('SIGNEDTX') Then

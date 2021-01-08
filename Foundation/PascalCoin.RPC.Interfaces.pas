@@ -45,12 +45,14 @@ Type
     ['{A04B65F9-345E-44F7-B834-88CCFFFAC4B6}']
     Function GetResponseObject: TJSONObject;
     Function GetResponseStr: String;
+    Function GetResultValue: TJSONValue;
     Function GetNodeURI: String;
     Procedure SetNodeURI(Const Value: String);
 
     Function RPCCall(Const AMethod: String; Const AParams: Array Of TParamPair): boolean;
     Property ResponseObject: TJSONObject Read GetResponseObject;
     Property ResponseStr: String Read GetResponseStr;
+    Property ResultValue: TJSONValue read GetResultValue;
     Property NodeURI: String Read GetNodeURI Write SetNodeURI;
   End;
 
@@ -901,6 +903,7 @@ Type
     Function payloadEncryptWithPublicKey(Const APayload: String; Const AKey: String;
       Const AKeyStyle: TKeyStyle): String;
 
+    Function executeoperations(Const RawOperationsArray: String): IPascalCoinOperations;
     Function executeoperation(Const RawOperation: String): IPascalCoinOperation;
 
     // Function verifysign

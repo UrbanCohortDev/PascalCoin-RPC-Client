@@ -67,6 +67,7 @@ Type
     StyleBook1: TStyleBook;
     LocalIPLabel: TLabel;
     RawOpsButton: TButton;
+    RawAnalysisButton: TButton;
     Procedure AccountInfoBtnClick(Sender: TObject);
     Procedure AddNodeButtonClick(Sender: TObject);
     Procedure BlockButtonClick(Sender: TObject);
@@ -76,6 +77,7 @@ Type
     Procedure NodeStatusBtnClick(Sender: TObject);
     Procedure OpenFolderBtnClick(Sender: TObject);
     Procedure PendingsButtonClick(Sender: TObject);
+    procedure RawAnalysisButtonClick(Sender: TObject);
     procedure RawOpsButtonClick(Sender: TObject);
   Private
     { Private declarations }
@@ -107,7 +109,7 @@ Uses
   FMX.DialogService,
   FMX.PlatformUtils,
   PascalCoin.RPC.Exceptions,
-  DevApp.Form.PendingInfo;
+  DevApp.Form.PendingInfo, DevApp.Form.RawOp.Analysis;
 
 
 Procedure TMainForm.AccountInfoBtnClick(Sender: TObject);
@@ -278,6 +280,20 @@ Begin
   FDisplayedClass := TPendingInfo;
   LFormInfo.Form.InitialiseThis;
 End;
+
+procedure TMainForm.RawAnalysisButtonClick(Sender: TObject);
+Var
+  LFormInfo: TFormInfo<TRawOpAnalysis>;
+Begin
+  If Not CloseDisplayedClass Then
+    Exit;
+  LFormInfo := FormStand1.GetFormInfo<TRawOpAnalysis>(True, Layout1);
+  If Not LFormInfo.IsVisible Then
+    LFormInfo.Show;
+  LFormInfo.Form.DefaultURI := NodeList.Items[NodeList.ItemIndex];
+  FDisplayedClass := TRawOpForm;
+  LFormInfo.Form.InitialiseThis;
+end;
 
 procedure TMainForm.RawOpsButtonClick(Sender: TObject);
 Var

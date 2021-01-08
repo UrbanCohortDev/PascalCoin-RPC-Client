@@ -25,11 +25,23 @@ inherited RawOpForm: TRawOpForm
       ImageIndex = -1
       Margins.Left = 3.000000000000000000
       Margins.Right = 3.000000000000000000
-      Position.X = 697.000000000000000000
+      Position.X = 597.000000000000000000
       Size.Width = 80.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
+    end
+    object Button3: TButton
+      Action = TransactionTestAction
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Margins.Right = 3.000000000000000000
+      Position.X = 680.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
     end
   end
   inherited FooterLayout: TLayout
@@ -57,17 +69,26 @@ inherited RawOpForm: TRawOpForm
         Align = Client
         TabOrder = 1
         Margins.Right = 3.000000000000000000
-        Size.Width = 566.000000000000000000
+        Size.Width = 471.000000000000000000
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
       end
       object KeyTypeCombo: TComboBox
         Align = Right
-        Position.X = 714.000000000000000000
-        Size.Width = 146.000000000000000000
+        Position.X = 728.000000000000000000
+        Size.Width = 132.000000000000000000
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
+      end
+      object PascalFormat: TCheckBox
+        Align = Right
+        Position.X = 619.000000000000000000
+        Size.Width = 109.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Pascal Format'
       end
     end
     object Layout2: TLayout
@@ -104,7 +125,7 @@ inherited RawOpForm: TRawOpForm
       end
       object Label3: TLabel
         Align = Left
-        Position.X = 311.000000000000000000
+        Position.X = 497.000000000000000000
         Position.Y = 3.000000000000000000
         Size.Width = 80.000000000000000000
         Size.Height = 24.000000000000000000
@@ -116,7 +137,7 @@ inherited RawOpForm: TRawOpForm
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         Align = Left
         TabOrder = 5
-        Position.X = 391.000000000000000000
+        Position.X = 577.000000000000000000
         Position.Y = 3.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 24.000000000000000000
@@ -126,7 +147,7 @@ inherited RawOpForm: TRawOpForm
       object Label4: TLabel
         Align = Left
         Margins.Left = 3.000000000000000000
-        Position.X = 555.000000000000000000
+        Position.X = 314.000000000000000000
         Position.Y = 3.000000000000000000
         Size.Width = 106.000000000000000000
         Size.Height = 24.000000000000000000
@@ -138,12 +159,24 @@ inherited RawOpForm: TRawOpForm
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         Align = Left
         TabOrder = 1
-        Position.X = 661.000000000000000000
+        Position.X = 420.000000000000000000
         Position.Y = 3.000000000000000000
         Margins.Right = 5.000000000000000000
         Size.Width = 72.000000000000000000
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
+      end
+      object Button4: TButton
+        Action = PublicKeyTest
+        Align = Right
+        Enabled = True
+        ImageIndex = -1
+        Position.X = 768.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 89.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
       end
     end
     object Layout3: TLayout
@@ -356,6 +389,15 @@ inherited RawOpForm: TRawOpForm
         Text = 'Execute'
         OnClick = ExecuteButtonClick
       end
+      object PushTransaction: TCheckBox
+        Align = Left
+        Size.Width = 120.000000000000000000
+        Size.Height = 28.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Push Transaction'
+        OnChange = PushTransactionChange
+      end
     end
     object Memo1: TMemo
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
@@ -367,8 +409,8 @@ inherited RawOpForm: TRawOpForm
       Size.Height = 191.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 7
-      Viewport.Width = 856.000000000000000000
-      Viewport.Height = 187.000000000000000000
+      Viewport.Width = 860.000000000000000000
+      Viewport.Height = 191.000000000000000000
     end
   end
   object ActionList1: TActionList
@@ -381,6 +423,14 @@ inherited RawOpForm: TRawOpForm
     object StandardDataAction: TAction
       Text = 'Standard Test'
       OnExecute = StandardDataActionExecute
+    end
+    object TransactionTestAction: TAction
+      Text = 'Transaction Test'
+      OnExecute = TransactionTestActionExecute
+    end
+    object PublicKeyTest: TAction
+      Text = 'PublicKey Test'
+      OnExecute = PublicKeyTestExecute
     end
   end
 end

@@ -130,6 +130,7 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UC.Delphi.Versions.pas"/>
         <None Include="Notes.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -153,7 +154,7 @@
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="New1.txt" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="Notes.txt" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

@@ -68,7 +68,7 @@ End;
 
 Function TPascalCoinAPIBase.GetJSONResult: TJSONValue;
 Begin
-  result := FClient.ResponseObject.GetValue('result');
+  result :=  FClient.ResultValue;// FClient.ResponseObject.GetValue('result');
 End;
 
 Function TPascalCoinAPIBase.GetJSONResultStr: String;

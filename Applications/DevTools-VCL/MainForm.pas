@@ -1,14 +1,31 @@
-unit MainForm;
+Unit MainForm;
 
-interface
+Interface
 
-uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.Actions, Vcl.ActnList, Vcl.StdActns, Vcl.Buttons, Vcl.StdCtrls,
-  Vcl.ComCtrls, Vcl.Grids, Vcl.ValEdit, Vcl.CheckLst;
+Uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  System.Actions,
+  Vcl.ActnList,
+  Vcl.StdActns,
+  Vcl.Buttons,
+  Vcl.StdCtrls,
+  Vcl.ComCtrls,
+  Vcl.Grids,
+  Vcl.ValEdit,
+  Vcl.CheckLst,
+  UC.Delphi.Versions;
 
-type
-  TForm1 = class(TForm)
+Type
+
+  TForm1 = Class(TForm)
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     Label1: TLabel;
@@ -17,234 +34,415 @@ type
     SpeedButton1: TSpeedButton;
     ActionList1: TActionList;
     BrowseForSource: TBrowseForFolder;
-    Label3: TLabel;
-    TgtMasterDir: TEdit;
-    SpeedButton2: TSpeedButton;
     BrowseForTarget: TBrowseForFolder;
     SaveAction: TAction;
     Button1: TButton;
     SpeedButton3: TSpeedButton;
     IgnoreFolderAction: TAction;
     Memo1: TMemo;
-    SpeedButton4: TSpeedButton;
     ExecAction: TAction;
     SrcFolders: TCheckListBox;
     Memo2: TMemo;
     Label4: TLabel;
     NotesAction: TAction;
-    procedure FormCreate(Sender: TObject);
-    procedure BrowseForSourceAccept(Sender: TObject);
-    procedure BrowseForTargetAccept(Sender: TObject);
-    procedure ExecActionExecute(Sender: TObject);
-    procedure IgnoreFolderActionExecute(Sender: TObject);
-    procedure SaveActionExecute(Sender: TObject);
-  private
+    SingleFolderGroup: TGroupBox;
+    Label3: TLabel;
+    TgtMasterDir: TEdit;
+    SpeedButton2: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    GlobalMap: TCheckBox;
+    MappingOptionsGroup: TGroupBox;
+    Platforms: TCheckListBox;
+    DelphiVersion: TComboBox;
+    MapPathsButton: TButton;
+    BackUpFolder: TEdit;
+    Label5: TLabel;
+    BrowseForBackupFolder: TBrowseForFolder;
+    Button2: TButton;
+    MapTest: TCheckBox;
+    Button3: TButton;
+    CreateMapAction: TAction;
+    Procedure BrowseForBackupFolderAccept(Sender: TObject);
+    Procedure FormDestroy(Sender: TObject);
+    Procedure FormCreate(Sender: TObject);
+    Procedure BrowseForSourceAccept(Sender: TObject);
+    Procedure BrowseForTargetAccept(Sender: TObject);
+    Procedure CreateMapActionExecute(Sender: TObject);
+    Procedure DelphiVersionChange(Sender: TObject);
+    Procedure GlobalMapClick(Sender: TObject);
+    Procedure ExecActionExecute(Sender: TObject);
+    Procedure IgnoreFolderActionExecute(Sender: TObject);
+    Procedure MapPathsButtonClick(Sender: TObject);
+    Procedure SaveActionExecute(Sender: TObject);
+  Private
     { Private declarations }
     FIgnoreFolders: TStringList;
-    procedure LoadSubFolders;
-    procedure ProcessTopFolder(AFolder: string);
-    procedure Log(const Value: string);
-    procedure ProcessSourceFolder(SourceFolder, TargetFolder: string);
-  public
+    FDelphiVersions: TDelphiVersions;
+    FMapPaths: TStrings;
+    Procedure LoadDelphiVersions;
+    Procedure LoadSubFolders;
+    Procedure ProcessTopFolder(AFolder: String);
+    Procedure Log(Const Value: String);
+    Procedure MapTopFolder(AFolder: String);
+    Procedure ProcessSourceFolder(SourceFolder, TargetFolder: String);
+    Procedure CreatePathMap;
+  Public
     { Public declarations }
-  end;
+  End;
 
-var
+Var
   Form1: TForm1;
 
-implementation
+Implementation
 
 {$R *.dfm}
 
-Uses System.IOUtils, System.Types, System.IniFiles, System.StrUtils;
+Uses
+  System.IOUtils,
+  System.Types,
+  System.IniFiles,
+  System.StrUtils,
+  System.Win.Registry;
 
-procedure TForm1.FormCreate(Sender: TObject);
-var lIni:TIniFile;
-begin
+Procedure TForm1.BrowseForBackupFolderAccept(Sender: TObject);
+Begin
+  BackUpFolder.Text := BrowseForBackupFolder.Folder;
+End;
+
+Procedure TForm1.FormDestroy(Sender: TObject);
+Begin
+  FDelphiVersions.Free;
+  FIgnoreFolders.Free;
+End;
+
+Procedure TForm1.FormCreate(Sender: TObject);
+Var
+  lIni: TIniFile;
+Begin
+  FDelphiVersions := TDelphiVersions.Create;
+  LoadDelphiVersions;
   FIgnoreFolders := TStringList.Create;
   FIgnoreFolders.Sorted := True;
-  FignoreFolders.Duplicates := dupIgnore;
+  FIgnoreFolders.Duplicates := dupIgnore;
   FIgnoreFolders.Delimiter := ';';
   lIni := TIniFile.Create(TPath.ChangeExtension(Application.ExeName, '.ini'));
-  try
+  Try
     FIgnoreFolders.DelimitedText := lIni.ReadString('Folders', 'Ignore', '');
     SrcMasterDir.Text := lIni.ReadString('Folders', 'MasterSource', '');
     TgtMasterDir.Text := lIni.ReadString('Folders', 'MasterTarget', '');
-
-  finally
+    GlobalMap.Checked := lIni.ReadBool('Settings', 'GlobalMap', False);
+    BackUpFolder.Text := lIni.ReadString('Mapping', 'BackUpFolder', '');
+  Finally
     lIni.Free;
-  end;
+  End;
 
   LoadSubFolders;
-end;
+End;
 
-procedure TForm1.BrowseForSourceAccept(Sender: TObject);
-begin
+Procedure TForm1.BrowseForSourceAccept(Sender: TObject);
+Begin
   SrcMasterDir.Text := BrowseForSource.Folder;
   LoadSubFolders;
-end;
+End;
 
-procedure TForm1.BrowseForTargetAccept(Sender: TObject);
-begin
+Procedure TForm1.BrowseForTargetAccept(Sender: TObject);
+Begin
   TgtMasterDir.Text := BrowseForTarget.Folder;
-end;
+End;
 
-procedure TForm1.ExecActionExecute(Sender: TObject);
-var
+Procedure TForm1.CreateMapActionExecute(Sender: TObject);
+Begin
+  Memo1.Lines.Clear;
+  Memo2.Lines.Clear;
+  CreatePathMap;
+  Memo2.Lines.AddStrings(FMapPaths);
+  FMapPaths.Free;
+  FMapPaths := Nil;
+End;
+
+Procedure TForm1.CreatePathMap;
+Var
+  J: Integer;
+Begin
+  Log('Creating Paths List');
+  FMapPaths := TStringList.Create;
+  For J := 0 To SrcFolders.Count - 1 Do
+  Begin
+
+    If SrcFolders.Checked[J] Then
+      MapTopFolder(SrcFolders.Items[J]);
+  End;
+
+End;
+
+Procedure TForm1.DelphiVersionChange(Sender: TObject);
+Begin
+  Platforms.Items.Clear;
+  FDelphiVersions.SupportedPlatformsToStrings(DelphiVersion.Text, Platforms.Items);
+End;
+
+Procedure TForm1.GlobalMapClick(Sender: TObject);
+Begin
+  MappingOptionsGroup.Visible := GlobalMap.Checked;
+  SingleFolderGroup.Visible := Not GlobalMap.Checked;
+End;
+
+Procedure TForm1.ExecActionExecute(Sender: TObject);
+Var
   I: Integer;
-begin
-   Memo1.Lines.Clear;
-   Memo2.Lines.Clear;
-   for I := 0 to SrcFolders.Count - 1 do
-   begin
-     if SrcFolders.Checked[I] then
-        ProcessTopFolder(SrcFolders.Items[I]);
-   end;
-   ShowMessage('Complete');
-end;
+Begin
+  Memo1.Lines.Clear;
+  Memo2.Lines.Clear;
+  For I := 0 To SrcFolders.Count - 1 Do
+  Begin
+    If SrcFolders.Checked[I] Then
+      ProcessTopFolder(SrcFolders.Items[I]);
+  End;
+  ShowMessage('Complete');
+End;
 
-procedure TForm1.IgnoreFolderActionExecute(Sender: TObject);
-var I: Integer;
-    lDir: String;
-begin
-   I := SrcFolders.ItemIndex;
-   if I < 0 then
-      Exit;
-   lDir := TPath.GetFileName(SrcFolders.Items[I]);
-   FIgnoreFolders.Add(lDir);
-   SrcFolders.Items.Delete(I);
-end;
+Procedure TForm1.IgnoreFolderActionExecute(Sender: TObject);
+Var
+  I: Integer;
+  lDir: String;
+Begin
+  I := SrcFolders.ItemIndex;
+  If I < 0 Then
+    Exit;
+  lDir := TPath.GetFileName(SrcFolders.Items[I]);
+  FIgnoreFolders.Add(lDir);
+  SrcFolders.Items.Delete(I);
+End;
 
-procedure TForm1.LoadSubFolders;
-var lDirs: TStringDynArray;
+Procedure TForm1.LoadDelphiVersions;
+Var
+  I: Integer;
+Begin
+  For I := 0 To FDelphiVersions.AvailableCount - 1 Do
+  Begin
+    DelphiVersion.Items.Add(FDelphiVersions.AvailableVersionName[I]);
+  End;
+End;
+
+Procedure TForm1.LoadSubFolders;
+Var
+  lDirs: TStringDynArray;
   I, X: Integer;
   lDir: String;
-begin
+Begin
   SrcFolders.Items.Clear;
   lDirs := TDirectory.GetDirectories(SrcMasterDir.Text);
 
-  for I := 0 to Length(lDirs) - 1 do
-  begin
+  For I := 0 To Length(lDirs) - 1 Do
+  Begin
     lDir := TPath.GetFileName(lDirs[I]);
     X := SrcFolders.Items.Add(lDirs[I]);
-    if FIgnoreFolders.IndexOf(lDir) < 0 then
-       SrcFolders.Checked[X] := True;
-  end;
+    If FIgnoreFolders.IndexOf(lDir) < 0 Then
+      SrcFolders.Checked[X] := True;
+  End;
 
   SrcFolders.ItemIndex := 0;
-end;
+End;
 
-procedure TForm1.Log(const Value: string);
-begin
+Procedure TForm1.Log(Const Value: String);
+Begin
   Memo1.Lines.Add(Value);
   Application.ProcessMessages;
-end;
+End;
 
-procedure TForm1.ProcessSourceFolder(SourceFolder, TargetFolder: string);
+Procedure TForm1.MapPathsButtonClick(Sender: TObject);
+Var
+  J, I: Integer;
+Begin
+  Memo1.Lines.Clear;
+  Memo2.Lines.Clear;
+  CreatePathMap;
+  Try
+    For I := 0 To Platforms.Count - 1 Do
+    Begin
+      If Platforms.Checked[I] Then
+      Begin
+        Log('Mapping for ' + Platforms.Items[I] + '; Paths Count: ' + FMapPaths.Count.ToString);
+        FDelphiVersions.OpenLibrary(DelphiVersion.Text, Platforms.Items[I], BackUpFolder.Text);
 
-   procedure ProcessThisFolder(Const AFolder: String; const ALevel: Integer);
-   var lFiles, lFolders: TStringDynarray;
-       S, lName, lTargetName, fileContents, lInc: String;
-   begin
-     Log(' ' + StringOfChar('-', ALevel * 2) +   ' Processing ' + AFolder);
+        For J := 0 To FMapPaths.Count - 1 Do
+        Begin
 
-     lFolders := TDirectory.GetDirectories(AFolder);
-     lFiles := TDirectory.GetFiles(AFolder);
-     for S In lFiles do
-     begin
-       lName := TPath.GetFileName(S);
-       lTargetName := TPath.Combine(TargetFolder, lName);
-       if TPath.GetExtension(S).ToLower = '.pas' then
-       begin
-         fileContents := TFile.ReadAllText(S);
-         lInc := '{$I ' + DupeString('..\', ALevel) + 'Include\';
-         fileContents := fileContents.Replace(lInc, '{$I ', [rfReplaceAll]);
-         TFile.WriteAllText(lTargetName, fileContents);
-         if not TFile.Exists(lTargetName) then
-            Memo2.Lines.Add(S)
-       end
-       else
-       begin
-         TFile.Copy(S, lTargetName);
-         if not TFile.Exists(lTargetName) then
-            Memo2.Lines.Add(S)
-       end;
-     end;
+          if FDelphiVersions.AddToLibrary(FMapPaths[J]) then
+             Log('Mapped ' + FMapPaths[J])
+          else
+             Log('Already Exists: ' + FMapPaths[J]);
 
-     for S in lFolders do
-        ProcessThisFolder(S, ALevel + 1);
+        End;
+        If MapTest.Checked Then
+        Begin
+          Memo2.Lines.Add(FMapPaths[I]);
+          Memo2.Lines.Add(StringOfChar('-', FMapPaths[I].Length));
+          FDelphiVersions.AppendPaths(Memo2.Lines);
+          Memo2.Lines.Add(' ');
+        End
+        Else
+          FDelphiVersions.SaveAndCloseLibrary;
+      End;
+    End;
+  Finally
+    FMapPaths.Free;
+  End;
+  ShowMessage('Complete');
+End;
 
-   end;
+Procedure TForm1.MapTopFolder(AFolder: String);
 
-var lFolders: TStringDynarray;
+  Procedure MapSourceFolder(BFolder: String);
+  Var
+    BFolders: TStringDynArray;
+    I: Integer;
+  Begin
+
+    FMapPaths.Add(BFolder);
+    Log('Added: ' + BFolder);
+    BFolders := TDirectory.GetDirectories(BFolder);
+    For I := 0 To Length(BFolders) - 1 Do
+      MapSourceFolder(BFolders[I]);
+
+  End;
+
+Var
+  lFolders: TStringDynArray;
   I: Integer;
-begin
+  SFolder: String;
+Begin
+  Log('Processing: ' + AFolder);
+  lFolders := TDirectory.GetDirectories(AFolder);
+  For I := 0 To Length(lFolders) - 1 Do
+  Begin
+    If lFolders[I].Contains('.') Then
+      Continue;
+    SFolder := TPath.Combine(lFolders[I], 'Src');
+    If TDirectory.Exists(SFolder) Then
+      Break
+    Else
+      SFolder := '';
+  End;
+
+  If SFolder <> '' Then
+    MapSourceFolder(SFolder)
+  else
+    Log('Source Folder not Found');
+End;
+
+Procedure TForm1.ProcessSourceFolder(SourceFolder, TargetFolder: String);
+
+  Procedure ProcessThisFolder(Const AFolder: String; Const ALevel: Integer);
+  Var
+    lFiles, lFolders: TStringDynArray;
+    S, lName, lTargetName, fileContents, lInc: String;
+  Begin
+    Log(' ' + StringOfChar('-', ALevel * 2) + ' Processing ' + AFolder);
+
+    lFolders := TDirectory.GetDirectories(AFolder);
+    lFiles := TDirectory.GetFiles(AFolder);
+    For S In lFiles Do
+    Begin
+      lName := TPath.GetFileName(S);
+      lTargetName := TPath.Combine(TargetFolder, lName);
+      If TPath.GetExtension(S).ToLower = '.pas' Then
+      Begin
+        fileContents := TFile.ReadAllText(S);
+        lInc := '{$I ' + DupeString('..\', ALevel) + 'Include\';
+        fileContents := fileContents.Replace(lInc, '{$I ', [rfReplaceAll]);
+        TFile.WriteAllText(lTargetName, fileContents);
+        If Not TFile.Exists(lTargetName) Then
+          Memo2.Lines.Add(S)
+      End
+      Else
+      Begin
+        TFile.Copy(S, lTargetName);
+        If Not TFile.Exists(lTargetName) Then
+          Memo2.Lines.Add(S)
+      End;
+    End;
+
+    For S In lFolders Do
+      ProcessThisFolder(S, ALevel + 1);
+
+  End;
+
+Var
+  lFolders: TStringDynArray;
+  I: Integer;
+Begin
 
   lFolders := TDirectory.GetDirectories(SourceFolder);
-  for I := 0 to Length(lFolders) - 1 do
-      ProcessThisFolder(lFolders[I], 1);
-end;
+  For I := 0 To Length(lFolders) - 1 Do
+    ProcessThisFolder(lFolders[I], 1);
+End;
 
-procedure TForm1.ProcessTopFolder(AFolder: string);
-  procedure EmptyFolder(const XFolder: String);
-  var uFiles: TStringDynArray;
-  S: String;
-  begin
+Procedure TForm1.ProcessTopFolder(AFolder: String);
+  Procedure EmptyFolder(Const XFolder: String);
+  Var
+    uFiles: TStringDynArray;
+    S: String;
+  Begin
     uFiles := TDirectory.GetFiles(XFolder);
-    for S in uFiles do
-        TFile.Delete(S);
-  end;
-var
- TargetFolder, SFolder, lPath, S: String;
- lFiles, lFolders, lSFolders: TStringDynarray;
+    For S In uFiles Do
+      TFile.Delete(S);
+  End;
+
+Var
+  TargetFolder, SFolder, lPath, S: String;
+  lFiles, lFolders, lSFolders: TStringDynArray;
   I, J: Integer;
-begin
+Begin
   Log('Starting ' + AFolder);
   TargetFolder := TPath.Combine(TgtMasterDir.Text, TPath.GetFileName(AFolder));
-  if TDirectory.Exists(TargetFolder) then
-     EmptyFolder(TargetFolder)
-  else
-     TDirectory.CreateDirectory(TargetFolder);
+  If TDirectory.Exists(TargetFolder) Then
+    EmptyFolder(TargetFolder)
+  Else
+    TDirectory.CreateDirectory(TargetFolder);
   lFiles := TDirectory.GetFiles(AFolder);
-  for I := 0 to Length(lFiles) - 1 do
-  begin
-    if SameText(TPath.GetFileName(lFiles[I]), 'README.md') then
-       TFile.Copy(lFiles[I], TPath.Combine(TargetFolder, 'README.md'))
-    else if SameText(TPath.GetFileName(lFiles[I]), 'LICENSE') then
-    begin
-       lPath := TPath.Combine(TargetFolder, 'LICENSE') + '.txt';
-       TFile.Copy(lFiles[I], lPath);
-    end;
-  end;
+  For I := 0 To Length(lFiles) - 1 Do
+  Begin
+    If SameText(TPath.GetFileName(lFiles[I]), 'README.md') Then
+      TFile.Copy(lFiles[I], TPath.Combine(TargetFolder, 'README.md'))
+    Else If SameText(TPath.GetFileName(lFiles[I]), 'LICENSE') Then
+    Begin
+      lPath := TPath.Combine(TargetFolder, 'LICENSE') + '.txt';
+      TFile.Copy(lFiles[I], lPath);
+    End;
+  End;
 
   lFolders := TDirectory.GetDirectories(AFolder);
-  for I := 0 to Length(lFolders) - 1 do
-  begin
-    if lFolders[I].Contains('.') then
-       Continue;
-    SFolder := TPath.Combine( lFolders[I], 'Src');
-    if TDirectory.Exists(sFolder) then
-       Break
-    else
+  For I := 0 To Length(lFolders) - 1 Do
+  Begin
+    If lFolders[I].Contains('.') Then
+      Continue;
+    SFolder := TPath.Combine(lFolders[I], 'Src');
+    If TDirectory.Exists(SFolder) Then
+      Break
+    Else
       SFolder := '';
-  end;
+  End;
 
-  if SFolder <> '' then
-     ProcessSourceFolder(SFolder, TargetFolder);
+  If SFolder <> '' Then
+    ProcessSourceFolder(SFolder, TargetFolder);
 
-end;
+End;
 
-procedure TForm1.SaveActionExecute(Sender: TObject);
-var lIni:TIniFile;
-begin
+Procedure TForm1.SaveActionExecute(Sender: TObject);
+Var
+  lIni: TIniFile;
+Begin
   lIni := TIniFile.Create(TPath.ChangeExtension(Application.ExeName, '.ini'));
-  try
+  Try
     lIni.WriteString('Folders', 'Ignore', FIgnoreFolders.DelimitedText);
     lIni.WriteString('Folders', 'MasterSource', SrcMasterDir.Text);
     lIni.WriteString('Folders', 'MasterTarget', TgtMasterDir.Text);
-  finally
+    lIni.WriteBool('Settings', 'GlobalMap', GlobalMap.Checked);
+    lIni.WriteString('Mapping', 'BackUpFolder', BackUpFolder.Text);
+  Finally
     lIni.Free;
-  end;
-end;
+  End;
+End;
 
-end.
+End.

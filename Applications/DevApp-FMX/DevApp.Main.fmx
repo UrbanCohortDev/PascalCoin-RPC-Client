@@ -3182,6 +3182,16 @@ object MainForm: TMainForm
         Text = 'Raw Ops'
         OnClick = RawOpsButtonClick
       end
+      object RawAnalysisButton: TButton
+        Position.X = 82.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 135.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Raw Op Analysis'
+        OnClick = RawAnalysisButtonClick
+      end
     end
   end
   object FormStand1: TFormStand

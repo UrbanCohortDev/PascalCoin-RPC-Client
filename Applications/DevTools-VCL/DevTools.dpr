@@ -7,7 +7,8 @@ uses
   madListProcesses,
   madListModules,
   Vcl.Forms,
-  MainForm in 'MainForm.pas' {Form1};
+  MainForm in 'MainForm.pas' {Form1},
+  UC.Delphi.Versions in 'UC.Delphi.Versions.pas';
 
 {$R *.res}
 

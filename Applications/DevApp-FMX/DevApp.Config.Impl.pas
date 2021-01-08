@@ -36,6 +36,7 @@ Type
     Function GetExplorerAPI: IPascalCoinExplorerAPI;
     Function GetNodeAPI: IPascalCoinNodeAPI;
     Function GetWalletAPI: IPascalCoinWalletAPI;
+    function GetOperationsAPI: IPascalCoinOperationsAPI;
   Protected
   Public
     Constructor Create;
@@ -48,6 +49,7 @@ Type
     Property ExplorerAPI: IPascalCoinExplorerAPI Read GetExplorerAPI;
     Property NodeAPI: IPascalCoinNodeAPI Read GetNodeAPI;
     Property WalletAPI: IPascalCoinWalletAPI Read GetWalletAPI;
+    Property OperationsAPI: IPascalCoinOperationsAPI read GetOperationsAPI;
   End;
 
 Implementation
@@ -60,7 +62,8 @@ Uses
   PascalCoin.RPC.Client,
   PascalCoin.RPC.API.Node,
   PascalCoin.RPC.API.Explorer,
-  PascalCoin.RPC.API.Wallet;
+  PascalCoin.RPC.API.Wallet,
+  PascalCoin.RPC.API.Operations;
 
 { TDevAppConfig }
 
@@ -111,6 +114,11 @@ Function TDevAppConfig.GetNodeAPI: IPascalCoinNodeAPI;
 Begin
   Result := TPascalCoinNodeAPI.Create(GetRPCClient);
 End;
+
+function TDevAppConfig.GetOperationsAPI: IPascalCoinOperationsAPI;
+begin
+  Result := TPascalCoinOperationsAPI.Create(GetRPCClient);
+end;
 
 Function TDevAppConfig.GetRPCClient: IPascalCoinRPCClient;
 Begin

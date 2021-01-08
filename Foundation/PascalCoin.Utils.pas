@@ -177,7 +177,7 @@ End;
 
 class function TPascalCoinUtils.KeyType(const AKey: String): TKeyType;
 const
-AOFFSET = 1;
+AOFFSET = 0;
 var
   ReversedSlice: TBytes;
   lValue: Int32;

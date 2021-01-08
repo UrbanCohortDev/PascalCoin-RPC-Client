@@ -1,4 +1,4 @@
-Unit PascalCoin.RPC.RawOp.Base;
+Unit PascalCoin.RawOp.Base;
 
 (* ***********************************************************************
   copyright 2019-2020  Russell Weetch
@@ -54,7 +54,6 @@ Type
     Function GetPayloadType: TPayloadType;
     Procedure SetPayloadType(Const Value: TPayloadType);
 
-    function LenAs2ByteHex(const Value: Integer): string;
     procedure SignOperation;
     /// <summary>
     ///   Hashes ValueToHash with SHA2-256
@@ -124,13 +123,6 @@ End;
 function TPascalCoinBaseRawOperation.HashThis: String;
 begin
   Result := TKeyUtils.HashSHA2_256(ValueToHash);
-end;
-
-function TPascalCoinBaseRawOperation.LenAs2ByteHex(const Value: Integer): string;
-var lSLE: TBytes;
-begin
-  lSLE := TKeyUtils.UInt32ToLittleEndianByteArrayTwoBytes(Value);
-  Result := TKeyUtils.AsHex(lSLE);
 end;
 
 procedure TPascalCoinBaseRawOperation.SetHexEncode(const Value: Boolean);

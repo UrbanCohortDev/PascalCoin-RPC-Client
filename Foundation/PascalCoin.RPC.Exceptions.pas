@@ -90,8 +90,10 @@ Type
   EInvalidDataException = Class(ERPCException);
   EInvalidSignatureException = Class(ERPCException);
   ENotAllowedException = Class(ERPCException);
+  EOperationException = Class(ERPCException);
 
 Function GetRPCExceptionClass(AStatusCode: Integer): ERPCExceptionClass;
+Function GetRPCExceptionByMethod(AMethod, AMessage: String): ERPCException;
 
 Implementation
 
@@ -133,6 +135,19 @@ Begin
     Result := ERPCGeneralException;
   End;
 End;
+
+Function GetRPCExceptionByMethod(AMethod, AMessage: String): ERPCException;
+begin
+  if AMethod = 'executeoperations' then
+  begin
+     //zero fee operations per block limit:1
+     //Invalid n_operation 3 (expected 2)
+     //Insufficient sender funds 278 < (1000 + 0 = 1000)
+     Result := EOperationException.Create(RPC_ERRNUM_OPERATION_ERROR, AMessage);
+  end
+  else
+    Result := ERPCGeneralException.Create(RPC_ERRNUM_GENERAL_ERROR, Amessage);
+end;
 
 { ERPCException }
 

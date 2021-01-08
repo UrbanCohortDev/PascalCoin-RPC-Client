@@ -1,0 +1,78 @@
+inherited RawOpAnalysis: TRawOpAnalysis
+  Caption = 'Raw Op Analysis'
+  DesignerMasterStyle = 0
+  inherited ContentLayout: TLayout
+    object Layout3D1: TLayout3D
+      Height = 4.000000000000000000
+      Width = 5.000000000000000000
+    end
+    object Layout1: TLayout
+      Align = Top
+      Margins.Bottom = 3.000000000000000000
+      Size.Width = 634.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Edit1: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Client
+        TabOrder = 0
+        Text = 
+          '0100000001000000740E000002000000D21E0000B88800000000000001000000' +
+          '0000000007004558414D504C450000000000002000EFD5CBC12F6CC347ED55F2' +
+          '6471E046CF59C87E099513F56F4F1DD49BDFA84C0E20007BCB0D96A93202A9C6' +
+          'F11D90BFDCAB99F513C880C4888FECAC74D9B09618C06E'
+        Size.Width = 569.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label1: TLabel
+        Align = Left
+        Size.Width = 65.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Raw Op'
+        TabOrder = 1
+      end
+    end
+    object Layout2: TLayout
+      Align = Top
+      Margins.Bottom = 3.000000000000000000
+      Position.Y = 28.000000000000000000
+      Size.Width = 634.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object Button1: TButton
+        Align = Right
+        Position.X = 554.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Go'
+        OnClick = Button1Click
+      end
+      object CheckBox1: TCheckBox
+        Align = Left
+        IsChecked = True
+        Size.Width = 120.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Multi Op'
+      end
+    end
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Align = Client
+      Size.Width = 634.000000000000000000
+      Size.Height = 310.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Viewport.Width = 630.000000000000000000
+      Viewport.Height = 306.000000000000000000
+    end
+  end
+end

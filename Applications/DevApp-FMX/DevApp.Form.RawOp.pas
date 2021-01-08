@@ -87,12 +87,21 @@ Type
     ClearAction: TAction;
     StandardDataAction: TAction;
     Button2: TButton;
+    TransactionTestAction: TAction;
+    Button3: TButton;
+    PascalFormat: TCheckBox;
+    PushTransaction: TCheckBox;
+    Button4: TButton;
+    PublicKeyTest: TAction;
     Procedure ClearActionExecute(Sender: TObject);
     Procedure ExecuteButtonClick(Sender: TObject);
     Procedure MenuItem2Click(Sender: TObject);
     Procedure PayloadEncryptionComboChange(Sender: TObject);
+    procedure PublicKeyTestExecute(Sender: TObject);
+    procedure PushTransactionChange(Sender: TObject);
     Procedure StandardDataActionExecute(Sender: TObject);
     Procedure ToAccountExit(Sender: TObject);
+    procedure TransactionTestActionExecute(Sender: TObject);
   Private
     { Private declarations }
     FExpectedSender: String;
@@ -137,9 +146,14 @@ Uses
   System.Rtti,
   System.StrUtils,
   PascalCoin.Utils,
-  PascalCoin.RPC.RawOp.Send,
+  PascalCoin.RawOp.Send,
   PascalCoin.Payload,
-  PascalCoin.KeyUtils, PascalCoin.RawOp.MultiOperations;
+  PascalCoin.KeyUtils, PascalCoin.RawOp.MultiOperations, DevApp.Utils;
+
+resourcestring
+TestNet_PrivateKey = 'CA0220004D2B50719518D780AEF52B4B80A64BCDD3B3BDC9F10E682324F6AFE945883600';
+TestNet_From = '2266-57';
+TestNet_To = '2267-69';
 
 {$IFDEF UNITTEST}
 procedure TRawOpForm.CheckStepValues(AMultiOp: IPascalCoinMultiOperations);
@@ -187,6 +201,7 @@ Begin
   Fee.Text := '';
   Payload.Text := '';
   PrivateKey.Text := '';
+  PascalFormat.IsChecked := False;
   KeyTypeCombo.ItemIndex := 0;
   PayloadEncryptionCombo.ItemIndex := 0;
   KRandom.Text := '';
@@ -205,10 +220,13 @@ End;
 
 Procedure TRawOpForm.ExecuteButtonClick(Sender: TObject);
 Var
+  lRecipientAccount: IPascalCoinAccount;
   lRawOp: IPascalCoinRawSend;
   lMultiOp: IPascalCoinMultiOperations;
+  ReturnOp: IPascalCoinOperation;
   lOp: String;
 Begin
+  lRecipientAccount := ExplorerAPI.GetAccount(ToAccount.Text);
   lRawOp := TPascalCoinSendOperation.Create(TPascalCoinPayload.Create);
   lRawOp.SenderAccount := FromAccount.Text;
   lRawOp.ReceiverAccount := ToAccount.Text;
@@ -216,7 +234,7 @@ Begin
   lRawOp.Fee := StrToCurr(Fee.Text.Trim);
   lRawOp.OpNumber := NextNOp.Text.ToInteger;
 {$IFDEF UNITTEST}
-  lRawOp.FixedRandomK := KRandom.Text;
+  lRawOp.FixedRandomK := KRandom.Text.Trim;
 {$ENDIF}
   lRawOp.Payload.EncryptionMethod := PayloadEncryptionMethod;
   lRawOp.Payload.Payload := Payload.Text;
@@ -224,12 +242,15 @@ Begin
     peNone:
       ;
     pePublicKey:
-      lRawOp.Payload.Password := FRecipientAccount.enc_pubkey;
+      lRawOp.Payload.Password := lRecipientAccount.enc_pubkey;
     peAES:
       lRawOp.Payload.Password := PasswordEdit.Text;
   End;
 
-  lRawOp.PrivateKey[GetKeyType] := PrivateKey.Text;
+  if PascalFormat.IsChecked then
+     lRawOp.PrivateKey[GetKeyType] := TKeyUtils.PrivateKeyFromPascalPrivateKey(PrivateKey.Text)
+  else
+     lRawOp.PrivateKey[GetKeyType] := PrivateKey.Text;
 
   lMultiOp := TPascalCoinMultiOperations.Create;
   lMultiOp.AddRawOperation(lRawOp);
@@ -253,9 +274,15 @@ Begin
   Memo1.Lines.Add('RawOp:');
   Memo1.Lines.Add(lOp);
 
-  If FCanExecute Then
+  If FCanExecute and  PushTransaction.IsChecked Then
   Begin
-
+    Try
+    returnOp := OperationsAPI.executeoperation(lRawOp.RawOp);
+    TDevAppUtils.OperationInfo(returnOP, Memo1.Lines);
+    Except
+      on e: exception do
+        ShowMessage('EXCEPTION: ' + e.Message);
+    End;
   End;
 End;
 
@@ -302,6 +329,40 @@ Begin
     (PayloadEncryptionCombo.Items[PayloadEncryptionCombo.ItemIndex]);
 End;
 
+procedure TRawOpForm.PublicKeyTestExecute(Sender: TObject);
+   procedure ProcessAccount(aNum: String);
+    var lAccount: IPascalCoinAccount;
+        lPPubKey, lBase58Key, lConverted: String;
+   begin
+     lAccount := ExplorerAPI.GetAccount(aNum);
+     lPPubKey := lAccount.enc_pubkey;
+     lBase58Key := TKeyUtils.GetPascalCoinPublicKeyAsBase58(lPPubKey);
+     lConverted := TKeyUtils.GetPascalCoinPublicKeyFromBase58(lBase58Key);
+     Memo1.Lines.Add('PascalCoin PublicKey: ' + lPPubkey);
+     Memo1.Lines.Add('Base58 PublicKey: ' + lBase58Key);
+     Memo1.Lines.Add('Pascal PubKey from Base58: ' + lConverted);
+   end;
+begin
+
+ Memo1.Lines.Clear;
+ Memo1.Lines.Add('From Account: ' + FromAccount.Text);
+ Memo1.Lines.Add(StringOfChar('=', 12));
+ ProcessAccount(FromAccount.Text);
+ Memo1.Lines.Add('');
+ Memo1.Lines.Add('To Account: ' + ToAccount.Text);
+ Memo1.Lines.Add(StringOfChar('=', 12));
+ ProcessAccount(ToAccount.Text);
+ Memo1.Lines.Add('');
+
+
+end;
+
+procedure TRawOpForm.PushTransactionChange(Sender: TObject);
+begin
+  if Not FCanExecute then
+     PushTransaction.IsChecked := False;
+end;
+
 Procedure TRawOpForm.StandardDataActionExecute(Sender: TObject);
 Begin
   Clear;
@@ -336,7 +397,7 @@ Begin
   FExpectedSignedTx :=
     '01000000740E000002000000D21E0000B888000000000000010000000000000007004558414D504C450000000000002000EFD5CBC12F6CC347ED55F26471E046CF59C87E099513F56F4F1DD49BDFA84C0E20007BCB0D96A93202A9C6F11D90BFDCAB99F513C880C4888FECAC74D9B09618C06E';
   FExpectedRawOp := '01000000' + FExpectedSignedTx;
-
+   PushTransaction.IsChecked := False;
   FCanExecute := False;
 End;
 
@@ -348,12 +409,35 @@ Begin
   FRecipientAccount := Nil;
   If TPascalCoinUtils.IsAccountNumberValid(ToAccount.Text) Then
   Begin
-    acct := TPascalCoinUtils.AccountNumber(ToAccount.Text);
-    FRecipientAccount := ExplorerAPI.GetAccount(acct);
+    FRecipientAccount := ExplorerAPI.GetAccount(ToAccount.Text);
   End
   Else
     ShowMessage('This is not a valid account number');
 
 End;
+
+procedure TRawOpForm.TransactionTestActionExecute(Sender: TObject);
+var
+Acct: IPascalCoinAccount;
+begin
+  inherited;
+  Clear;
+  FromAccount.Text := TestNet_From;
+  ToAccount.Text := TestNet_To;
+  Acct := EXPlorerAPI.GetAccount(TPascalCoinUtils.AccountNumber(TestNet_From));
+  NextNOp.Text := (Acct.n_operation + 1).ToString;
+  Fee.Text := '0.0000';
+  Amount.Text := '0.1';
+
+  Payload.Text := 'EXAMPLE TX';
+  PayloadEncryptionCombo.ItemIndex := 0;
+  PrivateKey.Text := TestNet_PrivateKey;
+  PascalFormat.IsChecked := True;
+  KeyTypeCombo.ItemIndex := KeyTypeCombo.Items.IndexOf('SECP256K1');
+  KRandom.Text := '';
+  OpNumber.Text := Acct.n_operation.ToString;
+   PushTransaction.IsChecked := True;
+
+end;
 
 End.

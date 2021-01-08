@@ -31,15 +31,18 @@ Type
     FNodeURI: String;
 
     FHTTPClient: IucHTTPRequest;
-    FResultStr: String;
-    FResultObj: TJSONObject;
+    FResponseStr: String;
+    FResponseObj: TJSONObject;
+    FResultValue: TJSONValue;
     FCallId: String;
     FNextId: Integer;
     Function NextId: String;
   Protected
     Function GetResponseObject: TJSONObject;
     Function GetResponseStr: String;
-    Function RPCCall(Const AMethod: String; Const AParams: Array Of TParamPair): boolean;
+    Function GetResultValue: TJSONValue;
+
+    Function RPCCall(Const AMethod: String; Const AParams: Array Of TParamPair): Boolean;
     Function GetNodeURI: String;
     Procedure SetNodeURI(Const Value: String);
 
@@ -70,13 +73,18 @@ End;
 
 Function TPascalCoinRPCClient.GetResponseObject: TJSONObject;
 Begin
-  result := TJSONObject.ParseJSONValue(FResultStr) As TJSONObject
+  result := TJSONObject.ParseJSONValue(FResponseStr) As TJSONObject
 End;
 
 Function TPascalCoinRPCClient.GetResponseStr: String;
 Begin
-  result := FResultStr
+  result := FResponseStr
 End;
+
+function TPascalCoinRPCClient.GetResultValue: TJSONValue;
+begin
+    Result := FResultValue;
+end;
 
 Function TPascalCoinRPCClient.NextId: String;
 Begin
@@ -85,11 +93,12 @@ Begin
 End;
 
 // {"jsonrpc": "2.0", "method": "XXX", "id": NNN, "params":{"p1":" ","p2":" "}}
-Function TPascalCoinRPCClient.RPCCall(Const AMethod: String; Const AParams: Array Of TParamPair): boolean;
+Function TPascalCoinRPCClient.RPCCall(Const AMethod: String; Const AParams: Array Of TParamPair): Boolean;
 Var
   lObj, lErrObj, lParams: TJSONObject;
+  lArray: TJSONArray;
   lParam: TParamPair;
-  lValue: TJSONValue;
+  lResponse, lValue, lStatusValue: TJSONValue;
   lStatusCode: Integer;
 Begin
   FCallId := NextId;
@@ -120,25 +129,45 @@ Begin
     { TODO : Test that return Id matches call id }
     Else
     Begin
-      FResultStr := FHTTPClient.ResponseStr;
-      FResultObj := (TJSONObject.ParseJSONValue(FResultStr) As TJSONObject);
-      lValue := FResultObj.FindValue('error');
+      FResponseStr := FHTTPClient.ResponseStr;
+
+      lResponse := TJSONObject.ParseJSONValue(FResponseStr);
+
+      FResponseObj := (lResponse As TJSONObject);
+
+      lValue := FResponseObj.FindValue('error');
 
       If lValue <> Nil Then
       Begin
 
-        FResultStr := '';
+        FResponseStr := '';
 
         lErrObj := lValue As TJSONObject;
         lStatusCode := lErrObj.Values['code'].AsType<Integer>;
 
         Raise GetRPCExceptionClass(lStatusCode).Create(lStatusCode, lErrObj.Values['message'].AsType<String>);
 
-      End
-      Else
-      Begin
-        result := True;
       End;
+
+      FResultValue := FResponseObj.GetValue('result');
+
+      If FResultValue is TJSONArray then
+      begin
+        lArray := FResultValue as TJSONArray;
+        if lArray.Size > 0 then
+        begin
+          lErrObj := lArray[0] as TJSONObject;
+          lStatusValue := lErrObj.FindValue('valid');
+          if (lStatusValue <> nil) and (lStatusValue.AsType<boolean> = false) then
+          begin
+            FResponseStr := '';
+            raise GetRPCExceptionByMethod(AMethod, lErrObj.Values['errors'].AsType<String>);
+          end;
+
+        end;
+      end;
+
+      Result := True;
 
     End;
 

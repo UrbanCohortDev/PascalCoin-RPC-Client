@@ -24,7 +24,8 @@ Uses
   System.Generics.Collections,
   PascalCoin.Consts,
   PascalCoin.RPC.Interfaces,
-  PascalCoin.RPC.API.Base;
+  PascalCoin.RPC.API.Base,
+  HlpConverters;
 
 Type
 
@@ -35,6 +36,9 @@ Type
       Const AKeyStyle: TKeyStyle): String;
 
     Function executeoperation(Const RawOperation: String): IPascalCoinOperation;
+    function executeoperations(const RawOperationsArray: String):
+        IPascalCoinOperations;
+
   Public
     Constructor Create(AClient: IPascalCoinRPCClient);
   End;
@@ -43,7 +47,7 @@ Implementation
 
 Uses
   Rest.JSON,
-  PascalCoin.RPC.Operation;
+  PascalCoin.RPC.Operation, PascalCoin.KeyUtils;
 
 { TPascalCoinOperationsAPI }
 
@@ -54,12 +58,21 @@ End;
 
 function TPascalCoinOperationsAPI.executeoperation(Const RawOperation: String):
     IPascalCoinOperation;
+var lOperations: String;
+  lRetval: IPascalCoinOperations;
 Begin
-  If FClient.RPCCall('executeoperations', [TParamPair.Create('rawoperations', RawOperation)]) Then
-  Begin
-    result := TPascalCoinOperation.FromJSONValue(GetJSONResult);
-  End;
+  lOperations := TKeyUtils.AsHex(TConverters.ReadUInt32AsBytesLE(1)) + RawOperation;
+  lRetval := executeoperations(lOperations);
+  Result := lRetval.Operation[0];
 End;
+
+function TPascalCoinOperationsAPI.executeoperations(const RawOperationsArray: String): IPascalCoinOperations;
+begin
+  If FClient.RPCCall('executeoperations', [TParamPair.Create('rawoperations', RawOperationsArray)]) Then
+  Begin
+    Result := TPascalCoinOperations.FromJSONValue(ResultAsArray);
+  End;
+end;
 
 Function TPascalCoinOperationsAPI.payloadEncryptWithPublicKey(Const APayload, AKey: String;
   Const AKeyStyle: TKeyStyle): String;

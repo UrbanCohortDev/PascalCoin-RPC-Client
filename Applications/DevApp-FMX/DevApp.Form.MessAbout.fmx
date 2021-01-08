@@ -1,0 +1,116 @@
+inherited MessAbout: TMessAbout
+  Caption = 'DevBaseForm1'
+  DesignerMasterStyle = 0
+  inherited ContentLayout: TLayout
+    object Layout1: TLayout
+      Align = Top
+      Size.Width = 634.000000000000000000
+      Size.Height = 129.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Label1: TLabel
+        Align = Top
+        Size.Width = 634.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Convert Keys'
+        TabOrder = 0
+      end
+      object Layout2: TLayout
+        Align = Top
+        Margins.Top = 3.000000000000000000
+        Margins.Bottom = 3.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 634.000000000000000000
+        Size.Height = 21.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object Label2: TLabel
+          Align = Left
+          Size.Width = 65.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Source'
+          TabOrder = 0
+        end
+        object SourceKey: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          TabOrder = 1
+          Margins.Right = 3.000000000000000000
+          Size.Width = 466.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = SourceKeyChange
+        end
+        object KeyStyle: TComboBox
+          Align = Right
+          Items.Strings = (
+            'Who knows?'
+            'Encoded'
+            'B58')
+          ItemIndex = 0
+          Position.X = 534.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+        end
+      end
+      object Layout3: TLayout
+        Align = Top
+        Position.Y = 44.000000000000000000
+        Size.Width = 634.000000000000000000
+        Size.Height = 29.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+      end
+      object Layout4: TLayout
+        Align = Top
+        Margins.Top = 3.000000000000000000
+        Margins.Bottom = 3.000000000000000000
+        Position.Y = 76.000000000000000000
+        Size.Width = 634.000000000000000000
+        Size.Height = 21.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object TargetLabel: TLabel
+          Align = Left
+          Size.Width = 65.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Source'
+          TabOrder = 0
+        end
+        object Edit2: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          TabOrder = 1
+          Size.Width = 519.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+        end
+        object SpeedButton1: TSpeedButton
+          Align = Right
+          Position.X = 584.000000000000000000
+          Size.Width = 50.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Copy'
+        end
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 304
+    Top = 224
+    object GetSourceStyle: TAction
+      Text = 'GetSourceStyle'
+      OnExecute = GetSourceStyleExecute
+    end
+    object ConvertSource: TAction
+      Text = 'ConvertSource'
+      OnExecute = ConvertSourceExecute
+    end
+  end
+end

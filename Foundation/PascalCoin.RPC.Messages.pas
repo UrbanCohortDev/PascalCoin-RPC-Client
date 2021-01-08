@@ -42,6 +42,8 @@ PUBLIC_KEY_FAIL = '$T key error: $V';
 KEY_X_ERROR =   'Error Extracting X Coord From PascalCoin Public Key.';
 KEY_Y_ERROR =   'Error Extracting Y Coord From PascalCoin Public Key.';
 
+KEY_HEADER_FAILED_MATCH = 'PascalCoin Public Key Header Does Not Match Selected Key Type.';
+
 
 implementation
 

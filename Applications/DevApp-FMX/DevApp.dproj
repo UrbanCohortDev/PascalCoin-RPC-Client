@@ -130,7 +130,7 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
         <SanitizedProjectName>DevApp</SanitizedProjectName>
-        <DCC_UnitSearchPath>..\..\Libraries\CryptoLib4Pascal;..\..\Libraries\SimpleBaseLib4Pascal;..\..\Libraries\HashLib4Pascal;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\..\..\CryptoLibs\CryptoLib4Pascal;..\..\..\CryptoLibs\SimpleBaseLib4Pascal;..\..\..\CryptoLibs\HashLib4Pascal;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DBXInterBaseDriver;TMSLogging;emsclientfiredac;tethering;DataSnapFireDAC;bindcompfmx;fmx;FireDACIBDriver;FireDACDBXDriver;dbexpress;IndyCore;xdata;dsnap;emsclient;DataSnapCommon;FireDACCommon;RESTBackendComponents;soapserver;FMXTMSFNCUIPackPkgDXE13;bindengine;CloudService;RemObjects_Indy_D27;FireDACCommonDriver;DataSnapClient;inet;IndyIPCommon;bindcompdbx;IndyIPServer;sparkle;tmsbcl;IndySystem;fmxFireDAC;FMXTMSFNCCorePkgDXE13;FireDAC;FireDACSqliteDriver;soaprtl;DbxCommonDriver;xmlrtl;soapmidas;DataSnapNativeClient;FireDACDSDriver;rtl;DbxClientDriver;CustomIPTransport;bindcomp;IndyIPClient;FrameStandPackage_10_4;dbxcds;RemObjects_WebBroker_D27;aurelius;dsnapxml;DataSnapProviderClient;dbrtl;IndyProtocols;RemObjects_Server_Indy_D27;$(DCC_UsePackage)</DCC_UsePackage>
@@ -315,8 +315,9 @@
     <PropertyGroup Condition="'$(Cfg_3_Win64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_Define>DEBUG;TESTNET;UNITTEST;$(DCC_Define)</DCC_Define>
+        <DCC_Define>DEBUG;TESTNET;UNITTEST;madExcept;$(DCC_Define)</DCC_Define>
         <DCC_UnitSearchPath>..\..\Libraries\TestLib;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -368,8 +369,8 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="..\..\AppUtils\UC.Internet.Support.pas"/>
-        <DCCReference Include="..\..\Foundation\PascalCoin.RPC.RawOp.Send.pas"/>
-        <DCCReference Include="..\..\Foundation\PascalCoin.RPC.RawOp.Base.pas"/>
+        <DCCReference Include="..\..\Foundation\PascalCoin.RawOp.Send.pas"/>
+        <DCCReference Include="..\..\Foundation\PascalCoin.RawOp.Base.pas"/>
         <DCCReference Include="..\..\Foundation\PascalCoin.RPC.Messages.pas"/>
         <DCCReference Include="DevApp.Form.RawOp.pas">
             <Form>RawOpForm</Form>
@@ -380,6 +381,14 @@
         <DCCReference Include="..\..\Foundation\PascalCoin.Payload.pas"/>
         <DCCReference Include="..\..\Foundation\PascalCoin.KeyUtils.pas"/>
         <DCCReference Include="..\..\Foundation\PascalCoin.RawOp.MultiOperations.pas"/>
+        <DCCReference Include="DevApp.Form.MessAbout.pas">
+            <Form>MessAbout</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="DevApp.Form.RawOp.Analysis.pas">
+            <Form>RawOpAnalysis</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

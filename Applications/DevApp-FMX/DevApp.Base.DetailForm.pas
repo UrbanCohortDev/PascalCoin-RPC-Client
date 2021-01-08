@@ -50,6 +50,7 @@ Type
     Function NodeAPI: IPascalCoinNodeAPI;
     Function ExplorerAPI: IPascalCoinExplorerAPI;
     Function WalletExplorerAPI: IPascalCoinWalletAPI;
+    function OperationsAPI: IPascalCoinOperationsAPI;
 
     Function UseURI: String; Virtual;
     Procedure HandleAPIException(E: Exception);
@@ -90,6 +91,12 @@ Begin
   Result := Config.NodeAPI;
   Result.NodeURI := UseURI;
 End;
+
+function TDevBaseForm.OperationsAPI: IPascalCoinOperationsAPI;
+begin
+  Result := Config.OperationsAPI;
+  Result.NodeURI := UseURI;
+end;
 
 Procedure TDevBaseForm.HandleAPIException(E: Exception);
 Begin
