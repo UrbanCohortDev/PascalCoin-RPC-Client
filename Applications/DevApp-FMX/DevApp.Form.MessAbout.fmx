@@ -100,10 +100,34 @@ inherited MessAbout: TMessAbout
         end
       end
     end
+    object Layout5: TLayout
+      Position.X = 16.000000000000000000
+      Position.Y = 152.000000000000000000
+      Size.Width = 609.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Button1: TButton
+        Position.X = 24.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 177.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'IndentifyPriveKeyType'
+        OnClick = Button1Click
+      end
+      object Label3: TLabel
+        Position.X = 296.000000000000000000
+        Position.Y = 16.000000000000000000
+        Text = 'Label3'
+        TabOrder = 1
+      end
+    end
   end
   object ActionList1: TActionList
-    Left = 304
-    Top = 224
+    Left = 568
+    Top = 168
     object GetSourceStyle: TAction
       Text = 'GetSourceStyle'
       OnExecute = GetSourceStyleExecute

@@ -1,7 +1,7 @@
 ﻿Unit PascalCoin.Consts;
 
 (* ***********************************************************************
-  copyright 2019-2020  Russell Weetch
+  copyright 2019-2021  Russell Weetch
   Distributed under the MIT software license, see the accompanying file
   LICENSE or visit http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,7 +19,7 @@
 
 Interface
 
-Uses System.SysUtils;
+Uses System.SysUtils, System.Rtti, System.Generics.Collections;
 
 Type
 
@@ -39,13 +39,18 @@ Type
   /// Currency is limited to 4 decimals (actually stored as Int64).
   /// </para>
   /// To help with formatting you can set the Default Currnecy Defaults <br />
-  /// - FormatSettings.CurrencyString := 'Ƿ'; // U+01F7 &amp;#503; <br />
+  /// - FormatSettings.CurrencyString := 'P'; <br />
   /// - FormatSettings.CurrencyFormat := 0; <br />
   /// - FormatSettings.CurrencyDecimals := 4;
   /// </summary>
   PASC_Currency = Currency;
 
   TAccountData = String; // Array [0 .. 31] Of Byte;
+
+  TStringPair = TPair<String, String>;
+  TParamPair = TPair<String, variant>;
+
+  TStringPairList = TList<TStringPair>;
 
   /// <summary>
   ///   How the payload is / is to be encrypted
@@ -69,7 +74,7 @@ Type
   TKeyType = (SECP256K1, SECP384R1, SECP521R1, SECT283K1);
 
   /// <summary>
-  /// current state of the wallet
+  ///   Whether the keys in the wallet are encrypted or not
   /// </summary>
   TEncryptionState = (
     /// <summary>
@@ -79,11 +84,7 @@ Type
     /// <summary>
     /// The wallet is encrypted and no valid password has been entered
     /// </summary>
-    esEncrypted,
-    /// <summary>
-    /// The wallet is encrypted and a valid password is available
-    /// </summary>
-    esDecrypted);
+    esEncrypted);
 
   TECDSA_Signature = Record
     R: String;

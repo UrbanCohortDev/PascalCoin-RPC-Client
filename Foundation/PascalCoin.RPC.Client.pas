@@ -1,7 +1,7 @@
 Unit PascalCoin.RPC.Client;
 
 (* ***********************************************************************
-  copyright 2019-2020  Russell Weetch
+  copyright 2019-2021  Russell Weetch
   Distributed under the MIT software license, see the accompanying file
   LICENSE or visit http://www.opensource.org/licenses/mit-license.php.
 
@@ -22,7 +22,8 @@ Interface
 Uses
   System.JSON,
   UC.Net.Interfaces,
-  PascalCoin.RPC.Interfaces;
+  PascalCoin.RPC.Interfaces,
+  PascalCoin.Consts;
 
 Type
 
@@ -55,8 +56,8 @@ Implementation
 Uses
   System.SysUtils,
   System.IOUtils,
-  PascalCoin.RPC.Exceptions,
-  PascalCoin.Consts;
+  System.Generics.Collections,
+  PascalCoin.RPC.Exceptions;
 
 { TPascalCoinRPCClient }
 
@@ -154,7 +155,7 @@ Begin
       If FResultValue is TJSONArray then
       begin
         lArray := FResultValue as TJSONArray;
-        if lArray.Size > 0 then
+        if lArray.Count > 0 then
         begin
           lErrObj := lArray[0] as TJSONObject;
           lStatusValue := lErrObj.FindValue('valid');

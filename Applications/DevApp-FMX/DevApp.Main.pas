@@ -1,7 +1,7 @@
 Unit DevApp.Main;
 
 (* ***********************************************************************
-  copyright 2019-2020  Russell Weetch
+  copyright 2019-2021  Russell Weetch
   Distributed under the MIT software license, see the accompanying file
   LICENSE or visit http://www.opensource.org/licenses/mit-license.php.
 
@@ -40,7 +40,7 @@ Uses
   DevApp.Shared,
   PascalCoin.RPC.Interfaces,
   SubjectStand,
-  UC.Internet.Support, DevApp.Form.RawOp;
+  UC.Internet.Support, DevApp.Form.RawOp, DevApp.Form.MessAbout;
 
 Type
 
@@ -68,10 +68,12 @@ Type
     LocalIPLabel: TLabel;
     RawOpsButton: TButton;
     RawAnalysisButton: TButton;
+    MessAboutButton: TButton;
     Procedure AccountInfoBtnClick(Sender: TObject);
     Procedure AddNodeButtonClick(Sender: TObject);
     Procedure BlockButtonClick(Sender: TObject);
     Procedure FormCreate(Sender: TObject);
+    procedure MessAboutButtonClick(Sender: TObject);
     Procedure NodeButtonClick(Sender: TObject);
     Procedure NodeListChange(Sender: TObject);
     Procedure NodeStatusBtnClick(Sender: TObject);
@@ -219,6 +221,21 @@ Begin
     NodeList.Items.Add('http://127.0.0.1:4003');
   {$ENDIF}
 End;
+
+procedure TMainForm.MessAboutButtonClick(Sender: TObject);
+Var
+  LFormInfo: TFormInfo<TMessAbout>;
+Begin
+  If Not CloseDisplayedClass Then
+    Exit;
+  LFormInfo := FormStand1.GetFormInfo<TMessAbout>(True, Layout1);
+  If Not LFormInfo.IsVisible Then
+    LFormInfo.Show;
+  LFormInfo.Form.DefaultURI := NodeList.Items[NodeList.ItemIndex];
+  FDisplayedClass := TMessAbout;
+  LFormInfo.Form.InitialiseThis;
+
+end;
 
 Procedure TMainForm.NodeButtonClick(Sender: TObject);
 Begin

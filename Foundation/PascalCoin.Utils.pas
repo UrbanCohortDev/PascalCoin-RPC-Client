@@ -1,7 +1,7 @@
 Unit PascalCoin.Utils;
 
 (* ***********************************************************************
-  copyright 2019-2020  Russell Weetch
+  copyright 2019-2021  Russell Weetch
   Distributed under the MIT software license, see the accompanying file
   LICENSE or visit http://www.opensource.org/licenses/mit-license.php.
 
@@ -62,11 +62,33 @@ Type
     Class Function IsValidAccountName(Const Value: String): Boolean; Static;
     Class Procedure ValidAccountName(Const Value: String); Static;
 
+    /// <summary>
+    ///   Calculates how many blocks need to be mined before the account can be
+    ///   recovered
+    /// </summary>
+    /// <param name="LatestBlock">
+    ///   Latest mined block
+    /// </param>
+    /// <param name="LastActiveBlock">
+    ///   Last block that contains a valid account transaction
+    /// </param>
     Class Function BlocksToRecovery(Const LatestBlock, LastActiveBlock: Integer): Integer; Static;
+
+    /// <summary>
+    ///   Converts BlocksToRecovery to the expected number of days expected to
+    ///   mine that number of blocks
+    /// </summary>
     Class Function DaysToRecovery(Const LatestBlock, LastActiveBlock: Integer): Double; Static;
 
-    Class Function KeyStyle(Const AKey: String): TKeyStyle; Static;
-    Class Function KeyType(const AKey: String): TKeyType; static;
+    class function PublicKeyStyle(Const APublicKey: String): TKeyStyle; static;
+
+    /// <summary>
+    ///   Returns the Key Type from a Pascal Coin Public or Private key
+    /// </summary>
+    /// <param name="APascalKey">
+    ///   This can be a public or private Pascal key
+    /// </param>
+    class function KeyTypeFromPascalKey(const APascalKey: String): TKeyType; static;
 
     Class Function UnixToLocalDate(Const Value: Integer): TDateTime; Static;
     Class Function StrToHex(Const Value: String): String; Static;
@@ -165,17 +187,17 @@ Begin
   Result := true;
 End;
 
-Class Function TPascalCoinUtils.KeyStyle(Const AKey: String): TKeyStyle;
+Class Function TPascalCoinUtils.PublicKeyStyle(Const APublicKey: String): TKeyStyle;
 Begin
-  If IsHex(AKey) Then
+  If IsHex(APublicKey) Then
     Result := TKeyStyle.ksEncKey
-  Else If IsBase58(AKey) Then
+  Else If IsBase58(APublicKey) Then
     Result := TKeyStyle.ksB58Key
   Else
-    Raise EUnrecognisedKeyStyle.Create(AKey);
+    Raise EUnrecognisedKeyStyle.Create(APublicKey);
 End;
 
-class function TPascalCoinUtils.KeyType(const AKey: String): TKeyType;
+class function TPascalCoinUtils.KeyTypeFromPascalKey(const APascalKey: String): TKeyType;
 const
 AOFFSET = 0;
 var
@@ -183,7 +205,7 @@ var
   lValue: Int32;
   lKey: TBytes;
 begin
-  lKey := THex.Decode(AKey);
+  lKey := THex.Decode(APascalKey);
 
   System.SetLength(ReversedSlice, 2);
   TBits.ReverseByteArray(System.Copy(lKey, AOFFSET, 2), ReversedSlice, Length(ReversedSlice) * System.SizeOf(byte));

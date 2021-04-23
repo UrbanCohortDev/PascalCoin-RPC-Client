@@ -1,7 +1,7 @@
 Unit DevApp.Form.AccountInfo;
 
 (* ***********************************************************************
-  copyright 2019-2020  Russell Weetch
+  copyright 2019-2021  Russell Weetch
   Distributed under the MIT software license, see the accompanying file
   LICENSE or visit http://www.opensource.org/licenses/mit-license.php.
 
@@ -222,7 +222,7 @@ Begin
     Exit;
   End;
 
-  If TPascalCoinUtils.KeyStyle(S) <> TKeyStyle.ksEncKey Then
+  If TPascalCoinUtils.PublicKeyStyle(S) <> TKeyStyle.ksEncKey Then
   Begin
     ShowMessage('Please paste Encoded Public Keys only');
     Exit;

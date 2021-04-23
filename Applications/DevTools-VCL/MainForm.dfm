@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Development Tools'
-  ClientHeight = 656
+  ClientHeight = 755
   ClientWidth = 548
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,6 +11,7 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  ShowHint = True
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -19,216 +20,316 @@ object Form1: TForm1
     Left = 0
     Top = 0
     Width = 548
-    Height = 656
+    Height = 755
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = -56
     object TabSheet1: TTabSheet
       Caption = 'Crypto Libraries'
-      DesignSize = (
-        540
-        628)
       object Label1: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 534
-        Height = 13
+        Height = 31
         Align = alTop
         Caption = 
           'Move Ugo'#39's Crypto Libs into single directories or map them to De' +
           'lphi'#39's Global Paths'
-        ExplicitWidth = 393
-      end
-      object Label2: TLabel
-        Left = 0
-        Top = 57
-        Width = 120
-        Height = 13
-        Caption = 'Source Master Directory:'
-      end
-      object SpeedButton1: TSpeedButton
-        Left = 415
-        Top = 53
-        Width = 23
-        Height = 22
-        Action = BrowseForSource
-      end
-      object SpeedButton3: TSpeedButton
-        Left = 415
-        Top = 80
-        Width = 57
-        Height = 22
-        Action = IgnoreFolderAction
       end
       object Label4: TLabel
-        Left = 21
-        Top = 464
-        Width = 71
+        AlignWithMargins = True
+        Left = 3
+        Top = 556
+        Width = 534
         Height = 13
+        Align = alBottom
         Caption = 'Failed To Copy'
-      end
-      object SrcMasterDir: TEdit
-        Left = 136
-        Top = 53
-        Width = 273
-        Height = 21
-        TabOrder = 0
+        ExplicitTop = 464
+        ExplicitWidth = 71
       end
       object Button1: TButton
-        Left = 452
-        Top = 3
+        Left = 451
+        Top = 0
         Width = 75
         Height = 22
         Action = SaveAction
-        TabOrder = 1
+        TabOrder = 0
       end
       object Memo1: TMemo
+        AlignWithMargins = True
         Left = 3
-        Top = 328
-        Width = 516
-        Height = 121
-        Anchors = [akLeft, akTop, akRight]
+        Top = 416
+        Width = 534
+        Height = 134
+        Align = alClient
         Lines.Strings = (
           'Memo1')
-        TabOrder = 2
-      end
-      object SrcFolders: TCheckListBox
-        Left = 136
-        Top = 80
-        Width = 273
-        Height = 97
-        ItemHeight = 13
-        TabOrder = 3
+        TabOrder = 1
+        ExplicitLeft = 0
+        ExplicitTop = 448
+        ExplicitWidth = 537
+        ExplicitHeight = 102
       end
       object Memo2: TMemo
+        AlignWithMargins = True
         Left = 3
-        Top = 483
-        Width = 422
-        Height = 126
+        Top = 575
+        Width = 534
+        Height = 149
+        Align = alBottom
         Lines.Strings = (
           'Memo2')
-        TabOrder = 4
+        TabOrder = 2
+        ExplicitTop = 528
       end
-      object SingleFolderGroup: TGroupBox
+      object GroupBox1: TGroupBox
+        AlignWithMargins = True
         Left = 3
-        Top = 180
-        Width = 511
-        Height = 85
-        Caption = 'Single Folder Option'
-        TabOrder = 5
-        object Label3: TLabel
-          Left = 8
-          Top = 24
-          Width = 119
-          Height = 13
-          Caption = 'Target Master Directory:'
-        end
-        object SpeedButton2: TSpeedButton
-          Left = 485
-          Top = 19
-          Width = 23
-          Height = 22
-          Action = BrowseForTarget
-        end
-        object SpeedButton4: TSpeedButton
-          Left = 433
-          Top = 56
-          Width = 75
-          Height = 22
-          Action = ExecAction
-        end
-        object TgtMasterDir: TEdit
-          Left = 133
-          Top = 20
-          Width = 346
-          Height = 21
-          TabOrder = 0
-        end
-      end
-      object GlobalMap: TCheckBox
-        Left = 8
-        Top = 24
-        Width = 153
-        Height = 17
-        Caption = 'Map To Global Paths'
-        TabOrder = 6
-        OnClick = GlobalMapClick
-      end
-      object MappingOptionsGroup: TGroupBox
-        Left = 3
-        Top = 183
-        Width = 511
-        Height = 139
-        Caption = 'Mapping Options'
-        TabOrder = 7
-        Visible = False
-        object Label5: TLabel
-          Left = 16
-          Top = 26
-          Width = 68
-          Height = 13
-          Caption = 'BackUp Folder'
-        end
-        object Platforms: TCheckListBox
-          Left = 167
-          Top = 48
-          Width = 253
-          Height = 83
-          Columns = 2
-          ItemHeight = 13
-          TabOrder = 0
-        end
-        object DelphiVersion: TComboBox
-          Left = 16
-          Top = 50
-          Width = 145
-          Height = 21
-          TabOrder = 1
-          Text = 'DelphiVersion'
-          OnChange = DelphiVersionChange
-        end
-        object MapPathsButton: TButton
-          Left = 432
-          Top = 106
-          Width = 75
-          Height = 25
-          Caption = 'Execute'
-          TabOrder = 2
-          OnClick = MapPathsButtonClick
-        end
-        object BackUpFolder: TEdit
-          Left = 168
-          Top = 21
-          Width = 254
-          Height = 21
-          TabOrder = 3
-        end
-        object Button2: TButton
-          Left = 432
-          Top = 21
-          Width = 75
-          Height = 25
-          Action = BrowseForBackupFolder
-          TabOrder = 4
-        end
-        object MapTest: TCheckBox
-          Left = 432
-          Top = 88
-          Width = 97
+        Top = 40
+        Width = 534
+        Height = 177
+        Align = alTop
+        TabOrder = 3
+        object GlobalMap: TCheckBox
+          AlignWithMargins = True
+          Left = 5
+          Top = 18
+          Width = 524
           Height = 17
-          Caption = 'Test Run'
-          Checked = True
-          State = cbChecked
-          TabOrder = 5
+          Align = alTop
+          Caption = 
+            'Map The Source Folders To Delphi'#39's Global Paths. Uncheck to Crea' +
+            'te single folders for each library'
+          TabOrder = 0
+          OnClick = GlobalMapClick
+          ExplicitLeft = -211
+          ExplicitTop = 22
+          ExplicitWidth = 433
         end
-        object Button3: TButton
-          Left = 432
-          Top = 52
-          Width = 75
-          Height = 25
-          Action = CreateMapAction
-          TabOrder = 6
+        object Panel1: TPanel
+          AlignWithMargins = True
+          Left = 5
+          Top = 41
+          Width = 524
+          Height = 27
+          Align = alTop
+          BevelOuter = bvNone
+          Caption = 'Panel1'
+          TabOrder = 1
+          object Label2: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 6
+            Width = 120
+            Height = 18
+            Margins.Top = 6
+            Align = alLeft
+            Caption = 'Master Source Directory:'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitHeight = 13
+          end
+          object SpeedButton1: TSpeedButton
+            Left = 501
+            Top = 0
+            Width = 23
+            Height = 27
+            Action = BrowseForSource
+            Align = alRight
+            ExplicitLeft = 189
+            ExplicitTop = 19
+            ExplicitHeight = 22
+          end
+          object SrcMasterDir: TEdit
+            AlignWithMargins = True
+            Left = 129
+            Top = 3
+            Width = 369
+            Height = 21
+            Align = alClient
+            TabOrder = 0
+            ExplicitLeft = 152
+            ExplicitTop = 0
+            ExplicitWidth = 349
+            ExplicitHeight = 24
+          end
+        end
+        object Panel2: TPanel
+          AlignWithMargins = True
+          Left = 5
+          Top = 74
+          Width = 524
+          Height = 98
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'Panel2'
+          TabOrder = 2
+          ExplicitLeft = 16
+          ExplicitTop = 71
+          ExplicitWidth = 185
+          ExplicitHeight = 41
+          object SpeedButton3: TSpeedButton
+            Left = 464
+            Top = 3
+            Width = 57
+            Height = 22
+            Action = IgnoreFolderAction
+          end
+          object SrcFolders: TCheckListBox
+            Left = 0
+            Top = 0
+            Width = 457
+            Height = 98
+            Align = alLeft
+            ItemHeight = 13
+            TabOrder = 0
+            ExplicitLeft = 1
+            ExplicitHeight = 60
+          end
+        end
+      end
+      object PCOptions: TPageControl
+        Left = 0
+        Top = 220
+        Width = 540
+        Height = 193
+        ActivePage = TabSheet3
+        Align = alTop
+        TabOrder = 4
+        ExplicitTop = 185
+        object TabSheet2: TTabSheet
+          Caption = 'TabSheet2'
+          object SingleFolderGroup: TGroupBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 526
+            Height = 159
+            Align = alClient
+            Caption = 'Single Folder Option'
+            TabOrder = 0
+            ExplicitLeft = 21
+            ExplicitTop = 80
+            ExplicitWidth = 511
+            ExplicitHeight = 85
+            object Label3: TLabel
+              Left = 8
+              Top = 24
+              Width = 119
+              Height = 13
+              Caption = 'Target Master Directory:'
+            end
+            object SpeedButton2: TSpeedButton
+              Left = 485
+              Top = 19
+              Width = 23
+              Height = 22
+              Action = BrowseForTarget
+            end
+            object SpeedButton4: TSpeedButton
+              Left = 433
+              Top = 56
+              Width = 75
+              Height = 22
+              Action = ExecAction
+            end
+            object TgtMasterDir: TEdit
+              Left = 133
+              Top = 20
+              Width = 346
+              Height = 21
+              TabOrder = 0
+            end
+          end
+        end
+        object TabSheet3: TTabSheet
+          Caption = 'TabSheet3'
+          ImageIndex = 1
+          object MappingOptionsGroup: TGroupBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 526
+            Height = 159
+            Align = alClient
+            Caption = 'Mapping Options'
+            TabOrder = 0
+            ExplicitLeft = -2
+            ExplicitTop = 49
+            ExplicitWidth = 534
+            ExplicitHeight = 116
+            object Label5: TLabel
+              Left = 16
+              Top = 18
+              Width = 68
+              Height = 13
+              Caption = 'BackUp Folder'
+            end
+            object Platforms: TCheckListBox
+              Left = 167
+              Top = 64
+              Width = 253
+              Height = 83
+              Columns = 2
+              ItemHeight = 13
+              TabOrder = 0
+            end
+            object DelphiVersion: TComboBox
+              Left = 16
+              Top = 66
+              Width = 145
+              Height = 21
+              TabOrder = 1
+              Text = 'DelphiVersion'
+              OnChange = DelphiVersionChange
+            end
+            object MapPathsButton: TButton
+              Left = 432
+              Top = 122
+              Width = 75
+              Height = 25
+              Caption = 'Execute'
+              TabOrder = 2
+              OnClick = MapPathsButtonClick
+            end
+            object BackUpFolder: TEdit
+              Left = 90
+              Top = 14
+              Width = 336
+              Height = 21
+              TabOrder = 3
+            end
+            object Button2: TButton
+              Left = 432
+              Top = 12
+              Width = 75
+              Height = 25
+              Action = BrowseForBackupFolder
+              TabOrder = 4
+            end
+            object MapTest: TCheckBox
+              Left = 432
+              Top = 99
+              Width = 97
+              Height = 17
+              Caption = 'Test Run Only'
+              Checked = True
+              State = cbChecked
+              TabOrder = 5
+            end
+            object Button3: TButton
+              Left = 432
+              Top = 68
+              Width = 75
+              Height = 25
+              Hint = 'Writes the directory mapping to first memo'
+              Action = CreateMapAction
+              TabOrder = 6
+            end
+          end
         end
       end
     end

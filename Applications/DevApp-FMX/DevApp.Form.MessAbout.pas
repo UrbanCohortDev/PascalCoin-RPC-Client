@@ -23,6 +23,10 @@ type
     ActionList1: TActionList;
     GetSourceStyle: TAction;
     ConvertSource: TAction;
+    Layout5: TLayout;
+    Button1: TButton;
+    Label3: TLabel;
+    procedure Button1Click(Sender: TObject);
     procedure ConvertSourceExecute(Sender: TObject);
     procedure GetSourceStyleExecute(Sender: TObject);
     procedure SourceKeyChange(Sender: TObject);
@@ -39,7 +43,21 @@ implementation
 
 {$R *.fmx}
 
-uses PascalCoin.KeyUtils, PascalCoin.Utils, PascalCoin.Consts;
+uses System.Rtti, PascalCoin.KeyUtils, PascalCoin.Utils, PascalCoin.Consts;
+
+procedure TMessAbout.Button1Click(Sender: TObject);
+var lKey: TStringPair;
+    lPrefix: String;
+begin
+  inherited;
+
+  lKey := TKeyUtils.GenerateKeyPair(TKeyType.SECP256K1);
+
+  lPrefix := TRttiEnumerationType.GetName<TKeyType>(TPascalCoinUtils.KeyTypeFromPascalKey(lKey.Key));
+
+//  lPrefix := System.Copy(lKey.Key, 0, 4);
+  Label3.Text := lPrefix;
+end;
 
 procedure TMessAbout.ConvertSourceExecute(Sender: TObject);
 var lKeyStyle: TKeyStyle;
@@ -70,7 +88,7 @@ procedure TMessAbout.GetSourceStyleExecute(Sender: TObject);
 var lKeyStyle: TKeyStyle;
 begin
   inherited;
-  lKeyStyle := TPascalCoinUtils.KeyStyle(SourceKey.Text);
+  lKeyStyle := TPascalCoinUtils.PublicKeyStyle(SourceKey.Text);
   KeyStyle.ItemIndex := Integer(lKeyStyle);
 end;
 

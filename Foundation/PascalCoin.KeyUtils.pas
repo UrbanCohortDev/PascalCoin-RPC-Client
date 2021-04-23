@@ -1,7 +1,7 @@
 Unit PascalCoin.KeyUtils;
 
 (* ***********************************************************************
-  copyright 2019-2020  Russell Weetch
+  copyright 2019-2021  Russell Weetch
   Distributed under the MIT software license, see the accompanying file
   LICENSE or visit http://www.opensource.org/licenses/mit-license.php.
 
@@ -83,19 +83,36 @@ Type
       : boolean; Static;
     Class Function ExtractAffineYFromPascalCoinPublicKey(Const APascalCoinPublicKey: String; Out AAffineYBytes: TBytes)
       : boolean; Static;
-     Class Function ExtractAffineXYFromPascalCoinPublicKey(Const APascalCoinPublicKey: String; Out AAffineXBytes, AAffineYBytes: TBytes)
-      : boolean; Static;
+    Class Function ExtractAffineXYFromPascalCoinPublicKey(Const APascalCoinPublicKey: String;
+      Out AAffineXBytes, AAffineYBytes: TBytes): boolean; Static;
 
     Class Function RecreatePublicKeyFromAffineXandAffineYCoord(AKeyType: TKeyType; Const AAffineX, AAffineY: TBytes)
       : IECPublicKeyParameters; Static;
     Class Function ComputeECIESPascalCoinEncrypt(Const APublicKey: IECPublicKeyParameters;
       Const APayloadToEncrypt: TBytes): TBytes; Static;
 
+    class function GetPrivateKeyParams(const APrivateKey: String; const AKeyType:
+        TKeyType): IECPrivateKeyParameters;
+
+    Class Function GetPrivateKey(Const AKeyPair: IAsymmetricCipherKeyPair): TBytes; Static;
     Class Function GetPrivateKeyPrefix(AKeyType: TKeyType; Const AInput: TBytes): TBytes; Static;
+    Class Function GetPublicKeyAffineX(Const AKeyPair: IAsymmetricCipherKeyPair): TBytes; Static;
+    Class Function GetPublicKeyAffineY(Const AKeyPair: IAsymmetricCipherKeyPair): TBytes; Static;
 
-    class function GetDomainParams(const AKeyType: TKeyType): IECDomainParameters; Static;
-    class function GetCurveParams(const AKeyType: TKeyType): IX9ECParameters; Static;
+    class function GetPublicKeyAffineXFromParams(const APublicKeyParams:
+        IECPublicKeyParameters): TBytes; static;
+    class function GetPublicKeyAffineYFromParams(const APublicKeyParams:
+        IECPublicKeyParameters): TBytes; static;
 
+
+    Class Function GetAffineXPrefix(AKeyType: TKeyType; Const AInput: TBytes): TBytes; Static;
+    Class Function GetAffineYPrefix(Const AInput: TBytes): TBytes; Static;
+
+    Class Function GetPascalCoinPublicKeyAsHexString(AKeyType: TKeyType; Const AXInput, AYInput: TBytes)
+      : String; Static;
+
+    Class Function GetDomainParams(Const AKeyType: TKeyType): IECDomainParameters; Static;
+    Class Function GetCurveParams(Const AKeyType: TKeyType): IX9ECParameters; Static;
 
     Class Function ComputeAES256_CBC_PKCS7PADDING_PascalCoinEncrypt(Const APlainTextBytes, APasswordBytes: TBytes)
       : TBytes; Static;
@@ -125,23 +142,25 @@ Type
     Class Function AsHex(Const Value: String; Var ALen: Integer): String; Overload; Static;
     Class Function AsHex(Const Value: String): String; Overload; Static;
     Class Function AsHex(Const Value: TBytes): String; Overload; Static;
-    Class Function IntToTwoByteHex(const Value: Integer): String; Static;
+    Class Function IntToTwoByteHex(Const Value: Integer): String; Static;
 
-    Class Function HexToCardinal(const Value: String): Cardinal; Static;
-    Class Function HexToInt(const Value: String): Integer; Static;
-    Class Function HexToCurrency(const Value: String): Currency; Static;
-    Class Function HexToStr(const Value: String): String; Static;
-    Class Function IntFromTwoByteHex(const Value: String): Integer; Static;
+    Class Function HexToCardinal(Const Value: String): Cardinal; Static;
+    Class Function HexToInt(Const Value: String): Integer; Static;
+    Class Function HexToCurrency(Const Value: String): Currency; Static;
+    Class Function HexToStr(Const Value: String): String; Static;
+    Class Function IntFromTwoByteHex(Const Value: String): Integer; Static;
 
-    class function GetPascalCoinPublicKeyAsBase58(const APascalCoinPublicKey: string): String; static;
-    class function GetPascalCoinPublicKeyFromBase58(const ABase58PublicKey:
-        string): String; static;
-
+    Class Function GenerateKeyPair(Const AKeyType: TKeyType): TStringPair;
+    class function GetCorrespondingPublicKey(const APrivateKey: String; const
+        AKeyType: TKeyType): String; static;
+    Class Function GetPascalCoinPublicKeyAsBase58(Const APascalCoinPublicKey: String): String; Static;
+    Class Function GetPascalCoinPublicKeyFromBase58(Const ABase58PublicKey: String): String; Static;
 
     Class Function GetKeyTypeNumericValue(AKeyType: TKeyType): Int32; Static;
     Class Function GetPascalCoinPrivateKeyAsHexString(AKeyType: TKeyType; Const AInput: TBytes): String; Static;
-    Class Function GetPascalCoinPrivateKeyEncryptedAsHexString(Const APascalCoinPrivateKey, APassword: String)
-      : String; Static;
+    Class Function EncryptPascalCoinPrivateKey(Const APascalCoinPrivateKey, APassword: String): String; Static;
+    class function DecryptPascalCoinPrivateKey(Const APascalCoinEncryptedKey,
+        APassword: String; out ADecryptedKey: String): Boolean; static;
 
     Class Function PrivateKeyFromPascalPrivateKey(Const APascalPrivateKey: String): String; Static;
     Class Function PrivateKeyToPascalPrivateKey(Const APrivateKey: String; Const AKeyType: TKeyType): String; Static;
@@ -157,12 +176,11 @@ Type
     /// <param name="APublicKey">
     /// B58 Encoded Key
     /// </param>
-    class function EncryptWithPublicKey(Const Value: String; Const
-        APascalCoinPublicKey: String): TBytes;
+    Class Function EncryptWithPublicKey(Const Value: String; Const APascalCoinPublicKey: String): TBytes;
 
 {$IFDEF UNITTEST}
-    class function SignOperation(Const APrivateKey: String; Const AKeyType:
-        TKeyType; Const AMessage, K: String): TECDSA_Signature; overload; static;
+    Class Function SignOperation(Const APrivateKey: String; Const AKeyType: TKeyType; Const AMessage, K: String)
+      : TECDSA_Signature; Overload; Static;
 {$ELSE}
     Class Function SignOperation(Const APrivateKey: String; Const AKeyType: TKeyType; Const AMessage: String)
       : TECDSA_Signature; Overload; Static;
@@ -472,6 +490,17 @@ Begin
   FRandom := TSecureRandom.Create();
 End;
 
+Class Function TKeyUtils.DecryptPascalCoinPrivateKey(Const APascalCoinEncryptedKey, APassword: String; out ADecryptedKey: String): Boolean;
+Var
+  CipherTextBytes, PasswordBytes, PlainTextBytes: TBytes;
+Begin
+  ADecryptedKey := '';
+  CipherTextBytes := THEX.Decode(APascalCoinEncryptedKey);
+  PasswordBytes := TConverters.ConvertStringToBytes(APassword, TEncoding.UTF8);
+  Result := ComputeAES256_CBC_PKCS7PADDING_PascalCoinDecrypt(CipherTextBytes, PasswordBytes, PlainTextBytes);
+  ADecryptedKey := THex.Encode(PlainTextBytes);
+End;
+
 Class Function TKeyUtils.DecryptWithPassword(Const Value, APassword: String; Out Payload: String): boolean;
 Begin
   Payload := '';
@@ -497,9 +526,11 @@ Class Function TKeyUtils.DoECDSASign(Const APrivateKey: IECPrivateKeyParameters;
 Var
   Signer: IECDsaSigner;
   Param: IParametersWithRandom;
+{$IFDEF UNITTEST}
   lRandomBytes: TBytes;
-  lRandom: ISecureRandom;
   lArray: TCryptoLibMatrixByteArray;
+  {$ENDIF}
+  lRandom: ISecureRandom;
 Begin
 {$IFDEF UNITTEST}
   If ARandomK = '' Then
@@ -554,10 +585,9 @@ Var
   RecreatedPublicKey: IECPublicKeyParameters;
 Begin
 
-  lKeyType := TPascalCoinUtils.KeyType(APascalCoinPublicKey);
+  lKeyType := TPascalCoinUtils.KeyTypeFromPascalKey(APascalCoinPublicKey);
 
   PayloadToEncrypt := TConverters.ConvertStringToBytes(Value, TEncoding.UTF8);
-
 
   If Not ExtractAffineXFromPascalCoinPublicKey(APascalCoinPublicKey, AffineXCoord) Then
     Raise EKeyException.Create('Public', KEY_X_ERROR);
@@ -624,8 +654,8 @@ Begin
   Result := System.Length(AAffineXBytes) = AffineXLength;
 End;
 
-class function TKeyUtils.ExtractAffineXYFromPascalCoinPublicKey(const APascalCoinPublicKey: String; out AAffineXBytes,
-  AAffineYBytes: TBytes): boolean;
+Class Function TKeyUtils.ExtractAffineXYFromPascalCoinPublicKey(Const APascalCoinPublicKey: String;
+  Out AAffineXBytes, AAffineYBytes: TBytes): boolean;
 Var
   AffineXLength, AffineYLength, Offset: Int32;
   LPascalCoinPublicKeyBytes: TBytes;
@@ -640,7 +670,7 @@ Begin
 
   Result := (System.Length(AAffineXBytes) = AffineXLength) And (System.Length(AAffineYBytes) = AffineYLength);
 
-end;
+End;
 
 Class Function TKeyUtils.ExtractAffineYFromPascalCoinPublicKey(Const APascalCoinPublicKey: String;
   Out AAffineYBytes: TBytes): boolean;
@@ -674,6 +704,43 @@ Begin
   Result := KeyPairGeneratorInstance.GenerateKeyPair();
 End;
 
+Class Function TKeyUtils.GenerateKeyPair(Const AKeyType: TKeyType): TStringPair;
+Var
+  LKeyPair: IAsymmetricCipherKeyPair;
+  LPrivateKey, LPublicKeyXCoord, LPublicKeyYCoord: TBytes;
+Begin
+  LKeyPair := GenerateECKeyPair(AKeyType);
+  LPrivateKey := GetPrivateKey(LKeyPair);
+  LPublicKeyXCoord := GetPublicKeyAffineX(LKeyPair);
+  LPublicKeyYCoord := GetPublicKeyAffineY(LKeyPair);
+
+  Result.Key := GetPascalCoinPrivateKeyAsHexString(AKeyType, LPrivateKey);
+  Result.Value := GetPascalCoinPublicKeyAsHexString(AKeyType, LPublicKeyXCoord, LPublicKeyYCoord);
+End;
+
+Class Function TKeyUtils.GetAffineXPrefix(AKeyType: TKeyType; Const AInput: TBytes): TBytes;
+Begin
+  Result := TArrayUtils.Concatenate(UInt32ToLittleEndianByteArrayTwoBytes(UInt32(GetKeyTypeNumericValue(AKeyType))),
+    UInt32ToLittleEndianByteArrayTwoBytes(System.Length(AInput)));
+End;
+
+Class Function TKeyUtils.GetAffineYPrefix(Const AInput: TBytes): TBytes;
+Begin
+  Result := UInt32ToLittleEndianByteArrayTwoBytes(System.Length(AInput));
+End;
+
+class function TKeyUtils.GetCorrespondingPublicKey(const APrivateKey: String; const AKeyType: TKeyType): String;
+var lPrivateKeyParams: IECPrivateKeyParameters;
+    lPublicKeyParams: IECPublicKeyParameters;
+    LPublicKeyXCoord, LPublicKeyYCoord: TBytes;
+begin
+  lPrivateKeyParams := GetPrivateKeyParams(APrivateKey, AKeyType);
+  lPublicKeyParams := TECKeyPairGenerator.GetCorrespondingPublicKey(lPrivateKeyParams);
+  LPublicKeyXCoord := GetPublicKeyAffineXFromParams(lPublicKeyParams);
+  LPublicKeyYCoord := GetPublicKeyAffineYFromParams(lPublicKeyParams);
+  Result := GetPascalCoinPublicKeyAsHexString(AKeyType, LPublicKeyXCoord, LPublicKeyYCoord);
+end;
+
 Class Function TKeyUtils.GetCurveFromKeyType(AKeyType: TKeyType): IX9ECParameters;
 Var
   CurveName: String;
@@ -682,18 +749,18 @@ Begin
   Result := TCustomNamedCurves.GetByName(CurveName);
 End;
 
-class function TKeyUtils.GetCurveParams(const AKeyType: TKeyType): IX9ECParameters;
-begin
+Class Function TKeyUtils.GetCurveParams(Const AKeyType: TKeyType): IX9ECParameters;
+Begin
   Result := TCustomNamedCurves.GetByName(TRttiEnumerationType.GetName<TKeyType>(AKeyType));
-end;
+End;
 
-class function TKeyUtils.GetDomainParams(const AKeyType: TKeyType): IECDomainParameters;
-var
-  lCurve: IX9ECParameters;
-begin
-  lCurve := GetCurveParams(AKeyType);
-  Result := TECDomainParameters.Create(lCurve.Curve, lCurve.G, lCurve.N, lCurve.H, lCurve.GetSeed);
-end;
+Class Function TKeyUtils.GetDomainParams(Const AKeyType: TKeyType): IECDomainParameters;
+Var
+  LCurve: IX9ECParameters;
+Begin
+  LCurve := GetCurveParams(AKeyType);
+  Result := TECDomainParameters.Create(LCurve.Curve, LCurve.G, LCurve.N, LCurve.H, LCurve.GetSeed);
+End;
 
 Class Function TKeyUtils.GetECIESPascalCoinCompatibilityEngine: IPascalCoinIESEngine;
 Var
@@ -766,6 +833,7 @@ Begin
       Result := 716;
     TKeyType.SECT283K1:
       Result := 729
+    Else Result := -1;
   End;
 End;
 
@@ -774,8 +842,7 @@ Begin
   Result := THEX.Encode(TArrayUtils.Concatenate(GetPrivateKeyPrefix(AKeyType, AInput), AInput));
 End;
 
-Class Function TKeyUtils.GetPascalCoinPrivateKeyEncryptedAsHexString(Const APascalCoinPrivateKey,
-  APassword: String): String;
+Class Function TKeyUtils.EncryptPascalCoinPrivateKey(Const APascalCoinPrivateKey, APassword: String): String;
 Var
   PascalCoinPrivateKeyBytes, PasswordBytes: TBytes;
 Begin
@@ -784,21 +851,54 @@ Begin
   Result := THEX.Encode(ComputeAES256_CBC_PKCS7PADDING_PascalCoinEncrypt(PascalCoinPrivateKeyBytes, PasswordBytes));
 End;
 
-class function TKeyUtils.GetPascalCoinPublicKeyAsBase58(const APascalCoinPublicKey: string): String;
-var
+Class Function TKeyUtils.GetPascalCoinPublicKeyAsBase58(Const APascalCoinPublicKey: String): String;
+Var
   PreBase58PublicKeyBytes, PascalCoinPublicKeyBytes, Base58PublicKeyBytes: TBytes;
-begin
-  PascalCoinPublicKeyBytes := THex.Decode(APascalCoinPublicKey);
-  Base58PublicKeyBytes := THex.Decode(B58_PUBKEY_PREFIX);
-  PreBase58PublicKeyBytes := TArrayUtils.Concatenate(TArrayUtils.Concatenate(Base58PublicKeyBytes, PascalCoinPublicKeyBytes), System.Copy(ComputeSHA2_256_ToBytes(PascalCoinPublicKeyBytes), 0, 4));
+Begin
+  PascalCoinPublicKeyBytes := THEX.Decode(APascalCoinPublicKey);
+  Base58PublicKeyBytes := THEX.Decode(B58_PUBKEY_PREFIX);
+  PreBase58PublicKeyBytes := TArrayUtils.Concatenate(TArrayUtils.Concatenate(Base58PublicKeyBytes,
+    PascalCoinPublicKeyBytes), System.Copy(ComputeSHA2_256_ToBytes(PascalCoinPublicKeyBytes), 0, 4));
   Result := TBase58.Encode(PreBase58PublicKeyBytes);
-end;
+End;
 
-class function TKeyUtils.GetPascalCoinPublicKeyFromBase58(const ABase58PublicKey: string): String;
-var lBytes: TBytes;
-begin
+Class Function TKeyUtils.GetPascalCoinPublicKeyAsHexString(AKeyType: TKeyType; Const AXInput, AYInput: TBytes): String;
+Var
+  PartX, PartY, TotalPart: TBytes;
+Begin
+  PartX := TArrayUtils.Concatenate(GetAffineXPrefix(AKeyType, AXInput), AXInput);
+  PartY := TArrayUtils.Concatenate(GetAffineYPrefix(AYInput), AYInput);
+  TotalPart := TArrayUtils.Concatenate(PartX, PartY);
+  Result := THEX.Encode(TotalPart);
+End;
+
+Class Function TKeyUtils.GetPascalCoinPublicKeyFromBase58(Const ABase58PublicKey: String): String;
+Var
+  lBytes: TBytes;
+Begin
   lBytes := System.Copy(TBase58.Decode(ABase58PublicKey), 1);
-  Result := THex.Encode(lBytes);
+  Result := THEX.Encode(lBytes);
+End;
+
+Class Function TKeyUtils.GetPrivateKey(Const AKeyPair: IAsymmetricCipherKeyPair): TBytes;
+Var
+  LPrivateKey: IECPrivateKeyParameters;
+Begin
+  LPrivateKey := AKeyPair.&Private As IECPrivateKeyParameters;
+  Result := LPrivateKey.D.ToByteArrayUnsigned();
+End;
+
+class function TKeyUtils.GetPrivateKeyParams(const APrivateKey: String; const AKeyType: TKeyType): IECPrivateKeyParameters;
+Var
+  lPrivate: TBytes;
+  LDomain: IECDomainParameters;
+  LPrivD: TBigInteger;
+  LSignerResult: TCryptoLibGenericArray<TBigInteger>;
+Begin
+  lPrivate := THEX.Decode(APrivateKey);
+  LDomain := GetDomainParams(AKeyType);
+  LPrivD := TBigInteger.Create(1, lPrivate);
+  Result := TECPrivateKeyParameters.Create('ECDSA', LPrivD, LDomain);
 end;
 
 Class Function TKeyUtils.GetPrivateKeyPrefix(AKeyType: TKeyType; Const AInput: TBytes): TBytes;
@@ -807,54 +907,84 @@ Begin
     UInt32ToLittleEndianByteArrayTwoBytes(System.Length(AInput)));
 End;
 
+Class Function TKeyUtils.GetPublicKeyAffineX(Const AKeyPair: IAsymmetricCipherKeyPair): TBytes;
+Var
+  LPublicKey: IECPublicKeyParameters;
+Begin
+  LPublicKey := AKeyPair.&Public As IECPublicKeyParameters;
+  Result := LPublicKey.Q.AffineXCoord.ToBigInteger().ToByteArrayUnsigned();
+End;
+
+class function TKeyUtils.GetPublicKeyAffineXFromParams(const APublicKeyParams: IECPublicKeyParameters): TBytes;
+begin
+  Result := APublicKeyParams.Q.AffineXCoord.ToBigInteger().ToByteArrayUnsigned();
+end;
+
+Class Function TKeyUtils.GetPublicKeyAffineY(Const AKeyPair: IAsymmetricCipherKeyPair): TBytes;
+Var
+  LPublicKey: IECPublicKeyParameters;
+Begin
+  LPublicKey := AKeyPair.&Public As IECPublicKeyParameters;
+  Result := LPublicKey.Q.AffineYCoord.ToBigInteger().ToByteArrayUnsigned();
+End;
+
+class function TKeyUtils.GetPublicKeyAffineYFromParams(const APublicKeyParams: IECPublicKeyParameters): TBytes;
+begin
+  Result := APublicKeyParams.Q.AffineYCoord.ToBigInteger().ToByteArrayUnsigned();
+end;
+
 Class Function TKeyUtils.HashSHA2_256(Const AInput: String): String;
 Begin
   Result := THEX.Encode(ComputeSHA2_256_ToBytes(THEX.Decode(AInput)));
 End;
 
-class function TKeyUtils.HexToCardinal(const Value: String): Cardinal;
-var lBytes: TBytes;
-begin
-  lBytes := THex.Decode(Value);
+Class Function TKeyUtils.HexToCardinal(Const Value: String): Cardinal;
+Var
+  lBytes: TBytes;
+Begin
+  lBytes := THEX.Decode(Value);
   Result := TConverters.ReadBytesAsUInt32LE(PByte(lBytes), 0)
-end;
+End;
 
-class function TKeyUtils.HexToCurrency(const Value: String): Currency;
+Class Function TKeyUtils.HexToCurrency(Const Value: String): Currency;
 Var
   lVal: Int64;
   lBytes: TBytes;
 Begin
-  lBytes := THex.Decode(Value);
+  lBytes := THEX.Decode(Value);
   lVal := TConverters.ReadBytesAsUInt64LE(PByte(lBytes), 0);
   Result := lVal / CURRENCY_SCALE;
-end;
+End;
 
-class function TKeyUtils.HexToInt(const Value: String): Integer;
-var lBytes: TBytes;
-begin
-  lBytes := THex.Decode(Value);
+Class Function TKeyUtils.HexToInt(Const Value: String): Integer;
+Var
+  lBytes: TBytes;
+Begin
+  lBytes := THEX.Decode(Value);
   Result := TConverters.ReadBytesAsUInt32LE(PByte(lBytes), 0)
-end;
+End;
 
-class function TKeyUtils.HexToStr(const Value: String): String;
-begin
+Class Function TKeyUtils.HexToStr(Const Value: String): String;
+Begin
 
-end;
+End;
 
-class function TKeyUtils.IntFromTwoByteHex(const Value: String): Integer;
-var lBytes: TBytes;
-begin
-  lBytes := THex.Decode(Value);
-  lBytes := TArrayUtils.Concatenate(lBytes, [0,0]);
+Class Function TKeyUtils.IntFromTwoByteHex(Const Value: String): Integer;
+Var
+  lBytes: TBytes;
+Begin
+  lBytes := THEX.Decode(Value);
+  lBytes := TArrayUtils.Concatenate(lBytes, [0, 0]);
   Result := TConverters.ReadBytesAsUInt32LE(PByte(lBytes), 0)
-end;
+End;
 
-class function TKeyUtils.IntToTwoByteHex(const Value: Integer): String;
-var lBytes: TBytes;
-begin
+Class Function TKeyUtils.IntToTwoByteHex(Const Value: Integer): String;
+Var
+  lBytes: TBytes;
+Begin
   lBytes := UInt32ToLittleEndianByteArrayTwoBytes(Value);
   Result := AsHex(lBytes);
-end;
+End;
 
 Class Function TKeyUtils.PrivateKeyFromPascalPrivateKey(Const APascalPrivateKey: String): String;
 Var
@@ -867,10 +997,10 @@ End;
 
 Class Function TKeyUtils.PrivateKeyToPascalPrivateKey(Const APrivateKey: String; Const AKeyType: TKeyType): String;
 Var
-  lPrivateKey: TBytes;
+  LPrivateKey: TBytes;
 Begin
-  lPrivateKey := THEX.Decode(APrivateKey);
-  Result := THEX.Encode(TArrayUtils.Concatenate(GetPrivateKeyPrefix(AKeyType, lPrivateKey), lPrivateKey));
+  LPrivateKey := THEX.Decode(APrivateKey);
+  Result := THEX.Encode(TArrayUtils.Concatenate(GetPrivateKeyPrefix(AKeyType, LPrivateKey), LPrivateKey));
 End;
 
 Class Function TKeyUtils.RecreatePrivateKeyFromByteArray(AKeyType: TKeyType; Const APrivateKey: TBytes)
@@ -910,38 +1040,39 @@ End;
 
 {$IFDEF UNITTEST}
 
-Class Function TKeyUtils.SignOperation(Const APrivateKey: String; Const AKeyType: TKeyType;
-  Const AMessage, K: String): TECDSA_Signature;
+Class Function TKeyUtils.SignOperation(Const APrivateKey: String; Const AKeyType: TKeyType; Const AMessage, K: String)
+  : TECDSA_Signature;
 {$ELSE}
 
 Class Function TKeyUtils.SignOperation(Const APrivateKey: String; Const AKeyType: TKeyType; Const AMessage: String)
   : TECDSA_Signature;
 {$ENDIF }
-var
+Var
   lPrivate: TBytes;
   LDomain: IECDomainParameters;
   LPrivD: TBigInteger;
   LPrivateKey: IECPrivateKeyParameters;
   LSignerResult: TCryptoLibGenericArray<TBigInteger>;
-begin
+Begin
 
-  lPrivate := THex.Decode(APrivateKey);
+  lPrivate := THEX.Decode(APrivateKey);
   LDomain := GetDomainParams(AKeyType);
   LPrivD := TBigInteger.Create(1, lPrivate);
   LPrivateKey := TECPrivateKeyParameters.Create('ECDSA', LPrivD, LDomain);
 {$IFDEF UNITTEST}
-  LSignerResult := DoECDSASign(LPrivateKey, THex.Decode(AMessage), K);
+  LSignerResult := DoECDSASign(LPrivateKey, THEX.Decode(AMessage), K);
 {$ELSE}
-  LSignerResult := DoECDSASign(LPrivateKey, THex.Decode(AMessage));
+  LSignerResult := DoECDSASign(LPrivateKey, THEX.Decode(AMessage));
 {$ENDIF}
-  Result.R := THex.Encode(LSignerResult[0].ToByteArrayUnsigned);
+  Result.R := THEX.Encode(LSignerResult[0].ToByteArrayUnsigned);
   Result.RLen := Length(LSignerResult[0].ToByteArrayUnsigned);
-  Result.S := THex.Encode(LSignerResult[1].ToByteArrayUnsigned);
+  Result.S := THEX.Encode(LSignerResult[1].ToByteArrayUnsigned);
   Result.SLen := Length(LSignerResult[1].ToByteArrayUnsigned);
-end;
+End;
 
 Class Function TKeyUtils.UInt32ToLittleEndianByteArrayTwoBytes(AValue: UInt32): TBytes;
-var lBytes: TBytes;
+Var
+  lBytes: TBytes;
 Begin
   lBytes := TConverters.ReadUInt32AsBytesLE(AValue);
   Result := System.Copy(lBytes, 0, 2);

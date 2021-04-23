@@ -21,7 +21,7 @@ Uses
   Vcl.Grids,
   Vcl.ValEdit,
   Vcl.CheckLst,
-  UC.Delphi.Versions;
+  UC.Delphi.Versions, Vcl.ExtCtrls;
 
 Type
 
@@ -62,6 +62,12 @@ Type
     MapTest: TCheckBox;
     Button3: TButton;
     CreateMapAction: TAction;
+    GroupBox1: TGroupBox;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    PCOptions: TPageControl;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
     Procedure BrowseForBackupFolderAccept(Sender: TObject);
     Procedure FormDestroy(Sender: TObject);
     Procedure FormCreate(Sender: TObject);
@@ -119,6 +125,8 @@ Procedure TForm1.FormCreate(Sender: TObject);
 Var
   lIni: TIniFile;
 Begin
+  PCOptions.Pages[0].TabVisible := False;
+  PCOptions.Pages[1].TabVisible := False;
   FDelphiVersions := TDelphiVersions.Create;
   LoadDelphiVersions;
   FIgnoreFolders := TStringList.Create;
@@ -183,8 +191,16 @@ End;
 
 Procedure TForm1.GlobalMapClick(Sender: TObject);
 Begin
-  MappingOptionsGroup.Visible := GlobalMap.Checked;
-  SingleFolderGroup.Visible := Not GlobalMap.Checked;
+  if GlobalMap.Checked then
+  begin
+    PCOptions.ActivePageIndex := 1;
+    Label4.Caption := 'Test Output';
+  end
+  else
+  begin
+    PCOptions.ActivePageIndex := 0;
+    Label4.Caption := 'Files that failed to copy to target folder';
+  end;
 End;
 
 Procedure TForm1.ExecActionExecute(Sender: TObject);
@@ -288,7 +304,11 @@ Begin
   Finally
     FMapPaths.Free;
   End;
-  ShowMessage('Complete');
+
+  if  MapTest.Checked then
+      ShowMessage('Complete. Paths are shown in the second memo box. Delphi Paths have not been updated')
+  else
+      ShowMessage('Complete. Paths have been added to the Delphi Global Paths');
 End;
 
 Procedure TForm1.MapTopFolder(AFolder: String);

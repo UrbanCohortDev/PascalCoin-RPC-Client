@@ -72,3 +72,5 @@ Applications/DevApp-FMX/Entitlement.TemplateOSX.xml
 Applications/DevApp-FMX/info.plist.TemplateOSX.xml
 Applications/DevApp-FMX/OSX64/
 Applications/DevApp-FMX/Win64/
+*bugreport.txt
+Applications/DevTools-VCL/Win64/Debug/DevTools.ini

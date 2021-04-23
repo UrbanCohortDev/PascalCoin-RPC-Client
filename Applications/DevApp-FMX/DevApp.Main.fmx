@@ -3192,6 +3192,12 @@ object MainForm: TMainForm
         Text = 'Raw Op Analysis'
         OnClick = RawAnalysisButtonClick
       end
+      object MessAboutButton: TButton
+        Position.Y = 72.000000000000000000
+        TabOrder = 6
+        Text = 'Mess About'
+        OnClick = MessAboutButtonClick
+      end
     end
   end
   object FormStand1: TFormStand
