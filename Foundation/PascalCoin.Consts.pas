@@ -97,6 +97,20 @@ Type
 
 Const
 
+  CT_OP_TRANSACTION = $01;
+  CT_OP_CHANGEKEY = $02;
+  CT_OP_RECOVER = $03;
+  // Protocol 2 new operations
+  CT_OP_LISTACCOUNTFORSALE = $04;
+  CT_OP_DELISTACCOUNT = $05;
+  CT_OP_BUYACCOUNT = $06;
+  CT_OP_CHANGEKEYSIGNED = $07;
+  CT_OP_CHANGEACCOUNTINFO = $08;
+  // Protocol 3 new operations
+  CT_OP_MULTIOPERATION = $09;  // PIP-0017
+  // Protocol 4 new operations
+  CT_OP_DATA = $0A;            // PIP-0016
+
   MAX_PAYLOAD_SIZE = 255;
 
   // All Approximate Values

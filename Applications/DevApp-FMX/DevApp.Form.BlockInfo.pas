@@ -1,4 +1,4 @@
-Unit DevApp.Form.BlockInfo;
+unit DevApp.Form.BlockInfo;
 
 (* ***********************************************************************
   copyright 2019-2021  Russell Weetch
@@ -17,9 +17,9 @@ Unit DevApp.Form.BlockInfo;
 
   *********************************************************************** *)
 
-Interface
+interface
 
-Uses
+uses
   System.SysUtils,
   System.Types,
   System.UITypes,
@@ -46,8 +46,8 @@ Uses
   FMX.Grid,
   Aurelius.Mapping.Metadata;
 
-Type
-  TBlockInfoForm = Class(TDevBaseForm)
+type
+  TBlockInfoForm = class(TDevBaseForm)
     Layout1: TLayout;
     Label1: TLabel;
     Block1: TEdit;
@@ -65,185 +65,203 @@ Type
     StringColumn1: TStringColumn;
     StringColumn2: TStringColumn;
     OpsCol: TStringColumn;
-    Procedure Block1KeyDown(Sender: TObject; Var Key: Word; Var KeyChar: Char; Shift: TShiftState);
-    Procedure BlockListCellClick(Const Column: TColumn; Const Row: Integer);
-    Procedure Button1Click(Sender: TObject);
-    Procedure Button2Click(Sender: TObject);
-    Procedure ClearButtonClick(Sender: TObject);
-  Private
+    CheckBox1: TCheckBox;
+    procedure Block1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure BlockListCellClick(const Column: TColumn; const Row: Integer);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure ClearButtonClick(Sender: TObject);
+  private
     { Private declarations }
     FLatestBlock: Integer;
     FBlockList: IPascalCoinBlocks;
-    Procedure LatestBlock;
-    Procedure GetSingleBlock;
-    Procedure ChangeBlock(Const AIncrement: Integer);
-    Procedure GetBlockRange;
-    Procedure HandleRange(Value: IPascalCoinBlocks);
-    Procedure ShowBlockOps(Const Row: Integer);
-    Procedure ShowMultiOp(block: Integer);
-    Procedure ShowSingleOp(block: Integer; OpIndex: Integer = 0);
-  Public
+    procedure LatestBlock;
+    procedure GetSingleBlock;
+    procedure ChangeBlock(const AIncrement: Integer);
+    procedure GetBlockRange;
+    procedure HandleRange(Value: IPascalCoinBlocks);
+    procedure ShowBlockOps(const Row: Integer);
+    procedure DisplayOps(ABlock: Integer);
+    procedure ShowMultiOp(block: Integer);
+    procedure ShowSingleOp(block: Integer; OpIndex: Integer = 0);
+  public
     { Public declarations }
-    Procedure InitialiseThis; Override;
-  End;
+    procedure InitialiseThis; override;
+  end;
 
-Var
+var
   BlockInfoForm: TBlockInfoForm;
 
-Implementation
+implementation
 
 {$R *.fmx}
 
-Uses
+uses
   DevApp.Utils,
   PascalCoin.RPC.Exceptions;
 
-Procedure TBlockInfoForm.Block1KeyDown(Sender: TObject; Var Key: Word; Var KeyChar: Char; Shift: TShiftState);
-Begin
-  If Key = vkReturn Then
+procedure TBlockInfoForm.Block1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
     Button1.OnClick(self)
-  Else If Key = vkUp Then
+  else if Key = vkUp then
     ChangeBlock(1)
-  Else If Key = vkDown Then
+  else if Key = vkDown then
     ChangeBlock(-1);
 
-End;
+end;
 
-Procedure TBlockInfoForm.BlockListCellClick(Const Column: TColumn; Const Row: Integer);
-Begin
+procedure TBlockInfoForm.BlockListCellClick(const Column: TColumn; const Row: Integer);
+begin
   Memo1.Lines.Clear;
-  If Column.Name = 'OpsCol' Then
+  if Column.Name = 'OpsCol' then
     ShowBlockOps(Row)
-  Else
+  else
     TDevAppUtils.BlockInfo(FBlockList[Row], Memo1.Lines);
-End;
+end;
 
-Procedure TBlockInfoForm.Button1Click(Sender: TObject);
-Begin
-  Inherited;
-  If (Block2.Text = '') Then
+procedure TBlockInfoForm.Button1Click(Sender: TObject);
+begin
+  inherited;
+  if (Block2.Text = '') then
     GetSingleBlock
-  Else
+  else
     GetBlockRange;
-End;
+end;
 
-Procedure TBlockInfoForm.Button2Click(Sender: TObject);
-Var
+procedure TBlockInfoForm.Button2Click(Sender: TObject);
+var
   lCount: Integer;
-Begin
-  Inherited;
+begin
+  inherited;
   lCount := Trunc(LastNBlocks.Value);
   HandleRange(ExplorerAPI.GetLastBlocks(lCount));
-End;
+end;
 
-Procedure TBlockInfoForm.ChangeBlock(Const AIncrement: Integer);
-Var
+procedure TBlockInfoForm.ChangeBlock(const AIncrement: Integer);
+var
   lBlock: Integer;
-Begin
+begin
   lBlock := Block1.Text.ToInteger;
   Block1.Text := (lBlock + AIncrement).ToString;
   GetSingleBlock;
-End;
+end;
 
-Procedure TBlockInfoForm.ClearButtonClick(Sender: TObject);
-Begin
-  Inherited;
+procedure TBlockInfoForm.ClearButtonClick(Sender: TObject);
+begin
+  inherited;
   Block1.Text := '';
   Block2.Text := '';
   Memo1.Lines.Clear;
   BlockList.RowCount := 0;
-End;
+end;
 
-Procedure TBlockInfoForm.GetBlockRange;
-Begin
+procedure TBlockInfoForm.DisplayOps(ABlock: Integer);
+begin
+
+end;
+
+procedure TBlockInfoForm.GetBlockRange;
+begin
   HandleRange(ExplorerAPI.GetBlockRange(Block1.Text.ToInteger, Block2.Text.ToInteger));
-End;
+end;
 
-Procedure TBlockInfoForm.GetSingleBlock;
-Var
+procedure TBlockInfoForm.GetSingleBlock;
+var
   lBlock: IPascalCoinBlock;
-Begin
+  lOpCount: Integer;
+begin
   Block2.Text := '';
   Memo1.Lines.Clear;
-  Try
+  try
     lBlock := ExplorerAPI.GetBlock(Block1.Text.ToInteger);
+    if CheckBox1.IsChecked then
+    begin
+      lOpCount := lBlock.operations;
+      if lOpCount = 0 then
+        ShowMessage('No Operations in this block')
+      else if lOpCount = 1 then
+        ShowSingleOp(lBlock.block)
+      else
+        ShowMultiOp(lBlock.block);
+    end;
+
     TDevAppUtils.BlockInfo(lBlock, Memo1.Lines);
-  Except
-    On e: EInvalidBlockException Do
-    Begin
+  except
+    on e: EInvalidBlockException do
+    begin
       Memo1.Lines.Add('Oops, Invalid Block');
       Exit;
-    End;
+    end;
 
-    On e: exception Do
-    Begin
+    on e: exception do
+    begin
       self.HandleAPIException(e);
-    End;
+    end;
 
-  End;
-End;
+  end;
+end;
 
-Procedure TBlockInfoForm.HandleRange(Value: IPascalCoinBlocks);
-Var
+procedure TBlockInfoForm.HandleRange(Value: IPascalCoinBlocks);
+var
   I: Integer;
-Begin
+begin
   FBlockList := Value;
   BlockList.RowCount := 0;
   BlockList.RowCount := Value.Count;
-  For I := 0 To FBlockList.Count - 1 Do
-  Begin
+  for I := 0 to FBlockList.Count - 1 do
+  begin
     BlockList.Cells[0, I] := FBlockList.block[I].block.ToString;
     BlockList.Cells[1, I] := FormatDateTime('dd/mm/yy hh:nn:ss', FBlockList.block[I].TimeStampAsDateTime);
     BlockList.Cells[2, I] := FBlockList[I].operations.ToString;
-  End;
-End;
+  end;
+end;
 
-Procedure TBlockInfoForm.InitialiseThis;
-Begin
-  Inherited;
+procedure TBlockInfoForm.InitialiseThis;
+begin
+  inherited;
   LatestBlock;
-End;
+end;
 
-Procedure TBlockInfoForm.LatestBlock;
-Begin
+procedure TBlockInfoForm.LatestBlock;
+begin
   FLatestBlock := ExplorerAPI.GetBlockCount;
   FormCaption.Text := 'Block Explorer: Latest Block = ' + FLatestBlock.ToString;
-End;
+end;
 
-Procedure TBlockInfoForm.ShowBlockOps(Const Row: Integer);
-Var
+procedure TBlockInfoForm.ShowBlockOps(const Row: Integer);
+var
   lOpCount: Integer;
-Begin
+begin
   lOpCount := FBlockList[Row].operations;
-  If lOpCount = 0 Then
+  if lOpCount = 0 then
     ShowMessage('No Operations in this block')
-  Else If lOpCount = 1 Then
+  else if lOpCount = 1 then
     ShowSingleOp(FBlockList[Row].block)
-  Else
+  else
     ShowMultiOp(FBlockList[Row].block);
+end;
 
-End;
-
-Procedure TBlockInfoForm.ShowMultiOp(block: Integer);
-Var
+procedure TBlockInfoForm.ShowMultiOp(block: Integer);
+var
   lOps: IPascalCoinOperations;
   I: Integer;
-Begin
+begin
   Memo1.Lines.Clear;
   lOps := ExplorerAPI.GetBlockOperations(block);
-  For I := 0 To lOps.Count - 1 Do
-  Begin
+  for I := 0 to lOps.Count - 1 do
+  begin
     Memo1.Lines.Add('Operation ' + I.ToString);
     Memo1.Lines.Add('===================');
     TDevAppUtils.OperationInfo(lOps[I], Memo1.Lines);
     Memo1.Lines.Add('');
-  End;
-End;
+  end;
+end;
 
-Procedure TBlockInfoForm.ShowSingleOp(block: Integer; OpIndex: Integer = 0);
-Begin
+procedure TBlockInfoForm.ShowSingleOp(block: Integer; OpIndex: Integer = 0);
+begin
   Memo1.Lines.Clear;
   TDevAppUtils.OperationInfo(ExplorerAPI.GetBlockOperation(block, OpIndex), Memo1.Lines);
-End;
+end;
 
-End.
+end.

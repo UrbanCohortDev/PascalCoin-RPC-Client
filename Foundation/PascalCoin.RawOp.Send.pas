@@ -32,7 +32,7 @@ Type
   TPascalCoinSendOperation = Class(TPascalCoinBaseRawOperation, IPascalCoinRawSend)
   Strict Private
   Const
-    Op_Transaction = 1;
+    Op_Transaction = CT_OP_TRANSACTION;
   Private
     FSenderAccount: String;
     FSendFrom: Cardinal;

@@ -92,9 +92,19 @@ inherited BlockInfoForm: TBlockInfoForm
         Size.Width = 59.000000000000000000
         Size.Height = 27.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 5
+        TabOrder = 6
         Text = 'Clear'
         OnClick = ClearButtonClick
+      end
+      object CheckBox1: TCheckBox
+        Align = Right
+        Position.X = 541.000000000000000000
+        Position.Y = 3.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Show Operations'
       end
     end
     object Layout2: TLayout
@@ -159,8 +169,8 @@ inherited BlockInfoForm: TBlockInfoForm
         Size.Height = 329.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        Viewport.Width = 385.000000000000000000
-        Viewport.Height = 329.000000000000000000
+        Viewport.Width = 381.000000000000000000
+        Viewport.Height = 325.000000000000000000
       end
     end
     object BlockList: TStringGrid
@@ -177,8 +187,8 @@ inherited BlockInfoForm: TBlockInfoForm
       TabOrder = 3
       Options = [Editing, ColumnResize, ColumnMove, ColLines, RowLines, RowSelect, Tabs, Header, HeaderClick, AutoDisplacement]
       OnCellClick = BlockListCellClick
-      Viewport.Width = 273.000000000000000000
-      Viewport.Height = 331.000000000000000000
+      Viewport.Width = 253.000000000000000000
+      Viewport.Height = 306.000000000000000000
       object StringColumn1: TStringColumn
         Header = 'Block'
         Size.Width = 65.000000000000000000

@@ -195,14 +195,22 @@ End;
 
 Procedure TAccountInfoForm.OpsButtonClick(Sender: TObject);
 Var
-  lDepth: Integer;
-Begin
+  lDepth, I: Integer;
+  lOps: IPascalCoinOperations;
+begin
   Inherited;
+  Memo2.Lines.Clear;
+
   If SameText(OpDepth.Text, 'deep') Then
     lDepth := DEEP_SEARCH
   Else
     lDepth := StrToInt(OpDepth.Text.Trim);
-  ExplorerAPI.getaccountoperations(TPascalCoinUtils.AccountNumber(Edit1.Text), lDepth);
+  lOps := ExplorerAPI.getaccountoperations(TPascalCoinUtils.AccountNumber(Edit1.Text), lDepth);
+
+  Memo2.Lines.Add('Operations Retrieved: ' + lOPs.Count.ToString);
+  Memo2.Lines.Add('====================================');
+  for I := 0 to lOps.Count - 1 do
+     TDevAppUtils.OperationInfo(lOps[I],   Memo2.Lines);
 End;
 
 Procedure TAccountInfoForm.PastePubKeyBtnClick(Sender: TObject);
@@ -218,7 +226,7 @@ Begin
 
   If S = '' Then
   Begin
-    ShowMessage('Unable to retrieve the value from teh clipboard');
+    ShowMessage('Unable to retrieve the value from the clipboard');
     Exit;
   End;
 
