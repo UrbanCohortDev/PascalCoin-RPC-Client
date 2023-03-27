@@ -14,9 +14,9 @@ This has all been developed in Delphi 10.4 (Sydney) but I have tried to avoid ma
 
 Within the framework I have tried to avoid using third party libraries, even using the built in Delphi JSON library. The exception is for libraries written specifically to support of the PascalCoin project. In particular the libraries by Ugo. Unlike the original development, I have included the needed files under the libraries sub folder, although please feel free to use the full repositories:
 
-SimplebaseLib4Pascal: https://github.com/Xor-el/SimpleBaseLib4Pascal
-HashLib4Pascal: https://github.com/Xor-el/HashLib4Pascal
-CryptoLib4Pascal: https://github.com/xor-el/cryptoLib4Pascal/
+- SimplebaseLib4Pascal: https://github.com/Xor-el/SimpleBaseLib4Pascal
+- HashLib4Pascal: https://github.com/Xor-el/HashLib4Pascal
+- CryptoLib4Pascal: https://github.com/xor-el/cryptoLib4Pascal/
 
 ## What's where
 
