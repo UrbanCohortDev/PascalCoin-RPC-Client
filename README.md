@@ -47,6 +47,6 @@ The current framework covers 1 (partially) and 2. I'm leaving 3 for the moment (
 if you like this development and want to support it by making a donation then please feel free :-)
 
 PASC donations: PASA/Account Number 1922/23
-BitCoin donations: 3DPfDtw455qby75TgL3tXTwBuHcWo4BgjL (now isn't the Pascal way easier?)
+
 
 Thank you
